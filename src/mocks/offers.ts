@@ -70,3 +70,6 @@ export const getBoundsForOffers = (offers: Offer[]) => {
   const northEast = {lat: maxLat + 0.5, lng: maxLng + 0.5};
   return new LatLngBounds(southWest, northEast);
 };
+
+
+export const hasPosition = (offer: Offer) => offer.position?.lat !== undefined && offer.position?.lng !== undefined;

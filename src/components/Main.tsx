@@ -6,7 +6,6 @@ import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import {actions} from '../redux/actions.ts';
-import {getOffers} from '../mocks/offers.ts';
 import {Offers} from './OffersPRops.tsx';
 
 
@@ -23,7 +22,10 @@ const MainComponent = ({setOffers}: MainProps) => {
   };
 
   useEffect(() => {
-    setOffers(getOffers());
+    fetch('http://localhost:8099/offer/search')
+      .then((response) => response.json())
+      .then((offers: Offer[]) => setOffers(offers));
+    // setOffers(getOffers());
   }, [setOffers]);
 
   return (
