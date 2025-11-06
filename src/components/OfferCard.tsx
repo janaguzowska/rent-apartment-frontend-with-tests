@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {Dispatch} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
+import {IMAGE_URL} from '../const.ts';
 
 interface OfferCardProps {
   currentOffer: Offer;
@@ -24,7 +25,7 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${currentOffer.id}`}>
-          <img className="place-card__image" src={currentOffer.previewImage} width="260" height="200"
+          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage}.jpg`} width="260" height="200"
             alt={currentOffer.title}
           />
         </Link>

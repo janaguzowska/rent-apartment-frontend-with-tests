@@ -1,2 +1,4 @@
-export const BASE_URL = 'https://15.design.htmlacademy.pro';
-export const OFFER_IMAGE_URL = `${BASE_URL }/static/hotel`;
+export const BASE_URL = 'http://localhost:8099';
+export const OFFER_URL = `${BASE_URL}/offer`;
+export const OFFER_SEARCH_URL = `${OFFER_URL}/search`;
+export const IMAGE_URL = `${BASE_URL}/image`;
