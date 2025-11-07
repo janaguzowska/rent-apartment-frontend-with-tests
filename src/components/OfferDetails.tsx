@@ -7,20 +7,33 @@ import {AppState} from '../types/AppState.ts';
 import {Dispatch, useEffect} from 'react';
 import {actions} from '../redux/actions.ts';
 import {NearPlaceCardList} from './NearPlaceCardList.tsx';
+import {OFFER_SEARCH_URL} from '../const.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
   setCurrentOffer: (id: number) => void;
   currentOffer?: Offer;
+  setOffers: (offers: Offer[]) => void;
+  offers: Offer[];
 }
 
 const OfferDetailsComponent = (props: OfferDetailsProps) => {
-  const {currentOffer, toggleFavorite, setCurrentOffer} = props;
+  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers} = props;
   const {id} = useParams();
 
   useEffect(() => {
-    setCurrentOffer(Number(id));
-  }, [id, setCurrentOffer]);
+    if (offers.length === 0) {
+      fetch(OFFER_SEARCH_URL)
+        .then((response) => response.json())
+        .then((responseOffers: Offer[]) => setOffers(responseOffers));
+    }
+  }, [offers, setOffers]);
+
+  useEffect(() => {
+    if (offers.some((offer) => offer.id === Number(id)) && !currentOffer) {
+      setCurrentOffer(Number(id));
+    }
+  }, [id, setCurrentOffer, offers, currentOffer]);
 
   const handleBookmarkClick = () => {
     toggleFavorite(currentOffer!);
@@ -136,11 +149,13 @@ const MapWrapper = styled.section`
 
 const mapStateToProps = (state: AppState) => ({
   currentOffer: state.reducer.currentOffer,
+  offers: state.reducer.offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer)),
-  setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id))
+  setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
 });
 
 export const OfferDetails = connect(mapStateToProps, mapDispatchToProps)(OfferDetailsComponent);
