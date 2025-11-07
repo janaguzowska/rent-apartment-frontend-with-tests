@@ -4,6 +4,7 @@ import {AppState} from '../types/AppState.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {Dispatch} from 'react';
+import {IMAGE_URL} from '../const.ts';
 
 interface NearPlaceCardProps {
   currentOffer: Offer;
@@ -25,7 +26,7 @@ const NearPlaceCardComponent = (props:NearPlaceCardProps) => {
           window.scrollTo(0, 0);
         }}
         >
-          <img className="place-card__image" src={currentOffer.previewImage} width="260" height="200" alt={currentOffer.title}/>
+          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`} width="260" height="200" alt={currentOffer.title}/>
         </Link>
       </div>
       <div className="place-card__info">

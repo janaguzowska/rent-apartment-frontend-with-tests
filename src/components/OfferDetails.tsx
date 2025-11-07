@@ -7,7 +7,7 @@ import {AppState} from '../types/AppState.ts';
 import {Dispatch, useEffect} from 'react';
 import {actions} from '../redux/actions.ts';
 import {NearPlaceCardList} from './NearPlaceCardList.tsx';
-import {OFFER_SEARCH_URL} from '../const.ts';
+import {IMAGE_URL, OFFER_SEARCH_URL} from '../const.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
@@ -49,8 +49,8 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
             {currentOffer.images.map((image) => (
-              <div key={image} className="offer__image-wrapper">
-                <img className="offer__image" src={image} alt="Photo studio"/>
+              <div key={image.id} className="offer__image-wrapper">
+                <img className="offer__image" src={`${IMAGE_URL}/${image.name}.jpg`} alt="Photo studio"/>
               </div>
             ))}
           </div>

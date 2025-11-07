@@ -4,6 +4,7 @@ import {Dispatch} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
+import {IMAGE_URL} from '../const.ts';
 
 interface FavoritesProps {
   offers: Offer[];
@@ -45,7 +46,7 @@ const FavoritesComponent = (props: FavoritesProps) => {
                     )}
                     <div className="favorites__image-wrapper place-card__image-wrapper">
                       <Link to={`/offer/${offer.id}`}>
-                        <img className="place-card__image" src={offer.previewImage} width="150" height="110"
+                        <img className="place-card__image" src={`${IMAGE_URL}/${offer.previewImage.name}.jpg`} width="150" height="110"
                           alt="Place image"
                         />
                       </Link>

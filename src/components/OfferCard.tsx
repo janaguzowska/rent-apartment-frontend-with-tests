@@ -25,7 +25,7 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${currentOffer.id}`}>
-          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage}.jpg`} width="260" height="200"
+          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`} width="260" height="200"
             alt={currentOffer.title}
           />
         </Link>
