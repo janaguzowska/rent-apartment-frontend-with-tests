@@ -4,6 +4,7 @@ import {Dispatch} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {IMAGE_URL} from '../const.ts';
+import {api} from '../services/api.ts';
 
 interface OfferCardProps {
   currentOffer: Offer;
@@ -13,7 +14,21 @@ interface OfferCardProps {
 const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
 
   const handleBookmarkClick = () => {
-    toggleFavorite(currentOffer);
+    const url = '/offer/favorite';
+    const handleThen = () => toggleFavorite(currentOffer);
+    const handleCatch = (error: Error) => {
+      // eslint-disable-next-line no-alert
+      alert(error);
+    };
+    if (currentOffer.isFavorite) {
+      api.delete<void>(`${url}/delete`, {offerId: currentOffer.id, userId: 1 })
+        .then(handleThen)
+        .catch(handleCatch);
+    } else {
+      api.post<void>(`${url}/add`, {offerId: currentOffer.id, userId: 1 })
+        .then(handleThen)
+        .catch(handleCatch);
+    }
   };
 
   return (
@@ -25,7 +40,8 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${currentOffer.id}`}>
-          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`} width="260" height="200"
+          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`} width="260"
+            height="200"
             alt={currentOffer.title}
           />
         </Link>
