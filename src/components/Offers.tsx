@@ -25,12 +25,12 @@ const sortedByPrice = (offers: Offer[], sortType?: SortType | null) => !sortType
   }
 });
 
-interface OffersPRops {
+interface OffersProps {
   currentCity?: City;
   offers: Offer[];
 }
 
-export const OffersComponent = (props: OffersPRops) => {
+export const OffersComponent = (props: OffersProps) => {
 
   const {currentCity, offers } = props;
   const [sortType, setSortType] = useState<SortType | null>(null);

@@ -3,6 +3,7 @@ import {OfferType} from './OfferType.ts';
 import {Host} from './Host.ts';
 import {Position} from './Position.ts';
 import {Image} from './Image.ts';
+import {Amenity} from './Amenity.ts';
 // import {Rating} from './Rating.ts';
 
 export interface Offer {
@@ -18,7 +19,7 @@ export interface Offer {
   description: string;
   bedrooms: number;
   maxAdults: number;
-  goods: string[];
+  amenities: Amenity[];
   host: Host;
   images: Image[];
   previewImage: Image;

@@ -8,6 +8,7 @@ import {Dispatch, useEffect} from 'react';
 import {actions} from '../redux/actions.ts';
 import {NearPlaceCardList} from './NearPlaceCardList.tsx';
 import {IMAGE_URL, OFFER_SEARCH_URL} from '../const.ts';
+import {Amenity} from '../types/Amenity.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
@@ -56,7 +57,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
           </div>
         </div>
         <div className="offer__container container">
-          <div className="offer__wrapper">
+          <OfferWrapper className="offer__wrapper">
             {currentOffer.isPremium && (
               <div className="offer__mark">
                 <span>Premium</span>
@@ -86,10 +87,10 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                 {currentOffer.type}
               </li>
               <li className="offer__feature offer__feature--bedrooms">
-                {currentOffer.bedrooms}
+                {currentOffer.bedrooms} Bedrooms
               </li>
               <li className="offer__feature offer__feature--adults">
-                {currentOffer.maxAdults}
+                Max {currentOffer.maxAdults} adults
               </li>
             </ul>
             <div className="offer__price">
@@ -99,10 +100,10 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
             <div className="offer__inside">
               <h2 className="offer__inside-title">What&apos;s inside</h2>
               <ul className="offer__inside-list">
-                {currentOffer.goods.map((furnishingItem: string) => (
-                  <li key={furnishingItem} className="offer__inside-item">
-                    {furnishingItem}
-                  </li>
+                {currentOffer.amenities.map((amenityItem: Amenity) => (
+                  <AmenityLi key={amenityItem.id} className="offer__inside-item">
+                    {amenityItem.name}
+                  </AmenityLi>
                 ))}
               </ul>
             </div>
@@ -126,13 +127,13 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               </div>
             </div>
             <Reviews/>
-          </div>
+          </OfferWrapper>
         </div>
         <MapWrapper className="offer__map map">
           {/*<OfferMap offers={offers}/>*/}
         </MapWrapper>
       </section>
-      <NearPlaceCardList />
+      <NearPlaceCardList/>
     </>
   );
 };
@@ -145,6 +146,14 @@ const MapWrapper = styled.section`
     width: 1200px;
     height: 600px;
   }
+`;
+
+const OfferWrapper = styled.div`
+  max-width: 750px;
+`;
+
+const AmenityLi = styled.li`
+  max-width: 230px;
 `;
 
 const mapStateToProps = (state: AppState) => ({
