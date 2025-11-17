@@ -1,3 +1,1 @@
-export const getArray = (length: number): number[] => {
-  return [...Array(length).keys()];
-}
+export const getArray = (length: number): number[] => [...Array(length).keys()];

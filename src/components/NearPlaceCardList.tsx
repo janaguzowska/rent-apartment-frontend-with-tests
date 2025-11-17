@@ -25,8 +25,8 @@ export const NearPlaceCardListComponent = (props: NearPlaceCardListProps) => {
 
 
 const mapStateToProps = (state: AppState) => ({
-  currentOffer: state.reducer.currentOffer,
-  offers: state.reducer.offers,
+  currentOffer: state.offerState.currentOffer,
+  offers: state.offerState.offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

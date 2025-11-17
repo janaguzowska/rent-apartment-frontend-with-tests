@@ -111,9 +111,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <h2 className="offer__host-title">Meet the host</h2>
               <div className="offer__host-user user">
                 <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                  <img className="offer__avatar user__avatar" src={currentOffer.host?.avatarUrl} width="74" height="74"
-                    alt="Host avatar"
-                  />
+                  <img className="offer__avatar user__avatar" src={currentOffer.host?.avatarUrl} width="74" height="74" alt="Host avatar" />
                 </div>
                 <span className="offer__user-name">
                   {currentOffer.host?.name}
@@ -126,7 +124,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                 </p>
               </div>
             </div>
-            <Reviews/>
+            <Reviews />
           </OfferWrapper>
         </div>
         <MapWrapper className="offer__map map">
@@ -157,8 +155,8 @@ const AmenityLi = styled.li`
 `;
 
 const mapStateToProps = (state: AppState) => ({
-  currentOffer: state.reducer.currentOffer,
-  offers: state.reducer.offers,
+  currentOffer: state.offerState.currentOffer,
+  offers: state.offerState.offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

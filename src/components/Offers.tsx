@@ -88,7 +88,7 @@ export const OffersComponent = (props: OffersProps) => {
 
 
 const mapStateToProps = (state: AppState) => ({
-  offers: state.reducer.offers
+  offers: state.offerState.offers
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
