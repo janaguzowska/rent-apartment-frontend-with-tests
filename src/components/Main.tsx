@@ -1,6 +1,6 @@
 import {CitiesTabs} from './CitiesTabs.tsx';
 import {OfferMap} from './OfferMap.tsx';
-import {Dispatch, useEffect, useState} from 'react';
+import {Dispatch, useEffect, useRef, useState} from 'react';
 import {City} from '../types/City.ts';
 import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
@@ -16,6 +16,7 @@ interface MainProps {
 
 const MainComponent = ({setOffers}: MainProps) => {
 
+  const isUseEffectCalled = useRef(false);
   const [currentCity, setCurrentCity] = useState<City>();
 
   const handleCityClick = (city: City) => {
@@ -23,9 +24,12 @@ const MainComponent = ({setOffers}: MainProps) => {
   };
 
   useEffect(() => {
+    if (isUseEffectCalled.current) {
+      return;
+    }
+    isUseEffectCalled.current = true;
     api.get<Offer[]>('/offer/search')
-      .then((offers: Offer[]) => setOffers(offers));
-    // setOffers(getOffers());
+      .then((offersResponse: Offer[]) => setOffers(offersResponse));
   }, [setOffers]);
 
   return (
@@ -57,6 +61,10 @@ const MapWrapper = styled.section`
     height: 100%;
   }
 `;
+
+// const mapStateToProps = (state: AppState) => ({
+//   offers: state.offerState.offers,
+// });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))

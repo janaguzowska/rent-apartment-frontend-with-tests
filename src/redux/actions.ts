@@ -1,6 +1,7 @@
 import {ActionType} from '../types/ActionType.ts';
 import {Offer} from '../types/Offer.ts';
 import {Review} from '../types/Review.ts';
+import {User} from '../types/User.ts';
 
 export const actions = {
   setOffers: (offers: Offer[]) => ({
@@ -13,10 +14,14 @@ export const actions = {
   }),
   setCurrentOffer: (id: number) => ({
     type: ActionType.SetCurrentOffer,
-    payload: {id}
+    payload: { id }
   }),
   addReview: (review: Review) => ({
     type: ActionType.AddReview,
-    payload: {review}
-  })
+    payload: { review }
+  }),
+  loginSuccess: (user: User) => ({
+    type: ActionType.LoginSuccess,
+    payload: { user }
+  }),
 };

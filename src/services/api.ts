@@ -12,7 +12,7 @@ class ApiService {
     };
   }
 
-  async request<T>(url: string, options: RequestInit = {}, params?: Record<string, string | number | boolean>): Promise<T> {
+  async request<T>(url: string, options: RequestInit = {}, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
     let fullUrl = this.baseUrl + url;
 
     if (params) {
@@ -23,27 +23,27 @@ class ApiService {
       fullUrl += `?${searchParams.toString()}`;
     }
 
-    const response = await fetch(fullUrl, {
+    const requestOptions: RequestInit = {
       ...options,
-      headers: this.defaultHeaders,
-    });
+      headers: {
+        ...this.defaultHeaders,
+        ...options.headers,
+      },
+    };
+
+    if (body) {
+      requestOptions.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(fullUrl, requestOptions);
     if (!response.ok) {
       throw new Error(`Error status: ${response.status}`);
     }
-    // const contentType = response.headers.get('content-type');
-    // const contentLength = response.headers.get('content-length');
-    // if (!contentLength || contentLength === '0') {
-    //   throw new Error(`Error status: ${response.status}`);
-    // }
-    // if (!contentType || !contentType.includes('application/json')) {
-    //   throw new Error(`Error status: ${response.status}`);
-    // return null;
-    // }
     return response.json() as T;
   }
 
-  async post<T>(url: string, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(url, {method: 'POST'}, params);
+  async post<T>(url: string, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
+    return this.request<T>(url, {method: 'POST'}, params, body);
   }
 
   async delete<T> (url: string, params?: Record<string, string | number | boolean>):Promise<T> {

@@ -3,5 +3,7 @@ export enum ActionType {
   ToggleFavorite = 'ToggleFavorite',
   SetCurrentOffer = 'SetCurrentOffer',
   AddReview = 'AddReview',
+  LoginSuccess = 'LoginSuccess',
+  Logout = 'Logout',
 }
 
