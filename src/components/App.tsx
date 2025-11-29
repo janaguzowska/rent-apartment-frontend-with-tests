@@ -4,6 +4,7 @@ import {OfferDetails} from './OfferDetails.tsx';
 import {Main} from './Main.tsx';
 import {Favorites} from './Favorites.tsx';
 import {Login} from './Login.tsx';
+import {RegistrationForm} from './RegistrationForm.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -13,6 +14,7 @@ export const App = () => (
         <Route index element={<Main />}/>
         <Route path="/offer/:id" element={<OfferDetails/>}/>
         <Route path="/favorites" element={<Favorites />}/>
+        <Route path="/register" element={<RegistrationForm />}/>
       </Route>
     </Routes>
   </BrowserRouter>

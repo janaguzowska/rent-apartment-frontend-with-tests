@@ -20,8 +20,11 @@ export const actions = {
     type: ActionType.AddReview,
     payload: { review }
   }),
-  loginSuccess: (user: User) => ({
-    type: ActionType.LoginSuccess,
+  setUser: (user: User) => ({
+    type: ActionType.setUser,
     payload: { user }
   }),
+  logout: () => ({
+    type: ActionType.Logout
+  })
 };

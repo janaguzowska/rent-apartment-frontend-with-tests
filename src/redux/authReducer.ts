@@ -14,7 +14,7 @@ const defaultState: AuthState = ({
 
 export const authReducer = (state = defaultState, action: PayloadAction<ActionPayload, ActionType>): AuthState => {
   switch (action.type) {
-    case ActionType.LoginSuccess:
+    case ActionType.setUser:
       return {
         ...state,
         isAuthorized: true,

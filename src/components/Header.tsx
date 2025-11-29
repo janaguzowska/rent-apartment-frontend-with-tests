@@ -6,15 +6,18 @@ import {connect} from 'react-redux';
 import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
 import {AVATAR_URL} from '../const.ts';
+import {actions} from '../redux/actions.ts';
+import {Dispatch} from 'react';
 
 interface HeaderProps {
   isAuthorized: boolean;
   // loginSuccess: (user: User) => void;
   user?: User;
   favoriteOffers: Offer[];
+  logout: () => void;
 }
 
-const HeaderComponent = ({isAuthorized, user, favoriteOffers}: HeaderProps) => (
+const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout}: HeaderProps) => (
   <header className="header">
     <div className="container">
       <div className="header__wrapper">
@@ -29,24 +32,33 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers}: HeaderProps) => (
               <>
                 <li className="header__nav-item user">
                   <Link to="/favorites" className="header__nav-link header__nav-link--profile">
-                    <Avatar avatarUrl={`${AVATAR_URL}/${user!.login}.jpg`} className="header__avatar-wrapper user__avatar-wrapper">
+                    <Avatar avatarUrl={`${AVATAR_URL}/${user!.login}.jpg`}
+                      className="header__avatar-wrapper user__avatar-wrapper"
+                    >
                     </Avatar>
                     <span className="header__user-name user__name">{user!.email}</span>
                     <span className="header__favorite-count">{favoriteOffers.length}</span>
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <a className="header__nav-link" href="#" onClick={logout}>
                     <span className="header__signout">Sign out</span>
                   </a>
                 </li>
               </>
             ) : (
-              <li className="header__nav-item">
-                <Link className="header__nav-link" to="/login">
-                  <span className="header__signout">Sign in</span>
-                </Link>
-              </li>
+              <>
+                <li className="header__nav-item">
+                  <Link className="header__nav-link" to="/login">
+                    <span className="header__signout">Sign in</span>
+                  </Link>
+                </li>
+                <li className="header__nav-item">
+                  <Link className="header__nav-link" to="/register">
+                    <span className="header__signout">Register</span>
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
         </nav>
@@ -56,7 +68,7 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers}: HeaderProps) => (
 );
 
 const Avatar = styled.div<{ avatarUrl: string }>`
-    background-image: url(${(props) => props.avatarUrl});
+  background-image: url(${(props) => props.avatarUrl});
 `;
 
 const mapStateToProps = (state: AppState) => ({
@@ -65,5 +77,9 @@ const mapStateToProps = (state: AppState) => ({
   favoriteOffers: state.offerState.offers.filter((offer) => offer.isFavorite)
 });
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  logout: () => dispatch(actions.logout()),
+});
 
-export const Header = connect(mapStateToProps)(HeaderComponent);
+
+export const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderComponent);

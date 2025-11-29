@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {actions} from '../redux/actions.ts';
 import {Offers} from './Offers.tsx';
 import {api} from '../services/api.ts';
+import {ReservationCart} from './ReservationCart.tsx';
 
 
 interface MainProps {
@@ -37,6 +38,7 @@ const MainComponent = ({setOffers}: MainProps) => {
       <h1 className="visually-hidden">Cities</h1>
       <div className="tabs">
         <CitiesTabs onCityClick={handleCityClick}/>
+        <ReservationCart />
       </div>
       <div className="cities">
         <div className="cities__places-container container">

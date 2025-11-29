@@ -8,10 +8,10 @@ import {actions} from '../redux/actions.ts';
 
 interface LoginProps {
   // isAuthorized: boolean;
-  loginSuccess: (user: User) => void;
+  setUser: (user: User) => void;
 }
 
-const LoginComponent = ({loginSuccess }: LoginProps) => {
+const LoginComponent = ({ setUser }: LoginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const LoginComponent = ({loginSuccess }: LoginProps) => {
     const url = '/login';
     api.post<User>(`${url}`, undefined, {email, password})
       .then((response:User) => {
-        loginSuccess(response);
+        setUser(response);
         navigate('/');
       })
       .catch(() => alert('Błąd przy logowaniu'));
@@ -102,7 +102,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  loginSuccess: (user: User) => dispatch(actions.loginSuccess(user)),
+  setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
 export const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
