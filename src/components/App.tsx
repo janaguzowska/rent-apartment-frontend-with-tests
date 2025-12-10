@@ -9,7 +9,8 @@ import {RegistrationForm} from './RegistrationForm.tsx';
 export const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/login" element={<Login />}/>
+      <Route path="/register" element={<RegistrationForm />}/>
       <Route path="/" element={<Page/>}>
         <Route index element={<Main />}/>
         <Route path="/offer/:id" element={<OfferDetails/>}/>

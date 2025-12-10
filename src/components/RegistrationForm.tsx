@@ -2,9 +2,10 @@ import {connect} from 'react-redux';
 import {Dispatch, useState} from 'react';
 import {api} from '../services/api.ts';
 import {User} from '../types/User.ts';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {actions} from '../redux/actions.ts';
 import {Registration} from '../types/Registration.ts';
+import styled from 'styled-components';
 
 interface RegistrationProps {
   setUser: (user: User) => void;
@@ -63,116 +64,154 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
 
   };
   return(
-    <form action="" method="post" className="registration-form" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          placeholder="firstName"
-          required
-          value={firstName}
-          onChange={(ev) => setFirstName(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="lastName">Second Name</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          placeholder="lastName"
-          required
-          value={lastName}
-          onChange={(ev) => setLastName(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="email"
-          required
-          value={email}
-          onChange={(ev) => setEmail(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="password"
-          required
-          value={password}
-          onChange={(ev) => setPassword(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          placeholder="confirm password"
-          required
-          value={confirmPassword}
-          onChange={(ev) => setConfirmPassword(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="login">Login</label>
-        <input
-          type="text"
-          id="login"
-          name="login"
-          placeholder="login"
-          required
-          value={login}
-          onChange={(ev) => setLogin(ev.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="isCustomer">Is Customer</label>
-        <input
-          type="checkbox"
-          id="isCustomer"
-          name="isCustomer"
-          placeholder="isCustomer"
-          checked={isCustomer}
-          onChange={(ev) => setIsCustomer(ev.target.checked)}
-        />
-      </div>
-      <div>
-        <label htmlFor="isHost">Is Host</label>
-        <input
-          type="checkbox"
-          id="isHost"
-          name="isHost"
-          placeholder="isHost"
-          checked={isHost}
-          onChange={(ev) => setIsHost(ev.target.checked)}
-        />
-      </div>
-      <div>
-        <label htmlFor="avatar">Avatar</label>
-        <input
-          type="url"
-          id="avatar"
-          name="avatar"
-          placeholder="avatar"
-          value={avatarUrl}
-          onChange={(ev) => setAvatarUrl(ev.target.value)}
-        />
-      </div>
-      <button type="submit" disabled={!isFormValid}>
-        Register
-      </button>
-    </form>
+    <div className="page page--gray page--login">
+      <header className="header">
+        <div className="container">
+          <div className="header__wrapper">
+            <div className="header__left">
+              <Link className="header__logo-link" to="/">
+                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main className="page__main page__main--login">
+        <div className="page__login-container container">
+          <RegisterFormWrapper className="login">
+            <h1 className="login__title">Registration form</h1>
+            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  className="login__input form__input"
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="firstName"
+                  required
+                  value={firstName}
+                  onChange={(ev) => setFirstName(ev.target.value)}
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="lastName">Second Name</label>
+                <input
+                  className="login__input form__input"
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  placeholder="lastName"
+                  required
+                  value={lastName}
+                  onChange={(ev) => setLastName(ev.target.value)}
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="email">Email</label>
+                <input
+                  className="login__input form__input"
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="email"
+                  required
+                  value={email}
+                  onChange={(ev) => setEmail(ev.target.value)}
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="password">Password</label>
+                <input
+                  className="login__input form__input"
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="password"
+                  required
+                  value={password}
+                  onChange={(ev) => setPassword(ev.target.value)}
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <input
+                  className="login__input form__input"
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="confirm password"
+                  required
+                  value={confirmPassword}
+                  onChange={(ev) => setConfirmPassword(ev.target.value)}
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="login">Login</label>
+                <input
+                  className="login__input form__input"
+                  type="text"
+                  id="login"
+                  name="login"
+                  placeholder="login"
+                  required
+                  value={login}
+                  onChange={(ev) => setLogin(ev.target.value)}
+                />
+              </div>
+              <UserTypeWrapper>
+                <UserType className="login__input-wrapper form__input-wrapper">
+                  <label htmlFor="isCustomer">Is Customer</label>
+                  <input
+                    className="login__input form__input"
+                    type="checkbox"
+                    id="isCustomer"
+                    name="isCustomer"
+                    placeholder="isCustomer"
+                    checked={isCustomer}
+                    onChange={(ev) => setIsCustomer(ev.target.checked)}
+                  />
+                </UserType>
+                <UserType className="login__input-wrapper form__input-wrapper">
+                  <label htmlFor="isHost">Is Host</label>
+                  <input
+                    className="login__input form__input"
+                    type="checkbox"
+                    id="isHost"
+                    name="isHost"
+                    placeholder="isHost"
+                    checked={isHost}
+                    onChange={(ev) => setIsHost(ev.target.checked)}
+                  />
+                </UserType>
+              </UserTypeWrapper>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="avatar">Avatar</label>
+                <input
+                  className="login__input form__input"
+                  type="file"
+                  id="avatar"
+                  name="avatar"
+                  placeholder="avatar"
+                  value={avatarUrl}
+                  onChange={(ev) => setAvatarUrl(ev.target.value)}
+                />
+              </div>
+              <button className="login__submit form__submit button" type="submit" disabled={!isFormValid}>
+                Register
+              </button>
+            </form>
+          </RegisterFormWrapper>
+          <section className="locations locations--login locations--current">
+            <div className="locations__item">
+              <a className="locations__item-link" href="#">
+                <span>Amsterdam</span>
+              </a>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 };
 
@@ -181,3 +220,32 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
 });
 
 export const RegistrationForm = connect(null, mapDispatchToProps)(RegistrationFormComponent);
+
+// const RegisterFormWrapper = styled.div`
+//   display: flex;
+// `;
+//
+// const RegisterForm = styled.form`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 25px;
+// `;
+//
+// const PersonalDetails = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+// `;
+
+const UserTypeWrapper = styled.div`
+  display: flex;
+`;
+
+const RegisterFormWrapper = styled.div`
+  padding-top: 0;
+`;
+
+const UserType = styled.div`
+  display: flex;
+`;
+

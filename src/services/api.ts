@@ -8,7 +8,7 @@ class ApiService {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.defaultHeaders = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
   }
 
@@ -23,11 +23,14 @@ class ApiService {
       fullUrl += `?${searchParams.toString()}`;
     }
 
+    const credentials = localStorage.getItem('credentials');
+
     const requestOptions: RequestInit = {
       ...options,
       headers: {
         ...this.defaultHeaders,
         ...options.headers,
+        ...(credentials ? {'Authorization': `Basic ${credentials}`} : {})
       },
     };
 

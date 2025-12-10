@@ -28,10 +28,10 @@ const LoginComponent = ({ setUser }: LoginProps) => {
     api.post<User>(`${url}`, undefined, {email, password})
       .then((response:User) => {
         setUser(response);
+        localStorage.setItem('credentials', btoa(`${email}:${password}`));
         navigate('/');
       })
       .catch(() => alert('Błąd przy logowaniu'));
-
   };
 
   return (

@@ -1,10 +1,11 @@
 import React, {forwardRef, useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import styled, {createGlobalStyle} from 'styled-components';
 
 const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   (props, ref) => (
-    <input
+    <StyledInput
       {...props}
       ref={ref}
       id="date-picker"
@@ -39,17 +40,45 @@ const CustomDateRangePicker: React.FC = () => {
   }, [dateRange]);
 
   return (
-    <DatePicker
-      selectsRange // Date range selecting enabled
-      startDate={startDate}
-      endDate={endDate}
-      onChange={(update) => {
-        setDateRange(update);
-      }}
-      calendarStartDay={1} // Starts from Monday
-      customInput={<CustomInput />}
-    />
+    <>
+      <DatePickerGlobalStyles />
+      <DatePicker
+        selectsRange // Date range selecting enabled
+        startDate={startDate}
+        endDate={endDate}
+        onChange={(update) => {
+          setDateRange(update);
+        }}
+        calendarStartDay={1} // Starts from Monday
+        customInput={<CustomInput/>}
+        wrapperClassName="custom-datepicker-wrapper"
+      />
+    </>
   );
 };
 
 export default CustomDateRangePicker;
+
+const StyledInput = styled.input`
+  border: none;
+  background-color: #f5f5f5;
+  height: 100%;
+  width: 100%;
+  outline: none;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
+`;
+
+const DatePickerGlobalStyles = createGlobalStyle`
+  &.react-datepicker-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+
+  &.react-datepicker__input-container {
+    height: 100%;
+  }
+`;
