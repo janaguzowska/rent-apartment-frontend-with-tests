@@ -6,22 +6,25 @@ import {Link, useNavigate} from 'react-router-dom';
 import {actions} from '../redux/actions.ts';
 import {Registration} from '../types/Registration.ts';
 import styled from 'styled-components';
+import {FileUploader} from './FileUploader.tsx';
 
 interface RegistrationProps {
   setUser: (user: User) => void;
 }
 
-const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
+const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [login, setLogin] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [isCustomer, setIsCustomer] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>();
+  const [isClient, setIsClient] = useState(false);
   const [isHost, setIsHost] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  // const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
   const doPasswordsMatch = password === confirmPassword;
@@ -34,7 +37,7 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
     doPasswordsMatch &&
     isEmailValid &&
     isLoginValid &&
-    (isCustomer || isHost);
+    (isClient || isHost);
 
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
@@ -49,8 +52,8 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
       email: email.trim(),
       password,
       login: login.trim(),
-      avatarUrl: avatarUrl.trim(),
-      isCustomer,
+      avatarUrl: avatarUrl?.trim(),
+      isClient,
       isHost,
     };
 
@@ -63,7 +66,8 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
       .catch(() => alert('Błąd przy rejestracji. Spróbuj ponownie.'));
 
   };
-  return(
+
+  return (
     <div className="page page--gray page--login">
       <header className="header">
         <div className="container">
@@ -80,7 +84,7 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
         <div className="page__login-container container">
           <RegisterFormWrapper className="login">
             <h1 className="login__title">Registration form</h1>
-            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+            <RegisterForm className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="firstName">First Name</label>
                 <input
@@ -88,7 +92,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="text"
                   id="firstName"
                   name="firstName"
-                  placeholder="firstName"
                   required
                   value={firstName}
                   onChange={(ev) => setFirstName(ev.target.value)}
@@ -101,7 +104,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="text"
                   id="lastName"
                   name="lastName"
-                  placeholder="lastName"
                   required
                   value={lastName}
                   onChange={(ev) => setLastName(ev.target.value)}
@@ -114,7 +116,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="email"
                   required
                   value={email}
                   onChange={(ev) => setEmail(ev.target.value)}
@@ -127,7 +128,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="password"
                   id="password"
                   name="password"
-                  placeholder="password"
                   required
                   value={password}
                   onChange={(ev) => setPassword(ev.target.value)}
@@ -140,7 +140,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
-                  placeholder="confirm password"
                   required
                   value={confirmPassword}
                   onChange={(ev) => setConfirmPassword(ev.target.value)}
@@ -153,7 +152,6 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
                   type="text"
                   id="login"
                   name="login"
-                  placeholder="login"
                   required
                   value={login}
                   onChange={(ev) => setLogin(ev.target.value)}
@@ -161,46 +159,47 @@ const RegistrationFormComponent = ({ setUser }: RegistrationProps) => {
               </div>
               <UserTypeWrapper>
                 <UserType className="login__input-wrapper form__input-wrapper">
-                  <label htmlFor="isCustomer">Is Customer</label>
-                  <input
-                    className="login__input form__input"
+                  <UserInput
+                    className="form__input"
                     type="checkbox"
-                    id="isCustomer"
-                    name="isCustomer"
-                    placeholder="isCustomer"
-                    checked={isCustomer}
-                    onChange={(ev) => setIsCustomer(ev.target.checked)}
+                    id="isClient"
+                    name="isClient"
+                    checked={isClient}
+                    // onChange={(ev) => setIsCustomer(ev.target.checked)}
                   />
+                  <UserLabel htmlFor="isClient" onClick={() => setIsClient(!isClient)} isChecked={isClient}>Is
+                    Client
+                  </UserLabel>
                 </UserType>
                 <UserType className="login__input-wrapper form__input-wrapper">
-                  <label htmlFor="isHost">Is Host</label>
-                  <input
-                    className="login__input form__input"
+                  <UserInput
+                    className="form__input"
                     type="checkbox"
                     id="isHost"
                     name="isHost"
-                    placeholder="isHost"
                     checked={isHost}
-                    onChange={(ev) => setIsHost(ev.target.checked)}
                   />
+                  <UserLabel htmlFor="isHost" onClick={() => setIsHost(!isHost)} isChecked={isHost}>Is Host</UserLabel>
+                </UserType>
+                <UserType className="login__input-wrapper form__input-wrapper">
+                  <UserInput
+                    className="form__input"
+                    type="checkbox"
+                    id="isAdmin"
+                    name="isAdmin"
+                    checked={isAdmin}
+                  />
+                  <UserLabel htmlFor="isAdmin" onClick={() => setIsAdmin(!isAdmin)} isChecked={isAdmin}>Is Admin</UserLabel>
                 </UserType>
               </UserTypeWrapper>
-              <div className="login__input-wrapper form__input-wrapper">
-                <label htmlFor="avatar">Avatar</label>
-                <input
-                  className="login__input form__input"
-                  type="file"
-                  id="avatar"
-                  name="avatar"
-                  placeholder="avatar"
-                  value={avatarUrl}
-                  onChange={(ev) => setAvatarUrl(ev.target.value)}
-                />
-              </div>
-              <button className="login__submit form__submit button" type="submit" disabled={!isFormValid}>
+              <AvatarWrapper className="login__input-wrapper form__input-wrapper">
+                <label htmlFor="avatar">Avatar </label>
+                <FileUploader url={avatarUrl} setUrl={setAvatarUrl}/>
+              </AvatarWrapper>
+              <SubmitButtonWrapper className="login__submit form__submit button" type="submit" disabled={!isFormValid}>
                 Register
-              </button>
-            </form>
+              </SubmitButtonWrapper>
+            </RegisterForm>
           </RegisterFormWrapper>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
@@ -219,33 +218,52 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
-export const RegistrationForm = connect(null, mapDispatchToProps)(RegistrationFormComponent);
+export const RegistrationPage = connect(null, mapDispatchToProps)(RegistrationPageComponent);
 
-// const RegisterFormWrapper = styled.div`
-//   display: flex;
-// `;
-//
-// const RegisterForm = styled.form`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 25px;
-// `;
-//
-// const PersonalDetails = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 10px;
-// `;
 
 const UserTypeWrapper = styled.div`
   display: flex;
+  align-items: center;
+`;
+
+const AvatarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 `;
 
 const RegisterFormWrapper = styled.div`
   padding-top: 0;
 `;
 
-const UserType = styled.div`
-  display: flex;
+const RegisterForm = styled.form`
+  width: 370px;
 `;
 
+const UserType = styled.div`
+  display: flex;
+  width: 50%
+`;
+
+const UserInput = styled.input`
+  display: none;
+`;
+
+const UserLabel = styled.label<{ isChecked: boolean }>`
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border: 3px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    vertical-align: middle;
+    background-color: ${(props) => props.isChecked ? '#c7c7c7' : '#ffffff'};
+  }
+`;
+
+const SubmitButtonWrapper = styled.button`
+  margin-top: 20px;
+`;

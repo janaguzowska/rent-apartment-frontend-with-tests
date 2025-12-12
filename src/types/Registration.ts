@@ -5,6 +5,7 @@ export interface Registration {
    login: string;
    password: string;
    avatarUrl?: string;
-  isCustomer?: boolean;
+  isClient?: boolean;
   isHost?: boolean;
+  isAdmin?: boolean;
 }
