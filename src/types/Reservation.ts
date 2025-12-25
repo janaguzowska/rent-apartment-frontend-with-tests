@@ -1,14 +1,10 @@
-import {City} from './City.ts';
 import {Offer} from './Offer.ts';
+import {Insurance} from './Insurance.tsx';
+import {Tour} from './Tour.ts';
 
 export interface Reservation {
-  id?: number;
-  checkedIn?: Date;
-  checkedOut?: Date;
-  NumberOfNights?: number;
-  adultsCount?: number;
-  childrenCount?: number;
-  city: City;
-  hotel: Offer;
-  TotalPrice?: number;
+  offer: Offer;
+  participants: Participant[];
+  insurance: Insurance[];
+  tours: Tour[];
 }

@@ -1,4 +1,4 @@
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {Reviews} from './Reviews.tsx';
 import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import {AppState} from '../types/AppState.ts';
 import {Dispatch, useEffect} from 'react';
 import {actions} from '../redux/actions.ts';
 import {NearPlaceCardList} from './NearPlaceCardList.tsx';
-import {IMAGE_URL, OFFER_SEARCH_URL} from '../const.ts';
+import {IMAGE_URL, OFFER_SEARCH_URL, reservationBasePath} from '../const.ts';
 import {Amenity} from '../types/Amenity.ts';
 
 interface OfferDetailsProps {
@@ -50,7 +50,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
         <div className="offer__gallery-container container">
           <div className="offer__gallery">
             {currentOffer.images.map((image) => (
-              <div key={image.id} className="offer__image-wrapper">
+              <div key={image.name} className="offer__image-wrapper">
                 <img className="offer__image" src={`${IMAGE_URL}/${image.name}.jpg`} alt="Photo studio"/>
               </div>
             ))}
@@ -93,11 +93,14 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                 Max {currentOffer.maxAdults} adults
               </li>
             </ul>
-            <div className="offer__price">
+            <OfferPrice className="offer__price">
               <b className="offer__price-value">&euro;{currentOffer.price}</b>
               <span className="offer__price-text">&nbsp;night</span>
-            </div>
-            <div className="offer__inside">
+            </OfferPrice>
+            <ReservationLink to={reservationBasePath(id!)} className="offer__order">
+              Reserve
+            </ReservationLink>
+            <OfferInside className="offer__inside">
               <h2 className="offer__inside-title">What&apos;s inside</h2>
               <ul className="offer__inside-list">
                 {currentOffer.amenities.map((amenityItem: Amenity) => (
@@ -106,7 +109,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                   </AmenityLi>
                 ))}
               </ul>
-            </div>
+            </OfferInside>
             <div className="offer__host">
               <h2 className="offer__host-title">Meet the host</h2>
               <div className="offer__host-user user">
@@ -152,6 +155,29 @@ const OfferWrapper = styled.div`
 
 const AmenityLi = styled.li`
   max-width: 230px;
+`;
+
+const ReservationLink = styled(Link)`
+  display: flex;
+  width: 300px;
+  height: 49px;
+  background-color: #4481c3;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-top: 30px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const OfferInside = styled.div`
+  margin-top: 30px;
+`;
+
+const OfferPrice = styled.div`
+  margin-bottom: 0;
 `;
 
 const mapStateToProps = (state: AppState) => ({

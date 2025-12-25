@@ -80,7 +80,7 @@ const ReviewsComponent = ({offerId, reviews, addReview}: ReviewsProps) => {
         <div className="reviews__rating-form form__rating">
           {
             Array.from({length: 5}, (_, i) => 5 - i).map((value) => (
-              <>
+              <div key={value}>
                 <input className="form__rating-input visually-hidden" name="rating" value={value} id={`${value}-stars`}
                   type="radio" checked={rating === value} onChange={() => setRating(value)}
                 />
@@ -91,7 +91,7 @@ const ReviewsComponent = ({offerId, reviews, addReview}: ReviewsProps) => {
                     <use xlinkHref="#icon-star"></use>
                   </svg>
                 </label>
-              </>
+              </div>
             ))
           }
         </div>

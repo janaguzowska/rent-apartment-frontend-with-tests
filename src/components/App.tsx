@@ -1,10 +1,13 @@
 import {Page} from './Page.tsx';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {OfferDetails} from './OfferDetails.tsx';
 import {Main} from './Main.tsx';
 import {Favorites} from './Favorites.tsx';
 import {Login} from './Login.tsx';
+import {ReservationPage} from './ReservationPage.tsx';
 import {RegistrationPage} from './RegistrationPage.tsx';
+import {ParticipantsStep} from './ParticipantsStep.tsx';
+import {SummaryStep} from './SummaryStep.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -12,10 +15,14 @@ export const App = () => (
       <Route path="/login" element={<Login />}/>
       <Route path="/register" element={<RegistrationPage />}/>
       <Route path="/" element={<Page/>}>
-        <Route index element={<Main />}/>
-        <Route path="/offer/:id" element={<OfferDetails/>}/>
+        <Route index element={<Main />} />
+        <Route path="/offer/:id" element={<OfferDetails/>} />
+        <Route path="/offer/:id/reservation" element={<ReservationPage />}>
+          <Route index element={<Navigate to="participants" replace />} />
+          <Route path="participants" element={<ParticipantsStep />} />
+          <Route path="summary" element={<SummaryStep />}/>
+        </Route>
         <Route path="/favorites" element={<Favorites />}/>
-        <Route path="/register" element={<RegistrationPage />}/>
       </Route>
     </Routes>
   </BrowserRouter>
