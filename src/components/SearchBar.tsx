@@ -1,10 +1,15 @@
 import Select from 'react-select';
-import {useState} from 'react';
+import {Dispatch, useEffect, useRef, useState} from 'react';
 import 'react-calendar/dist/Calendar.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import CustomDateRangePicker from './CustomDateRangePicker.tsx';
 import {OccupancyConfig} from './OccupancyConfig.tsx';
 import styled from 'styled-components';
+import {api} from '../services/api.ts';
+import {Offer} from '../types/Offer.ts';
+import {actions} from '../redux/actions.ts';
+import {connect} from 'react-redux';
+import {useSearchParams} from 'react-router-dom';
 
 // type ValuePiece = Date | null;
 // type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -14,20 +19,60 @@ interface CityOption {
   label: string;
 }
 
-const cityOptionsArray = [
+const cityOptionsArray: CityOption[] = [
   {value: 1, label: 'Warsaw'},
   {value: 2, label: 'Paris'},
   {value: 3, label: 'Rome'},
+  {value: 4, label: 'Madrid'},
+  {value: 5, label: 'Amsterdam'},
+  {value: 6, label: 'Athens'},
+  {value: 7, label: 'Brussels'},
 ];
 
-export const SearchBar = () => {
+interface SearchBarProps {
+  setOffers: (offers: Offer[]) => void;
+}
+
+export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
 
   const [selectedOption, setSelectedOption] = useState<CityOption | null>(null);
+  const isUseEffectCalled = useRef(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // const [checkInDate, setCheckInDate] = useState<Value>(new Date());
+
+  useEffect(() => {
+    if (isUseEffectCalled.current) {
+      return;
+    }
+    isUseEffectCalled.current = true;
+    const urlParams = Object.fromEntries(searchParams.entries());
+    api.get<Offer[]>('/offer/search', urlParams)
+      .then((offersResponse: Offer[]) => setOffers(offersResponse));
+
+    if (urlParams.city) {
+      setSelectedOption(cityOptionsArray.find((city) => city.label === urlParams.city) as CityOption);
+    }
+
+  }, [setOffers]);
+
+  const handleSearchSubmit = (cityLabel?: string) => (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (cityLabel) {
+      setSearchParams({city: cityLabel});
+    } else {
+      setSearchParams({});
+    }
+
+    api.get<Offer[]>('/offer/search', cityLabel ? { city: cityLabel } : undefined)
+      .then((offersResponse: Offer[]) => setOffers(offersResponse));
+  };
+
 
   return (
     <div className="container">
-      <StyledForm action="#" className="reservation__form" method="get" aria-label="Destination reservation form">
+      <StyledForm action="#" className="reservation__form" method="get" aria-label="Destination reservation form" onSubmit={handleSearchSubmit(selectedOption?.label)}>
         <DestinationWrapper className="reservation__destination-wrapper">
           <span className="reservation__destination-icon">
             <svg fill="#000000" width="40px" height="40px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
@@ -36,7 +81,7 @@ export const SearchBar = () => {
               />
             </svg>
           </span>
-          <CitySelect
+          <Select
             className="reservation__city-select"
             name="destination-city"
             placeholder="Where are you going?"
@@ -80,6 +125,13 @@ export const SearchBar = () => {
   );
 };
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
+});
+
+export const SearchBar = connect(null, mapDispatchToProps)(SearchBarComponent);
+
+
 const StyledForm = styled.form`
   display: flex;
   //justify-content: space-between;
@@ -94,6 +146,17 @@ const DestinationWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 280px;
+
+  .reservation__city-select {
+    width: 100%;
+    height: 100%;
+    outline: none;
+
+    &:focus {
+      outline: none;
+      border: none;
+    }
+  }
 `;
 
 const DateWrapper = styled.div`
@@ -117,16 +180,8 @@ const SearchWrapper = styled.div`
   width: 118px;
 `;
 
-const CitySelect = styled(Select)`
-  width: 100%;
-  height: 100%;
-  outline: none;
-
-  &:focus {
-    outline: none;
-    border: none;
-  }
-`;
+// const CitySelect = styled(Select)`
+// `;
 
 const SearchButton = styled.button`
   justify-content: center;

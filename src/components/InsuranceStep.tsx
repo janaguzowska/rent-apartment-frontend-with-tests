@@ -1,6 +1,7 @@
 import {useOutletContext} from 'react-router-dom';
 import {StepperPagination} from './StepperPagination.tsx';
 import {Reservation} from '../types/Reservation.ts';
+import {INSURANCES} from '../mocks/insurances.ts';
 
 interface InsuranceContext {
   reservation: Reservation;
@@ -12,36 +13,21 @@ export const InsuranceStep = () => {
 
   const handleInsurance = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setReservation({
-      ...reservation, insurance: [{
-        ...reservation.insurance[0],
-        lifeInsurance: ev.target.value,
-      }]
+      ...reservation, insuranceId: Number(ev.target.value)
     });
   };
 
   return (
     <>
       <form>
-        <div>
-          <label>
-            Life Insurance:
-            <input type="text" name="lifeInsurance" onChange={handleInsurance} value={reservation.insurance[0].lifeInsurance}/>
-          </label>
-        </div>
-        <div>
-          <label>
-            Accident Insurance:
-            <input type="text" name="accidentInsurance"/>
-          </label>
-        </div>
-        <div>
-          <label>
-            Luggage Insurance:
-            <input type="text" name="luggageInsurance"/>
-          </label>
-        </div>
+        {INSURANCES.map((insurance) => (
+          <div key={insurance.id}>
+            <label>Life Insurance:</label>
+            <input type="checkbox" onChange={handleInsurance} value={insurance.id}/>
+          </div>
+        ))}
       </form>
-      <StepperPagination />
+      <StepperPagination/>
     </>
   );
 };

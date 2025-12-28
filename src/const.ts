@@ -7,7 +7,10 @@ export const IMAGE_URL = `${BASE_URL}/image`;
 export const AVATAR_URL = `${BASE_URL}/avatar`;
 
 export const RATING_TITLES = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
-export const STEPS_NUMBER = 3;
+export const MIN_ADULTS = 1;
+export const MAX_ADULTS = 10;
+export const MIN_CHILDREN = 0;
+export const MIN_ROOMS = 1;
 
 const offerPath = (id: string) => `/offer/${id}`;
 export const reservationBasePath = (id: string) => `${offerPath(id)}/reservation`;
@@ -16,6 +19,8 @@ const stepPath = (path: string) => (id: string) => `${reservationBasePath(id)}/$
 export const RESERVATION_STEPS: StepParams[] = [
   {label: 'Selected offer', path: offerPath},
   {label: 'Participants', path: stepPath('participants')},
+  {label: 'Insurance', path: stepPath('insurance')},
+  {label: 'Tour', path: stepPath('tour')},
   {label: 'Summary', path: stepPath('summary')},
 ];
 

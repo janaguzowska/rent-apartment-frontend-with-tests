@@ -4,7 +4,8 @@ import {StepperBar} from './StepperBar.tsx';
 
 const DEFAULT_RESERVATION = {
   participants: [{firstName: 'Adam', lastName: 'Kwiatkowski'}],
-  insurance: [{lifeInsurance: 'Life insurance'}],
+  insurance: 2,
+  tours: [1]
 };
 
 export const ReservationPage = () => {

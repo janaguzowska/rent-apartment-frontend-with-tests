@@ -1,5 +1,4 @@
 import {OfferCard} from './OfferCard.tsx';
-import {City} from '../types/City.ts';
 import {Offer} from '../types/Offer.ts';
 import {Dispatch, useState} from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -7,9 +6,10 @@ import {SortType} from '../types/SortType.ts';
 import {AppState} from '../types/AppState.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
+import {useSearchParams} from 'react-router-dom';
 
-const filteredByCity = (offers:Offer[], city?: City) =>
-  offers.filter((offer) => !city?.title || offer.city.title === city?.title);
+const filteredByCity = (offers:Offer[], cityTitle?: string) =>
+  offers.filter((offer) => !cityTitle || offer.city.title === cityTitle);
 
 
 const sortedByPrice = (offers: Offer[], sortType?: SortType | null) => !sortType ? offers : offers.toSorted((a: Offer, b: Offer) => {
@@ -26,15 +26,16 @@ const sortedByPrice = (offers: Offer[], sortType?: SortType | null) => !sortType
 });
 
 interface OffersProps {
-  currentCity?: City;
   offers: Offer[];
 }
 
 export const OffersComponent = (props: OffersProps) => {
 
-  const {currentCity, offers } = props;
+  const { offers } = props;
   const [sortType, setSortType] = useState<SortType | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
+  const [searchParams] = useSearchParams();
+  const urlParams = Object.fromEntries(searchParams.entries());
 
   const onOfferSortClick = (offerSortType: SortType) =>
     setSortType(offerSortType === sortType ? null : sortType);
@@ -46,7 +47,7 @@ export const OffersComponent = (props: OffersProps) => {
   return (
     <section className="cities__places places">
       <h2 className="visually-hidden">Places</h2>
-      <b className="places__found">{filteredByCity(offers, currentCity).length} places to stay in Amsterdam</b>
+      <b className="places__found">{filteredByCity(offers, urlParams.city).length} places to stay in {urlParams.city}</b>
       <OutsideClickHandler onOutsideClick={() => {
         setShowSortOptions(false);
       }}
@@ -78,7 +79,7 @@ export const OffersComponent = (props: OffersProps) => {
         </form>
       </OutsideClickHandler>
       <div className="cities__places-list places__list tabs__content">
-        {sortedByPrice(filteredByCity(offers, currentCity), sortType).map((currentOffer) => (
+        {sortedByPrice(filteredByCity(offers, urlParams.city), sortType).map((currentOffer) => (
           <OfferCard key={currentOffer.id} currentOffer={currentOffer} />
         ))}
       </div>

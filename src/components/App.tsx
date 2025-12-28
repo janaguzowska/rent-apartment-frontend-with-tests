@@ -8,6 +8,8 @@ import {ReservationPage} from './ReservationPage.tsx';
 import {RegistrationPage} from './RegistrationPage.tsx';
 import {ParticipantsStep} from './ParticipantsStep.tsx';
 import {SummaryStep} from './SummaryStep.tsx';
+import {InsuranceStep} from './InsuranceStep.tsx';
+import {TourStep} from './TourStep.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -20,6 +22,8 @@ export const App = () => (
         <Route path="/offer/:id/reservation" element={<ReservationPage />}>
           <Route index element={<Navigate to="participants" replace />} />
           <Route path="participants" element={<ParticipantsStep />} />
+          <Route path="insurance" element={<InsuranceStep />} />
+          <Route path="tour" element={<TourStep />} />
           <Route path="summary" element={<SummaryStep />}/>
         </Route>
         <Route path="/favorites" element={<Favorites />}/>

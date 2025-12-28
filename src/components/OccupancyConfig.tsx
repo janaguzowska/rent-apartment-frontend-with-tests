@@ -1,34 +1,14 @@
 import styled from 'styled-components';
 import Switch from 'react-switch';
 import {useState} from 'react';
-
-const HasPetsToogle = () => {
-  const [checked, setChecked] = useState(false);
-
-  return (
-    <Switch
-      checked={checked}
-      onChange={setChecked}
-      onColor="#86d3ff"
-      onHandleColor="#2693e6"
-      handleDiameter={30}
-      uncheckedIcon={false}
-      checkedIcon={false}
-      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-      height={20}
-      width={60}
-    />
-  );
-};
-
+import {MIN_ADULTS, MIN_CHILDREN, MIN_ROOMS} from '../const.ts';
 
 export const OccupancyConfig = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
-  const [hasPets, setHasPets] = useState(false);
+  const [hasPets, setHasPets] = useState(true);
 
   type CounterType = 'adults' | 'children' | 'rooms';
 
@@ -49,13 +29,13 @@ export const OccupancyConfig = () => {
   const handleCountDown = (type: CounterType) => {
     switch (type) {
       case 'adults':
-        setAdults((prevAdults) => prevAdults > 1 ? prevAdults - 1 : prevAdults);
+        setAdults((prevAdults) => prevAdults > MIN_ADULTS ? prevAdults - 1 : prevAdults);
         break;
       case 'children':
-        setChildren((prevChildren) => prevChildren > 0 ? prevChildren - 1 : prevChildren);
+        setChildren((prevChildren) => prevChildren > MIN_CHILDREN ? prevChildren - 1 : prevChildren);
         break;
       case 'rooms':
-        setRooms((prevRooms) => prevRooms > 1 ? prevRooms - 1 : prevRooms);
+        setRooms((prevRooms) => prevRooms > MIN_ROOMS ? prevRooms - 1 : prevRooms);
         break;
     }
   };
@@ -81,7 +61,7 @@ export const OccupancyConfig = () => {
               </path>
             </svg>
           </div>
-          <div>{adults} adults • {children} children • {rooms} room {hasPets ? '• Pet' : ''}</div>
+          <div>{adults} adults • {children} children • {rooms} room {hasPets ? '• pet' : ''}</div>
           <div className="occupancy-config__icon-dropdown">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30px">
               <path
@@ -170,11 +150,23 @@ export const OccupancyConfig = () => {
           <OccupancyPets className="occupancy__pets">
             <div>Traveling with pets?</div>
             <HasPetsWrapper className="occupancy__pets-toggle">
-              <HasPetsToogle/>
+              <Switch
+                checked={hasPets}
+                onChange={setHasPets}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={60}
+              />
             </HasPetsWrapper>
           </OccupancyPets>
         </div>
-        <OccupancyConfirmButton type="button">
+        <OccupancyConfirmButton onClick={() => setIsDropdownOpen(false)} className={isDropdownOpen ? '' : 'visually-hidden'} type="button">
           <span>Done</span>
         </OccupancyConfirmButton>
       </OccupancyPopup>
