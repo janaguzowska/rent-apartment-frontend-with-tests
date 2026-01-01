@@ -11,8 +11,6 @@ import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
 
-// type ValuePiece = Date | null;
-// type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CityOption {
   value: number;
@@ -35,11 +33,13 @@ interface SearchBarProps {
 
 export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
 
-  const [selectedOption, setSelectedOption] = useState<CityOption | null>(null);
+  const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [rooms, setRooms] = useState(1);
+  const [hasPets, setHasPets] = useState(false);
   const isUseEffectCalled = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
-
-  // const [checkInDate, setCheckInDate] = useState<Value>(new Date());
 
   useEffect(() => {
     if (isUseEffectCalled.current) {
@@ -51,28 +51,49 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
       .then((offersResponse: Offer[]) => setOffers(offersResponse));
 
     if (urlParams.city) {
-      setSelectedOption(cityOptionsArray.find((city) => city.label === urlParams.city) as CityOption);
+      setSelectedCity(cityOptionsArray.find((city) => city.label === urlParams.city) as CityOption);
     }
-
+    if (urlParams.adults) {
+      setAdults(Number(urlParams.adults));
+    }
+    if (urlParams.children) {
+      setChildren(Number(urlParams.children));
+    }
+    if (urlParams.rooms) {
+      setRooms(Number(urlParams.rooms));
+    }
+    if (urlParams.hasPets) {
+      setHasPets(urlParams.hasPets === 'true');
+    }
   }, [setOffers]);
 
-  const handleSearchSubmit = (cityLabel?: string) => (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (cityLabel) {
-      setSearchParams({city: cityLabel});
-    } else {
-      setSearchParams({});
+    const params = new URLSearchParams();
+    if (selectedCity?.label) {
+      params.append('city', selectedCity.label);
     }
+    params.append('adults', adults.toString());
+    if (children) {
+      params.append('children', children.toString());
+    }
+    params.append('rooms', rooms.toString());
+    if (hasPets) {
+      params.append('hasPets', 'true');
+    }
+    setSearchParams(params);
 
-    api.get<Offer[]>('/offer/search', cityLabel ? { city: cityLabel } : undefined)
+    const urlParams = Object.fromEntries(params.entries());
+    api.get<Offer[]>('/offer/search', urlParams)
       .then((offersResponse: Offer[]) => setOffers(offersResponse));
   };
 
-
   return (
     <div className="container">
-      <StyledForm action="#" className="reservation__form" method="get" aria-label="Destination reservation form" onSubmit={handleSearchSubmit(selectedOption?.label)}>
+      <StyledForm action="#" className="reservation__form" method="get" aria-label="Destination reservation form"
+        onSubmit={handleSearchSubmit}
+      >
         <DestinationWrapper className="reservation__destination-wrapper">
           <span className="reservation__destination-icon">
             <svg fill="#000000" width="40px" height="40px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
@@ -85,8 +106,8 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
             className="reservation__city-select"
             name="destination-city"
             placeholder="Where are you going?"
-            value={selectedOption}
-            onChange={setSelectedOption}
+            value={selectedCity}
+            onChange={setSelectedCity}
             options={cityOptionsArray}
             styles={{
               control: (baseStyles) => ({
@@ -115,7 +136,9 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
           <CustomDateRangePicker/>
         </DateWrapper>
         <OccupancyWrapper className="reservation__occupancy">
-          <OccupancyConfig/>
+          <OccupancyConfig adults={adults} childrenNumber={children} rooms={rooms} hasPets={hasPets}
+            setAdults={setAdults} setChildren={setChildren} setRooms={setRooms} setHasPets={setHasPets}
+          />
         </OccupancyWrapper>
         <SearchWrapper className="reservation__search-wrapper">
           <SearchButton className="reservation__search-button" type="submit">Search</SearchButton>
@@ -193,4 +216,4 @@ const SearchButton = styled.button`
   color: white;
   font-size: 1rem;
   font-weight: bold;
- `;
+`;

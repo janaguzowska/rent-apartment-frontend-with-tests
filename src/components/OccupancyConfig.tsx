@@ -1,27 +1,35 @@
 import styled from 'styled-components';
 import Switch from 'react-switch';
 import {useState} from 'react';
-import {MIN_ADULTS, MIN_CHILDREN, MIN_ROOMS} from '../const.ts';
+import {MIN_ADULTS} from '../const.ts';
 
-export const OccupancyConfig = () => {
+interface OccupancyConfigProps {
+ adults: number;
+  childrenNumber: number;
+  rooms: number;
+  hasPets: boolean;
+  setAdults: (adults: number) => void;
+  setChildren: (children: number) => void;
+  setRooms: (rooms: number) => void;
+  setHasPets: (hasPets: boolean) => void;
+}
+
+export const OccupancyConfig = (props: OccupancyConfigProps) => {
+  const {adults, childrenNumber: children, rooms, hasPets, setAdults, setChildren, setRooms, setHasPets} = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [rooms, setRooms] = useState(1);
-  const [hasPets, setHasPets] = useState(true);
 
   type CounterType = 'adults' | 'children' | 'rooms';
 
   const handleCountUp = (type: CounterType) => {
     switch (type) {
       case 'adults':
-        setAdults((prevAdults) => prevAdults + 1);
+        setAdults(adults + 1);
         break;
       case 'children':
-        setChildren((prevChildren) => prevChildren + 1);
+        setChildren(children + 1);
         break;
       case 'rooms':
-        setRooms((prevRooms) => prevRooms + 1);
+        setRooms(rooms + 1);
         break;
     }
   };
@@ -29,13 +37,13 @@ export const OccupancyConfig = () => {
   const handleCountDown = (type: CounterType) => {
     switch (type) {
       case 'adults':
-        setAdults((prevAdults) => prevAdults > MIN_ADULTS ? prevAdults - 1 : prevAdults);
+        setAdults(adults > MIN_ADULTS ? adults - 1 : adults);
         break;
       case 'children':
-        setChildren((prevChildren) => prevChildren > MIN_CHILDREN ? prevChildren - 1 : prevChildren);
+        setChildren(Math.max(children - 1, 0));
         break;
       case 'rooms':
-        setRooms((prevRooms) => prevRooms > MIN_ROOMS ? prevRooms - 1 : prevRooms);
+        setRooms(Math.max(rooms - 1, 1));
         break;
     }
   };
@@ -43,6 +51,7 @@ export const OccupancyConfig = () => {
   const handleOpenDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
 
   return (
     <OccupancyConfigWrapper>
