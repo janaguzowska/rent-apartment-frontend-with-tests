@@ -11,7 +11,6 @@ import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
 
-
 interface CityOption {
   value: number;
   label: string;
@@ -116,6 +115,7 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
                 backgroundColor: '#f5f5f5',
                 border: 'none',
                 fontSize: '1rem',
+                boxShadow: 'none',
               }),
               indicatorsContainer: (baseStyles) => ({
                 ...baseStyles,

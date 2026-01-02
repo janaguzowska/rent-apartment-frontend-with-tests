@@ -92,6 +92,12 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <li className="offer__feature offer__feature--adults">
                 Max {currentOffer.maxAdults} adults
               </li>
+              <li className="offer__feature offer__feature--adults">
+                {currentOffer.children } children
+              </li>
+              <li className="offer__feature">
+                {currentOffer.hasPets && 'Pets allowed'}
+              </li>
             </ul>
             <OfferPrice className="offer__price">
               <b className="offer__price-value">&euro;{currentOffer.price}</b>

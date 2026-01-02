@@ -19,6 +19,8 @@ export interface Offer {
   description: string;
   bedrooms: number;
   maxAdults: number;
+  children: number;
+  hasPets: boolean;
   amenities: Amenity[];
   host: Host;
   images: Image[];
