@@ -10,6 +10,7 @@ import {Offer} from '../types/Offer.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
+import {dateToString, stringToDate} from '../util/dateUtil.ts';
 
 interface CityOption {
   value: number;
@@ -39,6 +40,10 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
   const [hasPets, setHasPets] = useState(false);
   const isUseEffectCalled = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
 
   useEffect(() => {
     if (isUseEffectCalled.current) {
@@ -64,6 +69,12 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
     if (urlParams.hasPets) {
       setHasPets(urlParams.hasPets === 'true');
     }
+    if (urlParams.checkIn) {
+      setDateRange([stringToDate(urlParams.checkIn), dateRange[1]]);
+    }
+    if (urlParams.checkOut) {
+      setDateRange([dateRange[0], stringToDate(urlParams.checkOut)]);
+    }
   }, [setOffers]);
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,6 +91,12 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
     params.append('rooms', rooms.toString());
     if (hasPets) {
       params.append('hasPets', 'true');
+    }
+    if (dateRange[0]) {
+      params.append('checkIn', dateToString(dateRange[0]));
+    }
+    if (dateRange[1]) {
+      params.append('checkOut', dateToString(dateRange[1]));
     }
     setSearchParams(params);
 
@@ -133,7 +150,7 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
               </path>
             </svg>
           </span>
-          <CustomDateRangePicker/>
+          <CustomDateRangePicker dateRange={dateRange} setDateRange={setDateRange}/>
         </DateWrapper>
         <OccupancyWrapper className="reservation__occupancy">
           <OccupancyConfig adults={adults} childrenNumber={children} rooms={rooms} hasPets={hasPets}

@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useState} from 'react';
+import React, {forwardRef} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled, {createGlobalStyle} from 'styled-components';
@@ -16,36 +16,39 @@ const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
 
 CustomInput.displayName = 'CustomInput';
 
-const CustomDateRangePicker: React.FC = () => {
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
-    null,
-    null,
-  ]);
+interface CustomDateRangePickerProps {
+  dateRange: [Date | null, Date | null];
+  setDateRange: (dateRange: [Date | null, Date | null]) => void;
+}
 
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-
-  useEffect(() => {
-    if (dateRange[0]) {
-      setStartDate(dateRange[0]);
-    } else {
-      setStartDate(undefined);
-    }
-
-    if (dateRange[1]) {
-      setEndDate(dateRange[1]);
-    } else {
-      setEndDate(undefined);
-    }
-  }, [dateRange]);
+const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
+  const {dateRange, setDateRange} = props;
+  // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  //
+  // useEffect(() => {
+  //   if (dateRange[0]) {
+  //     setStartDate(dateRange[0]);
+  //   } else {
+  //     setStartDate(undefined);
+  //   }
+  //
+  //   if (dateRange[1]) {
+  //     setEndDate(dateRange[1]);
+  //   } else {
+  //     setEndDate(undefined);
+  //   }
+  // }, [dateRange]);
 
   return (
     <>
-      <DatePickerGlobalStyles />
+      <DatePickerGlobalStyles/>
       <DatePicker
         selectsRange // Date range selecting enabled
-        startDate={startDate}
-        endDate={endDate}
+        // startDate={startDate}
+        // endDate={endDate}
+        startDate={dateRange[0]}
+        endDate={dateRange[1]}
         onChange={(update) => {
           setDateRange(update);
         }}
