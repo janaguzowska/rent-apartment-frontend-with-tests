@@ -1,14 +1,9 @@
-import {City} from './City.ts';
-import {Offer} from './Offer.ts';
-
 export interface SearchBarParams {
-  id?: number;
-  checkedIn?: Date;
-  checkedOut?: Date;
-  NumberOfNights?: number;
-  adultsCount?: number;
-  childrenCount?: number;
-  city: City;
-  hotel: Offer;
-  TotalPrice?: number;
+  city?: string;
+  checkIn?: Date;
+  checkOut?: Date;
+  adults?: number;
+  children?: number;
+  rooms?: number;
+  hasPets?: boolean;
 }

@@ -17,8 +17,8 @@ const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
 CustomInput.displayName = 'CustomInput';
 
 interface CustomDateRangePickerProps {
-  dateRange: [Date | null, Date | null];
-  setDateRange: (dateRange: [Date | null, Date | null]) => void;
+  dateRange: [Date | undefined, Date | undefined];
+  setDateRange: (dateRange: [Date | undefined, Date | undefined]) => void;
 }
 
 const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
@@ -49,8 +49,8 @@ const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
         // endDate={endDate}
         startDate={dateRange[0]}
         endDate={dateRange[1]}
-        onChange={(update) => {
-          setDateRange(update);
+        onChange={(newDateRange) => {
+          setDateRange([newDateRange[0] || undefined, newDateRange[1] || undefined]);
         }}
         calendarStartDay={1} // Starts from Monday
         customInput={<CustomInput/>}

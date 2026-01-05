@@ -1,6 +1,7 @@
 import {Offer} from './Offer.ts';
 import {Review} from './Review.ts';
 import {User} from './User.ts';
+import {SearchBarParams} from './SearchBarParams.ts';
 
 export interface ActionPayload {
   offers?: Offer[];
@@ -8,4 +9,5 @@ export interface ActionPayload {
   id?: number;
   review?: Review;
   user?: User;
+  searchBarParams?: SearchBarParams;
 }

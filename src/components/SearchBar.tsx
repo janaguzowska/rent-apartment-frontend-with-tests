@@ -11,6 +11,7 @@ import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
 import {dateToString, stringToDate} from '../util/dateUtil.ts';
+import {SearchBarParams} from '../types/SearchBarParams.ts';
 
 interface CityOption {
   value: number;
@@ -29,9 +30,10 @@ const cityOptionsArray: CityOption[] = [
 
 interface SearchBarProps {
   setOffers: (offers: Offer[]) => void;
+  setSearchBarParams: (searchBarParams: SearchBarParams) => void;
 }
 
-export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
+export const SearchBarComponent = ({setOffers, setSearchBarParams}: SearchBarProps) => {
 
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
   const [adults, setAdults] = useState(2);
@@ -40,10 +42,7 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
   const [hasPets, setHasPets] = useState(false);
   const isUseEffectCalled = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
-    null,
-    null,
-  ]);
+  const [dateRange, setDateRange] = useState<[Date | undefined, Date | undefined]>([undefined, undefined]);
 
   useEffect(() => {
     if (isUseEffectCalled.current) {
@@ -99,6 +98,15 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
       params.append('checkOut', dateToString(dateRange[1]));
     }
     setSearchParams(params);
+    setSearchBarParams({
+      city: selectedCity?.label,
+      checkIn: dateRange[0],
+      checkOut: dateRange[1],
+      adults,
+      children,
+      rooms,
+      hasPets
+    });
 
     const urlParams = Object.fromEntries(params.entries());
     api.get<Offer[]>('/offer/search', urlParams)
@@ -166,7 +174,8 @@ export const SearchBarComponent = ({setOffers}: SearchBarProps) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
+  setSearchBarParams: (searchBarParams: SearchBarParams) => dispatch(actions.setSearchBarParams(searchBarParams))
 });
 
 export const SearchBar = connect(null, mapDispatchToProps)(SearchBarComponent);
