@@ -29,7 +29,7 @@ export const offerReducer = (state: OfferState = defaultState, action: PayloadAc
     case ActionType.SetCurrentOffer:
       return {...state, currentOffer: state.offers.find((offer) => offer.id === Number(action.payload.id))};
     case ActionType.SetSearchBarParams:
-      return {...state, searchBarParams: action.payload.searchBarParams};
+      return {...state, searchBarParams: action.payload.searchBarParams!};
 
     default:
       return state;

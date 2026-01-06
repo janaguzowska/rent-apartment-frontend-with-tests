@@ -92,10 +92,10 @@ export const SearchBarComponent = ({setOffers, setSearchBarParams}: SearchBarPro
       params.append('hasPets', 'true');
     }
     if (dateRange[0]) {
-      params.append('checkIn', dateToString(dateRange[0]));
+      params.append('checkIn', dateToString(dateRange[0])!);
     }
     if (dateRange[1]) {
-      params.append('checkOut', dateToString(dateRange[1]));
+      params.append('checkOut', dateToString(dateRange[1])!);
     }
     setSearchParams(params);
     setSearchBarParams({

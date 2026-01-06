@@ -6,4 +6,6 @@ export interface Reservation {
   participants: Participant[];
   insuranceId: number;
   tours: Tour[];
+  checkIn: Date;
+  checkOut: Date;
 }
