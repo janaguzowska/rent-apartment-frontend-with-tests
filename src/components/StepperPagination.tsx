@@ -1,12 +1,18 @@
 import styled from 'styled-components';
-import {getBackStepPath, getNextStepPath, isBackButtonEnabled, isNextButtonEnabled} from '../const.ts';
+import {getBackStepPath, getNextStepPath, isBackButtonEnabled, isNextButtonEnabled, RESERVATION_URL} from '../const.ts';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
+import {api} from '../services/api.ts';
+import {Reservation} from '../types/Reservation.ts';
 
+interface StepperPaginationProps {
+  reservation?: Reservation;
+}
 
-export const StepperPagination = () => {
+export const StepperPagination = (props: StepperPaginationProps) => {
+  const {reservation} = props;
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { pathname } = useLocation();
+  const {id} = useParams();
+  const {pathname} = useLocation();
 
   const handleBackStepClick = () => {
     if (isBackButtonEnabled(id!, pathname)) {
@@ -17,14 +23,19 @@ export const StepperPagination = () => {
   const handleNextStepClick = () => {
     if (isNextButtonEnabled(id!, pathname)) {
       navigate(getNextStepPath(id!, pathname));
+    } else {
+      api.post<void>(`${RESERVATION_URL}/add`, undefined, reservation);
+      // .then(handleThen)
+      // .catch(handleCatch);
     }
   };
 
   // console.log(`isNextEnabled = ${ isNextEnabled}`);
+  const nextButtonTitle = isNextButtonEnabled(id!, pathname) ? 'Next step' : 'Complete';
   return (
     <StepPaginationWrapper className="container">
       <Button onClick={handleBackStepClick} disabled={!isBackButtonEnabled}>Previous step</Button>
-      <Button onClick={handleNextStepClick} disabled={!isNextButtonEnabled}>Next step</Button>
+      <Button onClick={handleNextStepClick} disabled={!isNextButtonEnabled}>{nextButtonTitle}</Button>
     </StepPaginationWrapper>
   );
 };
@@ -33,7 +44,6 @@ const StepPaginationWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 `;
 
 const Button = styled.button`

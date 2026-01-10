@@ -6,5 +6,6 @@ export enum ActionType {
   AddReview = 'AddReview',
   setUser = 'setUser',
   Logout = 'Logout',
+  SetReservation = 'SetReservations',
 }
 

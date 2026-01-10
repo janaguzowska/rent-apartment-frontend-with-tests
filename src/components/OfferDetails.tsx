@@ -9,6 +9,8 @@ import {actions} from '../redux/actions.ts';
 import {NearPlaceCardList} from './NearPlaceCardList.tsx';
 import {IMAGE_URL, OFFER_SEARCH_URL, reservationBasePath} from '../const.ts';
 import {Amenity} from '../types/Amenity.ts';
+import CustomDateRangePicker from './CustomDateRangePicker.tsx';
+import {Reservation} from '../types/Reservation.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
@@ -16,10 +18,14 @@ interface OfferDetailsProps {
   currentOffer?: Offer;
   setOffers: (offers: Offer[]) => void;
   offers: Offer[];
+  reservation: Reservation;
+  setReservation: (reservation: Reservation) => void;
 }
 
 const OfferDetailsComponent = (props: OfferDetailsProps) => {
-  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers} = props;
+  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation} = props;
+  // const [searchParams, setSearchParams] = useSearchParams();
+
   const {id} = useParams();
 
   useEffect(() => {
@@ -38,6 +44,14 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
 
   const handleBookmarkClick = () => {
     toggleFavorite(currentOffer!);
+  };
+
+  const handleDateRangeChange = (dateRange: [Date | undefined, Date | undefined]) => {
+    setReservation({
+      ...reservation,
+      checkIn: dateRange[0],
+      checkOut: dateRange[1],
+    });
   };
 
   if (!currentOffer) {
@@ -103,6 +117,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <b className="offer__price-value">&euro;{currentOffer.price}</b>
               <span className="offer__price-text">&nbsp;night</span>
             </OfferPrice>
+            <CustomDateRangePicker dateRange={[reservation.checkIn, reservation.checkOut]} setDateRange={handleDateRangeChange}/>
             <ReservationLink to={reservationBasePath(id!)} className="offer__order">
               Reserve
             </ReservationLink>
@@ -189,12 +204,14 @@ const OfferPrice = styled.div`
 const mapStateToProps = (state: AppState) => ({
   currentOffer: state.offerState.currentOffer,
   offers: state.offerState.offers,
+  reservation: state.reservationState.reservation,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer)),
   setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
-  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
+  setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
 });
 
 export const OfferDetails = connect(mapStateToProps, mapDispatchToProps)(OfferDetailsComponent);

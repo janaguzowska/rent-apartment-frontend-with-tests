@@ -12,7 +12,7 @@ export const SummaryStep = () => {
   return (
     <div>
       <span>FirstName: {reservation.participants[0].firstName}</span>
-      <StepperPagination />
+      <StepperPagination reservation={reservation}/>
     </div>
   );
 };

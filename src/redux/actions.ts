@@ -3,6 +3,7 @@ import {Offer} from '../types/Offer.ts';
 import {Review} from '../types/Review.ts';
 import {User} from '../types/User.ts';
 import {SearchBarParams} from '../types/SearchBarParams.ts';
+import {Reservation} from '../types/Reservation.ts';
 
 export const actions = {
   setOffers: (offers: Offer[]) => ({
@@ -31,5 +32,9 @@ export const actions = {
   setSearchBarParams: (searchBarParams: SearchBarParams) => ({
     type: ActionType.SetSearchBarParams,
     payload: { searchBarParams }
-  })
+  }),
+  setReservation: (reservation: Reservation) => ({
+    type: ActionType.SetReservation,
+    payload: { reservation },
+  }),
 };
