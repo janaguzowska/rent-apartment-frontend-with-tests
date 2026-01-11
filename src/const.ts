@@ -20,8 +20,8 @@ const stepPath = (path: string) => (id: string) => `${reservationBasePath(id)}/$
 export const RESERVATION_STEPS: StepParams[] = [
   {label: 'Selected offer', path: offerPath},
   {label: 'Participants', path: stepPath('participants')},
-  {label: 'Insurance', path: stepPath('insurance')},
-  {label: 'Tour', path: stepPath('tour')},
+  // {label: 'Insurance', path: stepPath('insurance')},
+  // {label: 'Tour', path: stepPath('tour')},
   {label: 'Summary', path: stepPath('summary')},
 ];
 

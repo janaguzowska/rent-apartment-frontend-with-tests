@@ -1,5 +1,5 @@
-interface Participant {
+export interface Participant {
   firstName: string;
   lastName: string;
-  address: string;
+  address?: string;
 }

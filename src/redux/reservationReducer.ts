@@ -8,7 +8,11 @@ interface ReservationState {
 }
 
 const defaultState: ReservationState = ({
-  reservation: {},
+  reservation: {
+    participants: [{firstName: '', lastName: ''}],
+    insuranceId: undefined,
+    tours: [],
+  }
 });
 
 export const reservationReducer = (state: ReservationState = defaultState, action: PayloadAction<ActionPayload, ActionType>) => {

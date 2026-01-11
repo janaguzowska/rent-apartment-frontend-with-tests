@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
 import {dateToString, stringToDate} from '../util/dateUtil.ts';
 import {SearchBarParams} from '../types/SearchBarParams.ts';
+import {DateRange} from '../types/DateRange.ts';
 
 interface CityOption {
   value: number;
@@ -42,7 +43,7 @@ export const SearchBarComponent = ({setOffers, setSearchBarParams}: SearchBarPro
   const [hasPets, setHasPets] = useState(false);
   const isUseEffectCalled = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [dateRange, setDateRange] = useState<[Date | undefined, Date | undefined]>([undefined, undefined]);
+  const [dateRange, setDateRange] = useState<DateRange>([undefined, undefined]);
 
   useEffect(() => {
     if (isUseEffectCalled.current) {

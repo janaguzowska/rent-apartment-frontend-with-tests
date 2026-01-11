@@ -2,6 +2,7 @@ import React, {forwardRef} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled, {createGlobalStyle} from 'styled-components';
+import {DateRange} from '../types/DateRange.ts';
 
 const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   (props, ref) => (
@@ -17,8 +18,8 @@ const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
 CustomInput.displayName = 'CustomInput';
 
 interface CustomDateRangePickerProps {
-  dateRange: [Date | undefined, Date | undefined];
-  setDateRange: (dateRange: [Date | undefined, Date | undefined]) => void;
+  dateRange: DateRange;
+  setDateRange: (dateRange: DateRange) => void;
 }
 
 const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
@@ -55,6 +56,7 @@ const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
         calendarStartDay={1} // Starts from Monday
         customInput={<CustomInput/>}
         wrapperClassName="custom-datepicker-wrapper"
+        autoComplete="off"
       />
     </>
   );

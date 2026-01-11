@@ -1,4 +1,4 @@
-import {Link, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Reviews} from './Reviews.tsx';
 import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
@@ -11,6 +11,8 @@ import {IMAGE_URL, OFFER_SEARCH_URL, reservationBasePath} from '../const.ts';
 import {Amenity} from '../types/Amenity.ts';
 import CustomDateRangePicker from './CustomDateRangePicker.tsx';
 import {Reservation} from '../types/Reservation.ts';
+import {Controller, FieldErrors, useForm} from 'react-hook-form';
+import {DateRange} from '../types/DateRange.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
@@ -22,11 +24,29 @@ interface OfferDetailsProps {
   setReservation: (reservation: Reservation) => void;
 }
 
+interface FormValues {
+  dateRange: DateRange;
+}
+
 const OfferDetailsComponent = (props: OfferDetailsProps) => {
   const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation} = props;
   // const [searchParams, setSearchParams] = useSearchParams();
 
   const {id} = useParams();
+  const navigate = useNavigate();
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {
+    control,
+    handleSubmit,
+    formState,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  } = useForm({
+    defaultValues: {
+      dateRange: [reservation.checkIn, reservation.checkOut] as DateRange,
+    },
+  });
+  const {errors} = formState as {errors: FieldErrors<FormValues>};
 
   useEffect(() => {
     if (offers.length === 0) {
@@ -39,6 +59,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
   useEffect(() => {
     if (offers.some((offer) => offer.id === Number(id)) && !currentOffer) {
       setCurrentOffer(Number(id));
+      setReservation({...reservation, offerId: Number(id)});
     }
   }, [id, setCurrentOffer, offers, currentOffer]);
 
@@ -46,12 +67,8 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
     toggleFavorite(currentOffer!);
   };
 
-  const handleDateRangeChange = (dateRange: [Date | undefined, Date | undefined]) => {
-    setReservation({
-      ...reservation,
-      checkIn: dateRange[0],
-      checkOut: dateRange[1],
-    });
+  const onSubmit = () => {
+    navigate(reservationBasePath(id!));
   };
 
   if (!currentOffer) {
@@ -117,10 +134,35 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <b className="offer__price-value">&euro;{currentOffer.price}</b>
               <span className="offer__price-text">&nbsp;night</span>
             </OfferPrice>
-            <CustomDateRangePicker dateRange={[reservation.checkIn, reservation.checkOut]} setDateRange={handleDateRangeChange}/>
-            <ReservationLink to={reservationBasePath(id!)} className="offer__order">
-              Reserve
-            </ReservationLink>
+            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+            <form action="#" onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                control={control}
+                name="dateRange"
+                rules={{
+                  validate: (value: DateRange) => (value[0] && value[1]) ? undefined : 'Please select a date range',
+                }}
+                render={({field}) => (
+                  <CustomDateRangePicker
+                    dateRange={field.value}
+                    setDateRange={(dateRange) => {
+                      field.onChange(dateRange);
+                      setReservation({
+                        ...reservation,
+                        checkIn: dateRange[0],
+                        checkOut: dateRange[1],
+                      });
+                    }}
+                  />
+                )}
+              />
+              {errors.dateRange && (
+                <p style={{color: 'red', marginTop: '10px'}}>{errors.dateRange.message}</p>
+              )}
+              <ReservationButton type="submit" className="offer__order">
+                Reserve
+              </ReservationButton>
+            </form>
             <OfferInside className="offer__inside">
               <h2 className="offer__inside-title">What&apos;s inside</h2>
               <ul className="offer__inside-list">
@@ -178,7 +220,7 @@ const AmenityLi = styled.li`
   max-width: 230px;
 `;
 
-const ReservationLink = styled(Link)`
+const ReservationButton = styled.button`
   display: flex;
   width: 300px;
   height: 49px;
@@ -187,6 +229,10 @@ const ReservationLink = styled(Link)`
   align-items: center;
   color: white;
   margin-top: 30px;
+  //border: none;
+  //cursor: pointer;
+  //font-family: inherit;
+  //font-size: inherit;
 
   &:hover {
     opacity: 0.7;

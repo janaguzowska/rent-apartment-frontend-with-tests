@@ -1,42 +1,60 @@
 import {Outlet, useParams} from 'react-router-dom';
-import {useState} from 'react';
+import {Dispatch, useEffect} from 'react';
 import {StepperBar} from './StepperBar.tsx';
 import {AppState} from '../types/AppState.ts';
 import {connect} from 'react-redux';
-import {SearchBarParams} from '../types/SearchBarParams.ts';
-
-const DEFAULT_RESERVATION = {
-  participants: [{firstName: 'Adam', lastName: 'Kwiatkowski'}],
-  insurance: 2,
-  tours: [1],
-  checkIn: new Date(),
-  checkOut: new Date(),
-};
+import {OFFER_SEARCH_URL} from '../const.ts';
+import {Offer} from '../types/Offer.ts';
+import {actions} from '../redux/actions.ts';
+import {Reservation} from '../types/Reservation.ts';
 
 interface ReservationPageProps {
-  searchBarParams: SearchBarParams;
+  offers: Offer[];
+  reservation: Reservation;
+  setCurrentOffer: (id: number) => void;
+  setOffers: (offers: Offer[]) => void;
+  setReservation: (reservation: Reservation) => void;
+  currentOffer?: Offer;
 }
 
+
 const ReservationPageComponent = (props: ReservationPageProps) => {
-  const {searchBarParams} = props;
+  const { offers, reservation, setCurrentOffer, setOffers, setReservation, currentOffer} = props;
   const {id} = useParams();
-  const [reservation, setReservation] = useState({
-    ...DEFAULT_RESERVATION,
-    offerId: Number(id),
-    checkIn: searchBarParams.checkIn || DEFAULT_RESERVATION.checkIn,
-    checkOut: searchBarParams.checkOut || DEFAULT_RESERVATION.checkOut,
-  });
+
+  useEffect(() => {
+    if (offers.length === 0) {
+      fetch(OFFER_SEARCH_URL)
+        .then((response) => response.json())
+        .then((responseOffers: Offer[]) => setOffers(responseOffers));
+    } else {
+      if (!currentOffer) {
+        setCurrentOffer(Number(id));
+      }
+      if (!reservation.offerId) {
+        setReservation({...reservation, offerId: Number(id)});
+      }
+    }
+  }, [id, offers, reservation, setCurrentOffer, setOffers, setReservation, currentOffer]);
 
   return (
     <div>
       <StepperBar />
-      <Outlet context={{reservation, setReservation}}/>
+      <Outlet />
     </div>
   );
 };
 
 const mapStateToProps = (state: AppState) => ({
-  searchBarParams: state.offerState.searchBarParams,
+  offers: state.offerState.offers,
+  reservation: state.reservationState.reservation,
+  currentOffer: state.offerState.currentOffer,
 });
 
-export const ReservationPage = connect(mapStateToProps)(ReservationPageComponent);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
+  setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
+});
+
+export const ReservationPage = connect(mapStateToProps, mapDispatchToProps)(ReservationPageComponent);
