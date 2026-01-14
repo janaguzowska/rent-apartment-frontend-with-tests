@@ -25,6 +25,7 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   // const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [confirmPasswordBlurred, setConfirmPasswordBlurred] = useState(false);
 
 
   const doPasswordsMatch = password === confirmPassword;
@@ -38,6 +39,13 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
     isEmailValid &&
     isLoginValid &&
     (isClient || isHost);
+
+  console.log(`doPasswordsMatch = ${doPasswordsMatch}`);
+  console.log(`isEmailValid = ${isEmailValid}`);
+  console.log(`isLoginValid = ${isLoginValid}`);
+  console.log(`isClient = ${isClient}`);
+  console.log(`isHost = ${isHost}`);
+  console.log(`confirmPasswordBlurred = ${confirmPasswordBlurred}`);
 
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
@@ -60,12 +68,15 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
     const url = '/register';
     api.post<User>(`${url}`, undefined, registrationData)
       .then((response: User) => {
+        const credentials = btoa(`${email.trim()}:${password}`);
+        localStorage.setItem('credentials', credentials);
         setUser(response);
         navigate('/');
       })
       .catch(() => alert('Błąd przy rejestracji. Spróbuj ponownie.'));
 
   };
+
 
   return (
     <div className="page page--gray page--login">
@@ -143,7 +154,13 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
                   required
                   value={confirmPassword}
                   onChange={(ev) => setConfirmPassword(ev.target.value)}
+                  onBlur={() => setConfirmPasswordBlurred(true)}
                 />
+                {confirmPasswordBlurred && !doPasswordsMatch && (
+                  <span style={{ color: 'red', fontSize: '12px' }}>
+                    Passwords do not match
+                  </span>
+                )}
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="login">Login</label>

@@ -1,12 +1,14 @@
 import {OfferCard} from './OfferCard.tsx';
 import {Offer} from '../types/Offer.ts';
-import {Dispatch, useState} from 'react';
+import {Dispatch, useEffect, useMemo, useState} from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import {SortType} from '../types/SortType.ts';
 import {AppState} from '../types/AppState.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {useSearchParams} from 'react-router-dom';
+import {api} from '../services/api.ts';
+import {SearchBarParams} from '../types/SearchBarParams.ts';
 
 const filteredByCity = (offers:Offer[], cityTitle?: string) =>
   offers.filter((offer) => !cityTitle || offer.city.title === cityTitle);
@@ -27,18 +29,28 @@ const sortedByPrice = (offers: Offer[], sortType?: SortType | null) => !sortType
 
 interface OffersProps {
   offers: Offer[];
+  setOffers: (offers: Offer[]) => void;
 }
 
 export const OffersComponent = (props: OffersProps) => {
 
-  const { offers } = props;
+  const { offers, setOffers } = props;
   const [sortType, setSortType] = useState<SortType | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [searchParams] = useSearchParams();
-  const urlParams = Object.fromEntries(searchParams.entries());
 
-  const onOfferSortClick = (offerSortType: SortType) =>
-    setSortType(offerSortType === sortType ? null : sortType);
+  const urlParams = useMemo(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    if (sortType) {
+      params.sortType = sortType;
+    }
+    return params;
+  }, [searchParams, sortType]);
+
+  useEffect(() => {
+    api.get<Offer[]>('/offer/search', urlParams)
+      .then((offersResponse: Offer[]) => setOffers(offersResponse));
+  }, [sortType, searchParams, setOffers]);
 
   const handleSortOptionsClick = () => {
     setShowSortOptions(!showSortOptions);
@@ -62,15 +74,15 @@ export const OffersComponent = (props: OffersProps) => {
           {showSortOptions && (
             <ul className="places__options places__options--custom places__options--opened">
               <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-              <li className="places__option" tabIndex={0} onClick={() => onOfferSortClick(SortType.PriceAsc)}>Price: low
+              <li className="places__option" tabIndex={0} onClick={() => setSortType(SortType.PriceAsc)}>Price: low
                 to
                 high
               </li>
-              <li className="places__option" tabIndex={0} onClick={() => onOfferSortClick(SortType.PriceDesc)}>Price:
+              <li className="places__option" tabIndex={0} onClick={() => setSortType(SortType.PriceDesc)}>Price:
                 high
                 to low
               </li>
-              <li className="places__option" tabIndex={0} onClick={() => onOfferSortClick(SortType.RatingDesc)}>Top
+              <li className="places__option" tabIndex={0} onClick={() => setSortType(SortType.RatingDesc)}>Top
                 rated
                 first
               </li>
@@ -87,13 +99,13 @@ export const OffersComponent = (props: OffersProps) => {
   );
 };
 
-
 const mapStateToProps = (state: AppState) => ({
   offers: state.offerState.offers
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer))
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
+  setSearchBarParams: (searchBarParams: SearchBarParams) => dispatch(actions.setSearchBarParams(searchBarParams))
 });
 
 export const Offers = connect(mapStateToProps, mapDispatchToProps)(OffersComponent);
