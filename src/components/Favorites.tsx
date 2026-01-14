@@ -5,6 +5,7 @@ import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
 import {IMAGE_URL} from '../const.ts';
+import {api} from '../services/api.ts';
 
 interface FavoritesProps {
   offers: Offer[];
@@ -16,7 +17,8 @@ const FavoritesComponent = (props: FavoritesProps) => {
   const { offers, toggleFavorite } = props;
 
   const handleBookmarkClick = (currentOffer: Offer) => {
-    toggleFavorite(currentOffer);
+    api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id, userId: 1 })
+      .then(() => toggleFavorite(currentOffer));
   };
 
   const getFavoriteOffers = () =>
@@ -90,7 +92,7 @@ const FavoritesComponent = (props: FavoritesProps) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  offers: state.offerState.offers
+  offers: state.offerState.offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

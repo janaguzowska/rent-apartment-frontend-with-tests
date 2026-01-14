@@ -14,20 +14,12 @@ interface OfferCardProps {
 const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
 
   const handleBookmarkClick = () => {
-    const url = '/offer/favorite';
-    const handleThen = () => toggleFavorite(currentOffer);
-    const handleCatch = (error: Error) => {
-      // eslint-disable-next-line no-alert
-      alert(error);
-    };
     if (currentOffer.isFavorite) {
-      api.delete<void>(`${url}/delete`, {offerId: currentOffer.id, userId: 1 })
-        .then(handleThen)
-        .catch(handleCatch);
+      api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id, userId: 1 })
+        .then(() => toggleFavorite(currentOffer));
     } else {
-      api.post<void>(`${url}/add`, {offerId: currentOffer.id, userId: 1 })
-        .then(handleThen)
-        .catch(handleCatch);
+      api.post<void>('/offer/favorite/add', {offerId: currentOffer.id, userId: 1 })
+        .then(() => toggleFavorite(currentOffer));
     }
   };
 
