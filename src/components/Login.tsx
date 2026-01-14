@@ -16,7 +16,8 @@ const LoginComponent = ({ setUser }: LoginProps) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const isPasswordValid = /[a-zA-Z]/.test(password) && /\d/.test(password);
+  // const isPasswordValid = /[a-zA-Z]/.test(password) && /\d/.test(password);
+  const isPasswordValid = /[a-zA-Z]/.test(password);
 
   const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();

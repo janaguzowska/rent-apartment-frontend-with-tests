@@ -15,10 +15,10 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
 
   const handleBookmarkClick = () => {
     if (currentOffer.isFavorite) {
-      api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id, userId: 1 })
+      api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id })
         .then(() => toggleFavorite(currentOffer));
     } else {
-      api.post<void>('/offer/favorite/add', {offerId: currentOffer.id, userId: 1 })
+      api.post<void>('/offer/favorite/add', {offerId: currentOffer.id})
         .then(() => toggleFavorite(currentOffer));
     }
   };

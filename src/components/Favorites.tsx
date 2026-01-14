@@ -17,7 +17,7 @@ const FavoritesComponent = (props: FavoritesProps) => {
   const { offers, toggleFavorite } = props;
 
   const handleBookmarkClick = (currentOffer: Offer) => {
-    api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id, userId: 1 })
+    api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id})
       .then(() => toggleFavorite(currentOffer));
   };
 
