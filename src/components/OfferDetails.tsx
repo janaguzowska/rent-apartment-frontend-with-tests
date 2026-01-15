@@ -13,11 +13,12 @@ import CustomDateRangePicker from './CustomDateRangePicker.tsx';
 import {Reservation} from '../types/Reservation.ts';
 import {Controller, FieldErrors, useForm} from 'react-hook-form';
 import {DateRange} from '../types/DateRange.ts';
+import {api} from '../services/api.ts';
 
 interface OfferDetailsProps {
   toggleFavorite: (currentOffer: Offer) => void;
   setCurrentOffer: (id: number) => void;
-  currentOffer?: Offer;
+  currentOffer: Offer;
   setOffers: (offers: Offer[]) => void;
   offers: Offer[];
   reservation: Reservation;
@@ -46,7 +47,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
       dateRange: [reservation.checkIn, reservation.checkOut] as DateRange,
     },
   });
-  const {errors} = formState as {errors: FieldErrors<FormValues>};
+  const {errors} = formState as { errors: FieldErrors<FormValues> };
 
   useEffect(() => {
     if (offers.length === 0) {
@@ -64,7 +65,13 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
   }, [id, setCurrentOffer, offers, currentOffer]);
 
   const handleBookmarkClick = () => {
-    toggleFavorite(currentOffer!);
+    if (currentOffer.isFavorite) {
+      api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id})
+        .then(() => toggleFavorite(currentOffer));
+    } else {
+      api.post<void>('/offer/favorite/add', {offerId: currentOffer.id})
+        .then(() => toggleFavorite(currentOffer));
+    }
   };
 
   const onSubmit = () => {
@@ -124,7 +131,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                 Max {currentOffer.maxAdults} adults
               </li>
               <li className="offer__feature offer__feature--adults">
-                {currentOffer.children } children
+                {currentOffer.children} children
               </li>
               <li className="offer__feature">
                 {currentOffer.hasPets && 'Pets allowed'}
@@ -177,7 +184,9 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <h2 className="offer__host-title">Meet the host</h2>
               <div className="offer__host-user user">
                 <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                  <img className="offer__avatar user__avatar" src={currentOffer.host?.avatarUrl} width="74" height="74" alt="Host avatar" />
+                  <img className="offer__avatar user__avatar" src={currentOffer.host?.avatarUrl} width="74" height="74"
+                    alt="Host avatar"
+                  />
                 </div>
                 <span className="offer__user-name">
                   {currentOffer.host?.name}
@@ -190,7 +199,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
                 </p>
               </div>
             </div>
-            <Reviews />
+            <Reviews/>
           </OfferWrapper>
         </div>
         <MapWrapper className="offer__map map">
@@ -248,7 +257,7 @@ const OfferPrice = styled.div`
 `;
 
 const mapStateToProps = (state: AppState) => ({
-  currentOffer: state.offerState.currentOffer,
+  currentOffer: state.offerState.currentOffer!,
   offers: state.offerState.offers,
   reservation: state.reservationState.reservation,
 });
