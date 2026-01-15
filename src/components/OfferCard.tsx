@@ -5,13 +5,15 @@ import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {IMAGE_URL} from '../const.ts';
 import {api} from '../services/api.ts';
+import {AppState} from '../types/AppState.ts';
 
 interface OfferCardProps {
   currentOffer: Offer;
   toggleFavorite: (currentOffer: Offer) => void;
+  isAuthorized: boolean;
 }
 
-const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
+const OfferCardComponent = ({currentOffer, toggleFavorite, isAuthorized}: OfferCardProps) => {
 
   const handleBookmarkClick = () => {
     if (currentOffer.isFavorite) {
@@ -44,15 +46,17 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
             <b className="place-card__price-value">&euro;{currentOffer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button
-            className={`place-card__bookmark-button ${currentOffer.isFavorite ? 'place-card__bookmark-button--active' : ''} button`}
-            type="button" onClick={handleBookmarkClick}
-          >
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          { isAuthorized && (
+            <button
+              className={`place-card__bookmark-button ${currentOffer.isFavorite ? 'place-card__bookmark-button--active' : ''} button`}
+              type="button" onClick={handleBookmarkClick}
+            >
+              <svg className="place-card__bookmark-icon" width="18" height="19">
+                <use xlinkHref="#icon-bookmark"></use>
+              </svg>
+              <span className="visually-hidden">To bookmarks</span>
+            </button>
+          )}
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
@@ -69,8 +73,12 @@ const OfferCardComponent = ({currentOffer, toggleFavorite}: OfferCardProps) => {
   );
 };
 
+const mapStateToProps = (state: AppState) => ({
+  isAuthorized: state.authState.isAuthorized,
+});
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer))
 });
 
-export const OfferCard = connect(null, mapDispatchToProps)(OfferCardComponent);
+export const OfferCard = connect(mapStateToProps, mapDispatchToProps)(OfferCardComponent);

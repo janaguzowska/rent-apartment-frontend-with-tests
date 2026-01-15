@@ -23,6 +23,7 @@ interface OfferDetailsProps {
   offers: Offer[];
   reservation: Reservation;
   setReservation: (reservation: Reservation) => void;
+  isAuthorized: boolean;
 }
 
 interface FormValues {
@@ -30,7 +31,7 @@ interface FormValues {
 }
 
 const OfferDetailsComponent = (props: OfferDetailsProps) => {
-  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation} = props;
+  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation, isAuthorized} = props;
   // const [searchParams, setSearchParams] = useSearchParams();
 
   const {id} = useParams();
@@ -74,8 +75,12 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
     }
   };
 
-  const onSubmit = () => {
-    navigate(reservationBasePath(id!));
+  const onReserveClick = () => {
+    if (isAuthorized) {
+      navigate(reservationBasePath(id!));
+    } else {
+      navigate('/login');
+    }
   };
 
   if (!currentOffer) {
@@ -103,15 +108,17 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
             )}
             <div className="offer__name-wrapper">
               <h1 className="offer__name">{currentOffer.title}</h1>
-              <button
-                className={`offer__bookmark-button ${currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''} button`}
-                type="button" onClick={handleBookmarkClick}
-              >
-                <svg className="offer__bookmark-icon" width="31" height="33">
-                  <use xlinkHref="#icon-bookmark"></use>
-                </svg>
-                <span className="visually-hidden">To bookmarks</span>
-              </button>
+              { isAuthorized && (
+                <button
+                  className={`offer__bookmark-button ${currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''} button`}
+                  type="button" onClick={handleBookmarkClick}
+                >
+                  <svg className="offer__bookmark-icon" width="31" height="33">
+                    <use xlinkHref="#icon-bookmark"></use>
+                  </svg>
+                  <span className="visually-hidden">To bookmarks</span>
+                </button>
+              )}
             </div>
             <div className="offer__rating rating">
               <div className="offer__stars rating__stars">
@@ -142,7 +149,7 @@ const OfferDetailsComponent = (props: OfferDetailsProps) => {
               <span className="offer__price-text">&nbsp;night</span>
             </OfferPrice>
             {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-            <form action="#" onSubmit={handleSubmit(onSubmit)}>
+            <form action="#" onSubmit={handleSubmit(onReserveClick)}>
               <Controller
                 control={control}
                 name="dateRange"
@@ -260,6 +267,7 @@ const mapStateToProps = (state: AppState) => ({
   currentOffer: state.offerState.currentOffer!,
   offers: state.offerState.offers,
   reservation: state.reservationState.reservation,
+  isAuthorized: state.authState.isAuthorized,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

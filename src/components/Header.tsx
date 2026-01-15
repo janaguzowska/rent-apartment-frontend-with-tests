@@ -7,7 +7,7 @@ import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
 import {AVATAR_URL} from '../const.ts';
 import {actions} from '../redux/actions.ts';
-import {Dispatch, useEffect} from 'react';
+import {Dispatch, FormEvent, useEffect} from 'react';
 
 interface HeaderProps {
   isAuthorized: boolean;
@@ -19,7 +19,8 @@ interface HeaderProps {
 }
 
 const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: HeaderProps) => {
-  const handleLogout = () => {
+  const handleLogout = (evt: FormEvent) => {
+    evt.preventDefault();
     localStorage.removeItem('credentials');
     logout();
   };

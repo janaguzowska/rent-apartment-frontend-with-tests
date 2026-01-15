@@ -30,7 +30,7 @@ const LoginComponent = ({ setUser }: LoginProps) => {
       .then((response:User) => {
         setUser(response);
         localStorage.setItem('credentials', btoa(`${email}:${password}`));
-        navigate('/');
+        navigate(-1);
       })
       .catch(() => alert('Błąd przy logowaniu'));
   };
