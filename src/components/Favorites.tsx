@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import {Offer} from '../types/Offer.ts';
-import {Dispatch, useMemo} from 'react';
+import {Dispatch, useEffect, useMemo} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
@@ -11,11 +11,17 @@ import {FavoritesEmpty} from './FavoritiesEmpty.tsx';
 interface FavoritesProps {
   offers: Offer[];
   toggleFavorite: (currentOffer: Offer) => void;
+  setOffers: (offers: Offer[]) => void;
 }
 
 const FavoritesComponent = (props: FavoritesProps) => {
 
-  const { offers, toggleFavorite } = props;
+  const { offers, toggleFavorite, setOffers } = props;
+
+  useEffect(() => {
+    api.get<Offer[]>('/offer/search')
+      .then((offersResponse: Offer[]) => setOffers(offersResponse));
+  }, [setOffers]);
 
   const handleBookmarkClick = (currentOffer: Offer) => {
     api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id})
@@ -98,7 +104,8 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer))
+  toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer)),
+  setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
 });
 
 export const Favorites = connect(mapStateToProps, mapDispatchToProps)(FavoritesComponent);
