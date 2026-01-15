@@ -1,11 +1,12 @@
 import {Link} from 'react-router-dom';
 import {Offer} from '../types/Offer.ts';
-import {Dispatch} from 'react';
+import {Dispatch, useMemo} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
 import {IMAGE_URL} from '../const.ts';
 import {api} from '../services/api.ts';
+import {FavoritesEmpty} from './FavoritiesEmpty.tsx';
 
 interface FavoritesProps {
   offers: Offer[];
@@ -21,8 +22,7 @@ const FavoritesComponent = (props: FavoritesProps) => {
       .then(() => toggleFavorite(currentOffer));
   };
 
-  const getFavoriteOffers = () =>
-    offers.filter((offer) => offer.isFavorite);
+  const favoriteOffers = useMemo(() => offers.filter((offer) => offer.isFavorite), [offers]);
 
   return (
     <main className="page__main page__main--favorites">
@@ -30,7 +30,9 @@ const FavoritesComponent = (props: FavoritesProps) => {
         <section className="favorites">
           <h1 className="favorites__title">Saved listing</h1>
           <ul className="favorites__list">
-            {getFavoriteOffers().map((offer) => (
+            {favoriteOffers.length === 0 ? (
+              <FavoritesEmpty />
+            ) : favoriteOffers.map((offer) => (
               <li key={offer.id} className="favorites__locations-items">
                 <div className="favorites__locations locations locations--current">
                   <div className="locations__item">
