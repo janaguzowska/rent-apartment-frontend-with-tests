@@ -7,7 +7,8 @@ import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
 import {AVATAR_URL} from '../const.ts';
 import {actions} from '../redux/actions.ts';
-import {Dispatch, FormEvent, useEffect} from 'react';
+import {Dispatch, FormEvent, useEffect, useState} from 'react';
+import {Menu, MenuItem} from '@mui/material';
 
 interface HeaderProps {
   isAuthorized: boolean;
@@ -21,11 +22,26 @@ interface HeaderProps {
 const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: HeaderProps) => {
   const {pathname} = useLocation();
   const navigate = useNavigate();
+  const [menuParent, setMenuParent] = useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuParent(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuParent(null);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    handleMenuClose();
+  };
 
   const handleLogout = (evt: FormEvent) => {
     evt.preventDefault();
     localStorage.removeItem('credentials');
     logout();
+    handleMenuClose();
     if (pathname.includes('/favorites')) {
       navigate('/');
     }
@@ -38,7 +54,7 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
     }
     const email = atob(credentials).split(':')[0];
     setUser({email});
-  }, []);
+  }, [setUser]);
 
   return (
     <header className="header">
@@ -54,20 +70,40 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
               {isAuthorized ? (
                 <>
                   <li className="header__nav-item user">
-                    <Link to="/favorites" className="header__nav-link header__nav-link--profile">
+                    <div
+                      onClick={handleMenuOpen}
+                      className="header__nav-link header__nav-link--profile"
+                      style={{cursor: 'pointer'}}
+                    >
                       <Avatar avatarUrl={`${AVATAR_URL}/${user!.login}.jpg`}
                         className="header__avatar-wrapper user__avatar-wrapper"
                       >
                       </Avatar>
                       <span className="header__user-name user__name">{user!.email}</span>
                       <span className="header__favorite-count">{favoriteOffers.length}</span>
-                    </Link>
+                    </div>
                   </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#" onClick={handleLogout}>
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
+                  <Menu
+                    anchorEl={menuParent}
+                    open={menuParent !== null}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem onClick={() => handleNavigate('/offers')}>
+                      Offers
+                    </MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/reservations')}>
+                      Reservations
+                    </MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/favorites')}>
+                      Favorites
+                    </MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/reviews')}>
+                      Reviews
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      Sign out
+                    </MenuItem>
+                  </Menu>
                 </>
               ) : (
                 <>
