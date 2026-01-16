@@ -22,6 +22,10 @@ export const actions = {
     type: ActionType.AddReview,
     payload: { review }
   }),
+  setReviews: (reviews: Review[]) => ({
+    type: ActionType.SetReviews,
+    payload: { reviews }
+  }),
   setUser: (user: User) => ({
     type: ActionType.setUser,
     payload: { user }

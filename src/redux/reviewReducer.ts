@@ -18,6 +18,11 @@ export const reviewReducer = (state: ReviewState = defaultState, action: Payload
         ...state,
         reviews: [...state.reviews, action.payload.review!],
       };
+    case ActionType.SetReviews:
+      return {
+        ...state,
+        reviews: action.payload.reviews!,
+      };
 
     default:
       return state;

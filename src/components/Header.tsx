@@ -1,5 +1,5 @@
 import Logo from '../../markup/img/logo.svg';
-import {Link} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {AppState} from '../types/AppState.ts';
 import {User} from '../types/User.ts';
 import {connect} from 'react-redux';
@@ -19,10 +19,16 @@ interface HeaderProps {
 }
 
 const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: HeaderProps) => {
+  const {pathname} = useLocation();
+  const navigate = useNavigate();
+
   const handleLogout = (evt: FormEvent) => {
     evt.preventDefault();
     localStorage.removeItem('credentials');
     logout();
+    if (pathname.includes('/favorites')) {
+      navigate('/');
+    }
   };
 
   useEffect(() => {

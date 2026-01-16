@@ -12,4 +12,5 @@ export interface ActionPayload {
   user?: User;
   searchBarParams?: SearchBarParams;
   reservation?: Reservation;
+  reviews?: Review[];
 }
