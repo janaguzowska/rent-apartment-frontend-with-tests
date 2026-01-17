@@ -10,6 +10,7 @@ import {ParticipantsStep} from './ParticipantsStep.tsx';
 import {SummaryStep} from './SummaryStep.tsx';
 import {InsuranceStep} from './InsuranceStep.tsx';
 import {TourStep} from './TourStep.tsx';
+import {UserOffers} from './UserOffers.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -27,6 +28,7 @@ export const App = () => (
           <Route path="summary" element={<SummaryStep />}/>
         </Route>
         <Route path="/favorites" element={<Favorites />}/>
+        <Route path="/offers" element={<UserOffers />}/>
       </Route>
     </Routes>
   </BrowserRouter>
