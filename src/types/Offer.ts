@@ -6,13 +6,16 @@ import {Image} from './Image.ts';
 import {Amenity} from './Amenity.ts';
 // import {Rating} from './Rating.ts';
 
-export interface Offer {
+export interface Offer extends NewOffer {
   id: number;
+}
+
+export interface NewOffer {
   title: string;
-  city: City;
+  city?: City;
   price: number;
   type: OfferType;
-  position: Position;
+  position?: Position;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
@@ -22,7 +25,7 @@ export interface Offer {
   children: number;
   hasPets: boolean;
   amenities: Amenity[];
-  host: Host;
+  host?: Host;
   images: Image[];
-  previewImage: Image;
+  previewImage?: Image;
 }

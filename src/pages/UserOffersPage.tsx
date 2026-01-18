@@ -28,7 +28,7 @@ export const UserOffersPageComponent = (props: UserOffersPageProps) => {
   return (
     <div>
       <div>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/offer/add')}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/offers/add')}>
           Add Offer
         </Button>
       </div>

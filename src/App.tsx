@@ -11,6 +11,7 @@ import {SummaryStep} from './components/SummaryStep.tsx';
 import {InsuranceStep} from './components/InsuranceStep.tsx';
 import {TourStep} from './components/TourStep.tsx';
 import {UserOffersPage} from './pages/UserOffersPage.tsx';
+import OfferAddPage from './pages/OfferAddPage.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -18,6 +19,7 @@ export const App = () => (
       <Route path="/login" element={<LoginPage />}/>
       <Route path="/register" element={<RegistrationPage />}/>
       <Route path="/" element={<Page/>}>
+        <Route path="/offers/add" element={<OfferAddPage />} />
         <Route index element={<MainPage />} />
         <Route path="/offer/:id" element={<OfferDetailsPage/>} />
         <Route path="/offer/:id/reservation" element={<ReservationPage />}>
