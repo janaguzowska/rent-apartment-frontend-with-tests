@@ -1,6 +1,6 @@
 import {Outlet, useParams} from 'react-router-dom';
 import {Dispatch, useEffect} from 'react';
-import {StepperBar} from './StepperBar.tsx';
+import {StepperBar} from '../components/StepperBar.tsx';
 import {AppState} from '../types/AppState.ts';
 import {connect} from 'react-redux';
 import {OFFER_SEARCH_URL} from '../const.ts';

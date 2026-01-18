@@ -6,15 +6,15 @@ import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
 import {IMAGE_URL} from '../const.ts';
 import {api} from '../services/api.ts';
-import {FavoritesEmpty} from './FavoritiesEmpty.tsx';
+import {FavoritesEmpty} from '../components/FavoritiesEmpty.tsx';
 
-interface FavoritesProps {
+interface FavoritesPageProps {
   offers: Offer[];
   toggleFavorite: (currentOffer: Offer) => void;
   setOffers: (offers: Offer[]) => void;
 }
 
-const FavoritesComponent = (props: FavoritesProps) => {
+const FavoritesPageComponent = (props: FavoritesPageProps) => {
 
   const { offers, toggleFavorite, setOffers } = props;
 
@@ -108,4 +108,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
 });
 
-export const Favorites = connect(mapStateToProps, mapDispatchToProps)(FavoritesComponent);
+export const FavoritesPage = connect(mapStateToProps, mapDispatchToProps)(FavoritesPageComponent);

@@ -1,21 +1,21 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import {Reviews} from './Reviews.tsx';
+import {Reviews} from '../components/Reviews.tsx';
 import {Offer} from '../types/Offer.ts';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import {AppState} from '../types/AppState.ts';
 import {Dispatch, useEffect} from 'react';
 import {actions} from '../redux/actions.ts';
-import {NearPlaceCardList} from './NearPlaceCardList.tsx';
+import {NearPlaceCardList} from '../components/NearPlaceCardList.tsx';
 import {IMAGE_URL, OFFER_SEARCH_URL, reservationBasePath} from '../const.ts';
 import {Amenity} from '../types/Amenity.ts';
-import CustomDateRangePicker from './CustomDateRangePicker.tsx';
+import CustomDateRangePicker from '../components/CustomDateRangePicker.tsx';
 import {Reservation} from '../types/Reservation.ts';
 import {Controller, FieldErrors, useForm} from 'react-hook-form';
 import {DateRange} from '../types/DateRange.ts';
 import {api} from '../services/api.ts';
 
-interface OfferDetailsProps {
+interface OfferDetailsPageProps {
   toggleFavorite: (currentOffer: Offer) => void;
   setCurrentOffer: (id: number) => void;
   currentOffer: Offer;
@@ -30,7 +30,7 @@ interface FormValues {
   dateRange: DateRange;
 }
 
-const OfferDetailsComponent = (props: OfferDetailsProps) => {
+const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
   const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation, isAuthorized} = props;
   // const [searchParams, setSearchParams] = useSearchParams();
 
@@ -277,4 +277,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
 });
 
-export const OfferDetails = connect(mapStateToProps, mapDispatchToProps)(OfferDetailsComponent);
+export const OfferDetailsPage = connect(mapStateToProps, mapDispatchToProps)(OfferDetailsPageComponent);

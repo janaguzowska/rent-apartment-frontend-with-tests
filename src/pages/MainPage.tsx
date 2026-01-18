@@ -1,7 +1,7 @@
-import {OfferMap} from './OfferMap.tsx';
+import {OfferMap} from '../components/OfferMap.tsx';
 import styled from 'styled-components';
-import {Offers} from './Offers.tsx';
-import {SearchBar} from './SearchBar.tsx';
+import {Offers} from '../components/Offers.tsx';
+import {SearchBar} from '../components/SearchBar.tsx';
 
 
 const MainComponent = () =>
@@ -48,8 +48,8 @@ const MapWrapper = styled.section`
 //   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers))
 // });
 
-// export const Main = connect(null, mapDispatchToProps)(MainComponent);
-export const Main = MainComponent;
+// export const MainPage = connect(null, mapDispatchToProps)(MainComponent);
+export const MainPage = MainComponent;
 
 const Tabs = styled.div`
     z-index: 1;

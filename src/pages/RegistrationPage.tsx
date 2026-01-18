@@ -6,7 +6,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import {actions} from '../redux/actions.ts';
 import {Registration} from '../types/Registration.ts';
 import styled from 'styled-components';
-import {FileUploader} from './FileUploader.tsx';
+import {FileUploader} from '../components/FileUploader.tsx';
 
 interface RegistrationProps {
   setUser: (user: User) => void;

@@ -106,4 +106,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
-export const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+export const LoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
