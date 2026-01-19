@@ -100,6 +100,9 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
                     <MenuItem onClick={() => handleNavigate('/reviews')}>
                       Reviews
                     </MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/users')}>
+                      Users
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>
                       Sign out
                     </MenuItem>
