@@ -1,8 +1,33 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {DataGrid, GridColDef} from '@mui/x-data-grid';
+import {api} from '../services/api.ts';
+import {User} from '../types/User.ts';
+import {Dispatch, useEffect} from 'react';
+import {AppState} from '../types/AppState.ts';
+import {actions} from '../redux/actions.ts';
+import {connect} from 'react-redux';
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
+const columns: GridColDef<(User[])[number]>[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 90,
+  },
+  {
+    field: 'login',
+    headerName: 'Login',
+    width: 150,
+  },
+  {
+    field: 'password',
+    headerName: 'Password',
+    width: 150,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 150,
+  },
   {
     field: 'firstName',
     headerName: 'First name',
@@ -16,56 +41,73 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     editable: true,
   },
   {
-    field: 'age',
-    headerName: 'Age',
+    field: 'avatar',
+    headerName: 'Avatar',
     type: 'number',
-    width: 110,
+    width: 150,
     editable: true,
   },
   {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+    field: 'isClient',
+    headerName: 'Is Client',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'isHost',
+    headerName: 'Is Host',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'isAdmin',
+    headerName: 'Is Admin',
+    width: 150,
+    editable: true,
   },
 ];
 
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
+interface OfferDetailsPageProps {
+  setUsers: (users: User[]) => void;
+  users: User[];
+}
 
-export default function UsersPage() {
+const UsersPageComponent = (props: OfferDetailsPageProps) => {
+
+  const {users, setUsers} = props;
+
+  useEffect(() => {
+    api.post<User[]>('/user/search', undefined, {})
+      .then((usersResponse) => setUsers(usersResponse))
+      .catch((error) => console.error('Error:', error));
+  }, [setUsers]);
+
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box sx={{height: '90%', width: '100%'}}>
       <DataGrid
-        rows={rows}
+        rows={users}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 20,
             },
           },
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[20, 50, 100]}
         checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>
   );
-}
+};
 
-//
-// export default function UsersPage() {
-//   return <DataGrid columns={[]} />;
-// }
+const mapStateToProps = (state: AppState) => ({
+  users: state.usersState.users,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setUsers: (users: User[]) => dispatch(actions.setUsers(users)),
+});
+
+export const UsersPage = connect(mapStateToProps, mapDispatchToProps)(UsersPageComponent);

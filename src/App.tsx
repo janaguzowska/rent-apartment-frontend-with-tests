@@ -12,7 +12,7 @@ import {InsuranceStep} from './components/InsuranceStep.tsx';
 import {TourStep} from './components/TourStep.tsx';
 import {UserOffersPage} from './pages/UserOffersPage.tsx';
 import OfferAddPage from './pages/OfferAddPage.tsx';
-import UsersPage from './pages/UsersPage.tsx';
+import {UsersPage} from './pages/UsersPage.tsx';
 
 export const App = () => (
   <BrowserRouter>

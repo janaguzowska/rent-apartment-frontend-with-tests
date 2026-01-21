@@ -41,4 +41,8 @@ export const actions = {
     type: ActionType.SetReservation,
     payload: { reservation },
   }),
+  setUsers: (users: User[]) => ({
+    type: ActionType.setUsers,
+    payload: { users }
+  }),
 };
