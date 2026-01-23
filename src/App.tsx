@@ -13,6 +13,7 @@ import {TourStep} from './components/TourStep.tsx';
 import {UserOffersPage} from './pages/UserOffersPage.tsx';
 import OfferAddPage from './pages/OfferAddPage.tsx';
 import {UsersPage} from './pages/UsersPage.tsx';
+import {UserReservationPage} from './pages/UserReservationsPage.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -33,6 +34,7 @@ export const App = () => (
         <Route path="/favorites" element={<FavoritesPage />}/>
         <Route path="/offers" element={<UserOffersPage />}/>
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/reservations" element={<UserReservationPage />} />
       </Route>
     </Routes>
   </BrowserRouter>

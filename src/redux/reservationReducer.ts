@@ -1,25 +1,27 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {ActionPayload} from '../types/ActionPayload.ts';
 import {ActionType} from '../types/ActionType.ts';
-import {Reservation} from '../types/Reservation.ts';
+import {NewReservation, Reservation} from '../types/Reservation.ts';
 
 interface ReservationState {
-  reservation: Reservation;
+  reservation: NewReservation;
+  reservations: Reservation[];
 }
 
 const defaultState: ReservationState = ({
   reservation: {
     participants: [{firstName: '', lastName: ''}],
     insuranceId: undefined,
-    tours: [],
-  }
+    tourIds: [],
+  },
+  reservations: [],
 });
 
-export const reservationReducer = (state: ReservationState = defaultState, action: PayloadAction<ActionPayload, ActionType>) => {
+export const reservationReducer = (state: ReservationState = defaultState, action: PayloadAction<ReservationState, ActionType>) => {
   switch (action.type) {
     case ActionType.SetReservation:
-      return {...state, reservation: action.payload.reservation!};
-
+      return {...state, reservation: action.payload.reservation};
+    case ActionType.SetUserReservations:
+      return {...state, reservations: action.payload.reservations};
     default:
       return state;
   }

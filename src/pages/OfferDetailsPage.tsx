@@ -59,11 +59,11 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
   }, [offers, setOffers]);
 
   useEffect(() => {
-    if (offers.some((offer) => offer.id === Number(id)) && !currentOffer) {
+    if (offers.length && currentOffer?.id !== Number(id)) {
       setCurrentOffer(Number(id));
       setReservation({...reservation, offerId: Number(id)});
     }
-  }, [id, setCurrentOffer, offers, currentOffer]);
+  }, [id, setCurrentOffer, offers, currentOffer, setReservation, reservation]);
 
   const handleBookmarkClick = () => {
     if (currentOffer.isFavorite) {
