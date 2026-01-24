@@ -13,6 +13,14 @@ import {
 import '@progress/kendo-theme-default/dist/all.css';
 import './ReportsPage.css';
 
+interface PieLabelArgs {
+  percentage?: number;
+}
+
+interface DonutLabelArgs {
+  value?: number;
+}
+
 // Mockowe dane statystyk
 const reservationsByMonth = [
   { month: 'Sty', count: 45 },
@@ -131,7 +139,7 @@ export const ReportsPage = () => (
               categoryField="category"
               labels={{
                 visible: true,
-                content: (e) => `${e.percentage}%`,
+                content: (e: PieLabelArgs) => `${e.percentage}%`,
               }}
             />
           </ChartSeries>
@@ -248,7 +256,7 @@ export const ReportsPage = () => (
               categoryField="type"
               labels={{
                 visible: true,
-                content: (e) => `${e.value}%`,
+                content: (e: DonutLabelArgs) => `${e.value}%`,
               }}
             />
           </ChartSeries>

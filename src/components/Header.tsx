@@ -103,6 +103,9 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
                     <MenuItem onClick={() => handleNavigate('/users')}>
                       Users
                     </MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/reports')}>
+                      Reports
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>
                       Sign out
                     </MenuItem>

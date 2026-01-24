@@ -14,6 +14,7 @@ import {UserOffersPage} from './pages/UserOffersPage.tsx';
 import OfferAddPage from './pages/OfferAddPage.tsx';
 import {UsersPage} from './pages/UsersPage.tsx';
 import {UserReservationPage} from './pages/UserReservationsPage.tsx';
+import {ReportsPage} from './pages/ReportsPage.tsx';
 
 export const App = () => (
   <BrowserRouter>
@@ -35,6 +36,7 @@ export const App = () => (
         <Route path="/offers" element={<UserOffersPage />}/>
         <Route path="/users" element={<UsersPage />} />
         <Route path="/reservations" element={<UserReservationPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
       </Route>
     </Routes>
   </BrowserRouter>
