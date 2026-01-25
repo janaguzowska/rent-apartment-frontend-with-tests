@@ -16,6 +16,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {ReservationCount} from '../types/ReservationCount.ts';
 import {api} from '../services/api.ts';
 import {OfferCount} from '../types/OfferCount.ts';
+import {ReviewCount} from '../types/ReviewCount.ts';
 
 interface PieLabelArgs {
   category: string;
@@ -88,6 +89,7 @@ export const ReportsPage = () => {
 
   const [reservationCount, setReservationCount] = useState<ReservationCount[]>([]);
   const [offerCount, setOfferCount] = useState<OfferCount[]>([]);
+  const [reviewCount, setReviewCount] = useState<ReviewCount[]>([]);
 
   const offerCountSum = useMemo(() => offerCount.reduce((acc, offer) => acc + offer.count, 0), [offerCount]);
 
@@ -102,6 +104,12 @@ export const ReportsPage = () => {
       .then(setOfferCount)
       .catch((error) => console.error('Error:', error));
   }, [setOfferCount]);
+
+  useEffect(() => {
+    api.post<OfferCount[]>('/report/search/review-count', undefined, {})
+      .then(setReviewCount)
+      .catch((error) => console.error('Error:', error));
+  }, []);
 
   return (
     <div className="reports-container">
@@ -198,12 +206,12 @@ export const ReportsPage = () => {
             <ChartTitle text="Rozkład ocen w recenzjach"/>
             <ChartLegend visible={false}/>
             <ChartCategoryAxis>
-              <ChartCategoryAxisItem categories={reviewsRatings.map((r) => r.rating)}/>
+              <ChartCategoryAxisItem categories={reviewCount.map((r) => r.rating)}/>
             </ChartCategoryAxis>
             <ChartSeries>
               <ChartSeriesItem
                 type="bar"
-                data={reviewsRatings.map((r) => r.count)}
+                data={reviewCount.map((r) => r.count)}
                 color="#ff9800"
                 tooltip={{visible: true}}
               />
