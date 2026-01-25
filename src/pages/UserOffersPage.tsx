@@ -42,7 +42,7 @@ export const UserOffersPageComponent = (props: UserOffersPageProps) => {
 
 const mapStateToProps = (state: AppState) => ({
   offers: state.offerState.offers,
-  reservation: state.reservationState.reservation,
+  reservationForm: state.reservationState.reservationForm,
   isAuthorized: state.authState.isAuthorized,
 });
 

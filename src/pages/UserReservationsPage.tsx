@@ -132,7 +132,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  setUserReservations: (reservation: Reservation[]) => dispatch(actions.setUserReservations(reservation)),
+  setUserReservations: (reservations: Reservation[]) => dispatch(actions.setUserReservations(reservations)),
 });
 
 export const UserReservationPage = connect(mapStateToProps, mapDispatchToProps)(UserReservationsPageComponent);

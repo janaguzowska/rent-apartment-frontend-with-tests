@@ -10,7 +10,7 @@ import {NearPlaceCardList} from '../components/NearPlaceCardList.tsx';
 import {IMAGE_URL, OFFER_SEARCH_URL, reservationBasePath} from '../const.ts';
 import {Amenity} from '../types/Amenity.ts';
 import CustomDateRangePicker from '../components/CustomDateRangePicker.tsx';
-import {Reservation} from '../types/Reservation.ts';
+import {ReservationForm} from '../types/Reservation.ts';
 import {Controller, FieldErrors, useForm} from 'react-hook-form';
 import {DateRange} from '../types/DateRange.ts';
 import {api} from '../services/api.ts';
@@ -21,8 +21,8 @@ interface OfferDetailsPageProps {
   currentOffer: Offer;
   setOffers: (offers: Offer[]) => void;
   offers: Offer[];
-  reservation: Reservation;
-  setReservation: (reservation: Reservation) => void;
+  reservationForm: ReservationForm;
+  setReservationForm: (reservationForm: ReservationForm) => void;
   isAuthorized: boolean;
 }
 
@@ -31,7 +31,7 @@ interface FormValues {
 }
 
 const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
-  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservation, setReservation, isAuthorized} = props;
+  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservationForm, setReservationForm, isAuthorized} = props;
   // const [searchParams, setSearchParams] = useSearchParams();
 
   const {id} = useParams();
@@ -45,7 +45,7 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   } = useForm({
     defaultValues: {
-      dateRange: [reservation.checkIn, reservation.checkOut] as DateRange,
+      dateRange: [reservationForm.checkIn, reservationForm.checkOut] as DateRange,
     },
   });
   const {errors} = formState as { errors: FieldErrors<FormValues> };
@@ -61,9 +61,9 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
   useEffect(() => {
     if (offers.length && currentOffer?.id !== Number(id)) {
       setCurrentOffer(Number(id));
-      setReservation({...reservation, offerId: Number(id)});
+      setReservationForm({...reservationForm, offerId: Number(id)});
     }
-  }, [id, setCurrentOffer, offers, currentOffer, setReservation, reservation]);
+  }, [id, setCurrentOffer, offers, currentOffer, setReservationForm, reservationForm]);
 
   const handleBookmarkClick = () => {
     if (currentOffer.isFavorite) {
@@ -161,8 +161,8 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
                     dateRange={field.value}
                     setDateRange={(dateRange) => {
                       field.onChange(dateRange);
-                      setReservation({
-                        ...reservation,
+                      setReservationForm({
+                        ...reservationForm,
                         checkIn: dateRange[0],
                         checkOut: dateRange[1],
                       });
@@ -266,7 +266,7 @@ const OfferPrice = styled.div`
 const mapStateToProps = (state: AppState) => ({
   currentOffer: state.offerState.currentOffer!,
   offers: state.offerState.offers,
-  reservation: state.reservationState.reservation,
+  reservationForm: state.reservationState.reservationForm,
   isAuthorized: state.authState.isAuthorized,
 });
 
@@ -274,7 +274,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer)),
   setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
-  setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
+  setReservationForm: (reservationForm: ReservationForm) => dispatch(actions.setReservationForm(reservationForm)),
 });
 
 export const OfferDetailsPage = connect(mapStateToProps, mapDispatchToProps)(OfferDetailsPageComponent);

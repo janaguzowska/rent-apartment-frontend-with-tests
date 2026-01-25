@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import {getBackStepPath, getNextStepPath, isBackButtonEnabled, isNextButtonEnabled, RESERVATION_URL} from '../const.ts';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {api} from '../services/api.ts';
-import {Reservation} from '../types/Reservation.ts';
+import {ReservationForm} from '../types/Reservation.ts';
 
 interface StepperPaginationProps {
-  reservation?: Reservation;
+  reservationForm?: ReservationForm;
 }
 
 export const StepperPagination = (props: StepperPaginationProps) => {
-  const {reservation} = props;
+  const {reservationForm} = props;
   const navigate = useNavigate();
   const {id} = useParams();
   const {pathname} = useLocation();
@@ -24,7 +24,7 @@ export const StepperPagination = (props: StepperPaginationProps) => {
     if (isNextButtonEnabled(id!, pathname)) {
       navigate(getNextStepPath(id!, pathname));
     } else {
-      api.post<void>(`${RESERVATION_URL}/add`, undefined, reservation);
+      api.post<void>(`${RESERVATION_URL}/add`, undefined, reservationForm);
       // .then(handleThen)
       // .catch(handleCatch);
     }

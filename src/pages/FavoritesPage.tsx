@@ -43,7 +43,7 @@ const FavoritesPageComponent = (props: FavoritesPageProps) => {
                 <div className="favorites__locations locations locations--current">
                   <div className="locations__item">
                     <a className="locations__item-link" href="#">
-                      <span>{offer.city.title}</span>
+                      <span>{offer.city?.title}</span>
                     </a>
                   </div>
                 </div>
@@ -56,7 +56,7 @@ const FavoritesPageComponent = (props: FavoritesPageProps) => {
                     )}
                     <div className="favorites__image-wrapper place-card__image-wrapper">
                       <Link to={`/offer/${offer.id}`}>
-                        <img className="place-card__image" src={`${IMAGE_URL}/${offer.previewImage.name}.jpg`} width="150" height="110"
+                        <img className="place-card__image" src={`${IMAGE_URL}/${offer.previewImage?.name}.jpg`} width="150" height="110"
                           alt="Place image"
                         />
                       </Link>

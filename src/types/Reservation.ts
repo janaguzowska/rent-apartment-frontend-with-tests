@@ -3,14 +3,14 @@ import {Participant} from './Participant.ts';
 import {Offer} from './Offer.ts';
 import {Insurance} from './Insurance.ts';
 
-export interface Reservation extends NewReservation {
+export interface Reservation extends ReservationForm {
   id: number;
   offer: Offer;
   tours: Tour[];
   insurance?: Insurance;
 }
 
-export interface NewReservation {
+export interface ReservationForm {
   offerId?: number;
   participants: Participant[];
   insuranceId?: number;

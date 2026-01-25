@@ -1,25 +1,25 @@
 import {StepperPagination} from './StepperPagination.tsx';
-import {Reservation} from '../types/Reservation.ts';
 import {AppState} from '../types/AppState.ts';
 import {Dispatch} from 'react';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
+import {ReservationForm} from '../types/Reservation.ts';
 
 
 interface ParticipantsStepProps {
-  reservation: Reservation;
-  setReservation: (reservation: Reservation) => void;
+  reservationForm: ReservationForm;
+  setReservationForm: (reservationForm: ReservationForm) => void;
 }
 
 export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
-  const {reservation, setReservation} = props;
+  const {reservationForm, setReservationForm} = props;
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = ev.target;
 
-    setReservation({
-      ...reservation, participants: [{
-        ...reservation.participants[0],
+    setReservationForm({
+      ...reservationForm, participants: [{
+        ...reservationForm.participants[0],
         [name]: value,
       }]
     });
@@ -31,13 +31,13 @@ export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
         <div>
           <label>
             First name:
-            <input type="text" name="firstName" onChange={handleChange} value={reservation.participants[0].firstName} autoComplete="off"/>
+            <input type="text" name="firstName" onChange={handleChange} value={reservationForm.participants[0].firstName} autoComplete="off"/>
           </label>
         </div>
         <div>
           <label>
             Last name:
-            <input type="text" name="lastName" onChange={handleChange} value={reservation.participants[0].lastName} autoComplete="off"/>
+            <input type="text" name="lastName" onChange={handleChange} value={reservationForm.participants[0].lastName} autoComplete="off"/>
           </label>
         </div>
       </form>
@@ -47,11 +47,11 @@ export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  reservation: state.reservationState.reservation,
+  reservationForm: state.reservationState.reservationForm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
+  setReservationForm: (reservationForm: ReservationForm) => dispatch(actions.setReservationForm(reservationForm)),
 });
 
 export const ParticipantsStep = connect(mapStateToProps, mapDispatchToProps)(ParticipantsStepComponent);

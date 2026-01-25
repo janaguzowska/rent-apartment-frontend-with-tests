@@ -6,20 +6,20 @@ import {connect} from 'react-redux';
 import {OFFER_SEARCH_URL} from '../const.ts';
 import {Offer} from '../types/Offer.ts';
 import {actions} from '../redux/actions.ts';
-import {Reservation} from '../types/Reservation.ts';
+import {ReservationForm} from '../types/Reservation.ts';
 
 interface ReservationPageProps {
   offers: Offer[];
-  reservation: Reservation;
+  reservationForm: ReservationForm;
   setCurrentOffer: (id: number) => void;
   setOffers: (offers: Offer[]) => void;
-  setReservation: (reservation: Reservation) => void;
+  setReservationForm: (reservationForm: ReservationForm) => void;
   currentOffer?: Offer;
 }
 
 
 const ReservationPageComponent = (props: ReservationPageProps) => {
-  const { offers, reservation, setCurrentOffer, setOffers, setReservation, currentOffer} = props;
+  const { offers, reservationForm, setCurrentOffer, setOffers, setReservationForm, currentOffer} = props;
   const {id} = useParams();
 
   useEffect(() => {
@@ -31,11 +31,11 @@ const ReservationPageComponent = (props: ReservationPageProps) => {
       if (!currentOffer) {
         setCurrentOffer(Number(id));
       }
-      if (!reservation.offerId) {
-        setReservation({...reservation, offerId: Number(id)});
+      if (!reservationForm.offerId) {
+        setReservationForm({...reservationForm, offerId: Number(id)});
       }
     }
-  }, [id, offers, reservation, setCurrentOffer, setOffers, setReservation, currentOffer]);
+  }, [id, offers, reservationForm, setCurrentOffer, setOffers, setReservationForm, currentOffer]);
 
   return (
     <div>
@@ -47,14 +47,14 @@ const ReservationPageComponent = (props: ReservationPageProps) => {
 
 const mapStateToProps = (state: AppState) => ({
   offers: state.offerState.offers,
-  reservation: state.reservationState.reservation,
+  reservationForm: state.reservationState.reservationForm,
   currentOffer: state.offerState.currentOffer,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
-  setReservation: (reservation: Reservation) => dispatch(actions.setReservation(reservation)),
+  setReservationForm: (reservationForm: ReservationForm) => dispatch(actions.setReservationForm(reservationForm)),
 });
 
 export const ReservationPage = connect(mapStateToProps, mapDispatchToProps)(ReservationPageComponent);
