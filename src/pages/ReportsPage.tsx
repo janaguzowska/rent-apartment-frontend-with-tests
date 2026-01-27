@@ -10,6 +10,7 @@ import {
   ChartValueAxis,
   ChartValueAxisItem,
 } from '@progress/kendo-react-charts';
+
 import '@progress/kendo-theme-default/dist/all.css';
 import './ReportsPage.css';
 import {useEffect, useMemo, useState} from 'react';
@@ -17,6 +18,9 @@ import {ReservationCount} from '../types/ReservationCount.ts';
 import {api} from '../services/api.ts';
 import {OfferCount} from '../types/OfferCount.ts';
 import {ReviewCount} from '../types/ReviewCount.ts';
+import {IncomeSum} from '../types/IncomeSum.ts';
+import {OfferCountByBedrooms} from '../types/OfferCountByBedrooms.ts';
+import {getRoomLabel} from '../util/objectUtil.ts';
 
 interface PieLabelArgs {
   category: string;
@@ -24,7 +28,7 @@ interface PieLabelArgs {
 }
 
 interface DonutLabelArgs {
-  value?: number;
+  value: number;
 }
 
 // Mockowe dane statystyk
@@ -53,22 +57,22 @@ const userRegistrations = [
   {month: 'Cze', users: 35},
 ];
 
-const reviewsRatings = [
-  {rating: '5★', count: 120},
-  {rating: '4★', count: 85},
-  {rating: '3★', count: 45},
-  {rating: '2★', count: 15},
-  {rating: '1★', count: 8},
-];
-
-const revenueData = [
-  {month: 'Sty', revenue: 15000, expenses: 8000},
-  {month: 'Lut', revenue: 18000, expenses: 9000},
-  {month: 'Mar', revenue: 22000, expenses: 10000},
-  {month: 'Kwi', revenue: 28000, expenses: 12000},
-  {month: 'Maj', revenue: 32000, expenses: 13000},
-  {month: 'Cze', revenue: 38000, expenses: 14000},
-];
+// const reviewsRatings = [
+//   {rating: '5★', count: 120},
+//   {rating: '4★', count: 85},
+//   {rating: '3★', count: 45},
+//   {rating: '2★', count: 15},
+//   {rating: '1★', count: 8},
+// ];
+//
+// const revenueData = [
+//   {month: 'Sty', revenue: 15000, expenses: 8000},
+//   {month: 'Lut', revenue: 18000, expenses: 9000},
+//   {month: 'Mar', revenue: 22000, expenses: 10000},
+//   {month: 'Kwi', revenue: 28000, expenses: 12000},
+//   {month: 'Maj', revenue: 32000, expenses: 13000},
+//   {month: 'Cze', revenue: 38000, expenses: 14000},
+// ];
 
 const occupancyRate = [
   {week: 'Tydz 1', rate: 65},
@@ -79,19 +83,22 @@ const occupancyRate = [
   {week: 'Tydz 6', rate: 88},
 ];
 
-const offerTypesDistribution = [
-  {type: 'Premium', value: 35},
-  {type: 'Standard', value: 45},
-  {type: 'Budget', value: 20},
-];
+// const offerTypesDistribution = [
+//   {type: 'Premium', value: 35},
+//   {type: 'Standard', value: 45},
+//   {type: 'Budget', value: 20},
+// ];
 
 export const ReportsPage = () => {
 
   const [reservationCount, setReservationCount] = useState<ReservationCount[]>([]);
   const [offerCount, setOfferCount] = useState<OfferCount[]>([]);
   const [reviewCount, setReviewCount] = useState<ReviewCount[]>([]);
+  const [incomeSum, setIncomeSum] = useState<IncomeSum[]>([]);
+  const [offerCountByBedrooms, setOfferCountByBedrooms] = useState<OfferCountByBedrooms[]>([]);
 
   const offerCountSum = useMemo(() => offerCount.reduce((acc, offer) => acc + offer.count, 0), [offerCount]);
+  // const offerCountSumByBedrooms = useMemo(() => offerCountByBedrooms.reduce((acc, offerCountByBedroom) => acc + offerCountByBedroom.count, 0), [offerCountByBedrooms]);
 
   useEffect(() => {
     api.post<ReservationCount[]>('/report/search/reservation-count', undefined, {})
@@ -106,8 +113,20 @@ export const ReportsPage = () => {
   }, [setOfferCount]);
 
   useEffect(() => {
-    api.post<OfferCount[]>('/report/search/review-count', undefined, {})
+    api.post<ReviewCount[]>('/report/search/review-count', undefined, {})
       .then(setReviewCount)
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
+  useEffect(() => {
+    api.post<IncomeSum[]>('/report/search/income-sum', undefined, {})
+      .then(setIncomeSum)
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
+  useEffect(() => {
+    api.post<OfferCountByBedrooms[]>('/report/search/offers-count-by-bedrooms', undefined, {})
+      .then(setOfferCountByBedrooms)
       .catch((error) => console.error('Error:', error));
   }, []);
 
@@ -226,7 +245,7 @@ export const ReportsPage = () => {
             <ChartTitle text="Przychody vs Wydatki"/>
             <ChartLegend position="bottom"/>
             <ChartCategoryAxis>
-              <ChartCategoryAxisItem categories={revenueData.map((r) => r.month)}/>
+              <ChartCategoryAxisItem categories={incomeSum.map((r) => r.month)}/>
             </ChartCategoryAxis>
             <ChartValueAxis>
               <ChartValueAxisItem labels={{format: '{0:N0} PLN'}}/>
@@ -234,14 +253,14 @@ export const ReportsPage = () => {
             <ChartSeries>
               <ChartSeriesItem
                 type="column"
-                data={revenueData.map((r) => r.revenue)}
+                data={incomeSum.map((r) => r.income)}
                 name="Przychody"
                 color="#2196f3"
                 tooltip={{visible: true}}
               />
               <ChartSeriesItem
                 type="column"
-                data={revenueData.map((r) => r.expenses)}
+                data={incomeSum.map((r) => r.expenses)}
                 name="Wydatki"
                 color="#f44336"
                 tooltip={{visible: true}}
@@ -278,17 +297,20 @@ export const ReportsPage = () => {
         {/* Wykres donut - Typy ofert */}
         <div className="chart-card">
           <Chart>
-            <ChartTitle text="Dystrybucja typów ofert"/>
+            <ChartTitle text="Liczba pokoi"/>
             <ChartLegend position="bottom"/>
             <ChartSeries>
               <ChartSeriesItem
                 type="donut"
-                data={offerTypesDistribution}
-                field="value"
-                categoryField="type"
+                data={offerCountByBedrooms.map((offerCountByBedroom) => ({
+                  ...offerCountByBedroom,
+                  bedrooms: getRoomLabel(offerCountByBedroom.bedrooms),
+                }))}
+                field="count"
+                categoryField="bedrooms"
                 labels={{
                   visible: true,
-                  content: (e: DonutLabelArgs) => `${e.value}%`,
+                  content: (item: DonutLabelArgs) => `${Math.round(item.value / offerCountSum * 100)}%`
                 }}
               />
             </ChartSeries>
