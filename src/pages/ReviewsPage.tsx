@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Grid, GridCellProps, GridColumn, GridDataStateChangeEvent, GridToolbar} from '@progress/kendo-react-grid';
 import {process, State} from '@progress/kendo-data-query';
 import {Review} from '../types/Review';
 import {api} from '../services/api';
+import {UserInfoCell} from '../components/UserInfoCell.tsx';
 
 export const ReviewsPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -17,22 +18,24 @@ export const ReviewsPage = () => {
     }
   });
 
-  const loadReviews = useCallback(() => {
+  const loadReviews = () => {
     setLoading(true);
     try {
-      api.post<Review[]>('/reviews/search', {}, {})
+      api.post<Review[]>('/review/search', {}, {})
         .then((reviewResponse) => setReviews(reviewResponse));
     } catch (error) {
+
+      // eslint-disable-next-line no-console
       console.error('Error loading reviews:', error);
       setReviews([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     loadReviews();
-  }, [loadReviews]);
+  }, []);
 
   // const dataStateChange = (event: GridPageChangeEvent | GridSortChangeEvent | GridFilterChangeEvent) => {
   //   setDataState({
@@ -61,40 +64,6 @@ export const ReviewsPage = () => {
         <span style={{color}}>
           {'★'.repeat(rating)}{'☆'.repeat(5 - rating)} ({rating})
         </span>
-      </td>
-    );
-  };
-
-  const AvatarCell = (props: GridCellProps) => {
-    const { userName, userAvatar } = props.dataItem as Review;
-    return (
-      <td>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img
-            src={userAvatar}
-            alt={userName}
-            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40';
-            }}
-          />
-          <strong>{userName}</strong>
-        </div>
-      </td>
-    );
-  };
-
-  const DateCell = (props: GridCellProps) => {
-    const date = new Date((props.dataItem as Review).date);
-    return (
-      <td>
-        {date.toLocaleDateString('pl-PL', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })}
       </td>
     );
   };
@@ -162,7 +131,7 @@ export const ReviewsPage = () => {
         <GridToolbar>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
             <div>
-              <strong>Łącznie recenzji: {reviews.length}</strong>
+              <strong>Total reviews: {reviews.length}</strong>
               {dataState.filter && (dataState.filter).filters.length > 0 && (
                 <span style={{ marginLeft: '15px', color: '#666' }}>
                   (Wyfiltrowano: {processedData.total})
@@ -196,7 +165,7 @@ export const ReviewsPage = () => {
 
         <GridColumn
           field="offerId"
-          title="ID Oferty"
+          title="Offer ID"
           width="100px"
           filterable
           sortable
@@ -204,17 +173,17 @@ export const ReviewsPage = () => {
         />
 
         <GridColumn
-          field="userName"
-          title="Użytkownik"
-          width="250px"
-          cells={{data: AvatarCell}}
+          field="user"
+          title="User"
+          width="350px"
+          cells={{data: UserInfoCell}}
           filterable
           sortable
         />
 
         <GridColumn
           field="rating"
-          title="Ocena"
+          title="Rating"
           width="200px"
           cells={{data: RatingCell}}
           filterable
@@ -224,7 +193,7 @@ export const ReviewsPage = () => {
 
         <GridColumn
           field="description"
-          title="Opis"
+          title="Description"
           width="400px"
           cells={{data: DescriptionCell}}
           filterable
@@ -232,10 +201,9 @@ export const ReviewsPage = () => {
         />
 
         <GridColumn
-          field="date"
-          title="Data"
+          field="creationDate"
+          title="Creation date"
           width="220px"
-          cells={{data: DateCell}}
           filterable
           sortable
           filter="date"

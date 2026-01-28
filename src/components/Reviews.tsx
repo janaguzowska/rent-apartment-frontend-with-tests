@@ -39,7 +39,7 @@ const ReviewsComponent = ({offerId, reviews, addReview, setReviews, isAuthorized
       userAvatar: Avatar,
       rating,
       description: text.trim(),
-      date: new Date().toISOString(),
+      creationDate: new Date().toISOString(),
     };
 
     api.post<void>('/review/add', undefined, newReview)
@@ -75,7 +75,7 @@ const ReviewsComponent = ({offerId, reviews, addReview, setReviews, isAuthorized
                 {review.description}
               </p>
               <time className="reviews__time" dateTime="2019-04-24">
-                {new Date(review.date).toLocaleTimeString('en-EN', {
+                {new Date(review.creationDate).toLocaleTimeString('en-EN', {
                   month: 'long',
                   year: 'numeric',
                 })}
