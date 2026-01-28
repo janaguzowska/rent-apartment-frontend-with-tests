@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Grid, GridCellProps, GridColumn, GridDataStateChangeEvent, GridToolbar} from '@progress/kendo-react-grid';
 import {process, State} from '@progress/kendo-data-query';
 import {Review} from '../types/Review';
@@ -7,7 +7,7 @@ import {UserInfoCell} from '../components/UserInfoCell.tsx';
 
 export const ReviewsPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [dataState, setDataState] = useState<State>({
     skip: 0,
     take: 10,
@@ -18,24 +18,21 @@ export const ReviewsPage = () => {
     }
   });
 
-  const loadReviews = () => {
-    setLoading(true);
-    try {
-      api.post<Review[]>('/review/search', {}, {})
-        .then((reviewResponse) => setReviews(reviewResponse));
-    } catch (error) {
-
-      // eslint-disable-next-line no-console
-      console.error('Error loading reviews:', error);
-      setReviews([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loadReviews = useCallback(() => {
+    setShowLoader(true);
+    api.post<Review[]>('/review/search', {}, {})
+      .then((reviewResponse) => setReviews(reviewResponse))
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error loading reviews:', error);
+        setReviews([]);
+      })
+      .finally(() => setShowLoader(false));
+  }, [setShowLoader]);
 
   useEffect(() => {
     loadReviews();
-  }, []);
+  }, [loadReviews]);
 
   // const dataStateChange = (event: GridPageChangeEvent | GridSortChangeEvent | GridFilterChangeEvent) => {
   //   setDataState({
@@ -111,6 +108,7 @@ export const ReviewsPage = () => {
           allowUnsort: true,
           mode: 'multiple'
         }}
+        showLoader={showLoader}
         filterable
         pageable={{
           buttonCount: 5,
