@@ -4,6 +4,8 @@ import {process, State} from '@progress/kendo-data-query';
 import {Review} from '../types/Review';
 import {api} from '../services/api';
 import {UserInfoCell} from '../components/UserInfoCell.tsx';
+import {DateRangeFilterCell} from '../components/DateRangeFilterCell.tsx';
+import {getReviewsWithDateType} from '../util/dateUtil.ts';
 
 export const ReviewsPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -41,11 +43,7 @@ export const ReviewsPage = () => {
   //   } as State);
   // };
 
-  const dataStateChange = (event: GridDataStateChangeEvent) => {
-    setDataState(event.dataState);
-  };
-
-  const processedData = process(reviews, dataState);
+  const processedData = process(getReviewsWithDateType(reviews), dataState);
 
   const RatingCell = (props: GridCellProps) => {
     const rating = (props.dataItem as Review).rating;
@@ -64,6 +62,7 @@ export const ReviewsPage = () => {
       </td>
     );
   };
+
 
   const DescriptionCell = (props: GridCellProps) => {
     const description = (props.dataItem as Review).description;
@@ -101,9 +100,9 @@ export const ReviewsPage = () => {
       <h1 style={{ marginBottom: '20px', color: '#333' }}>Recenzje</h1>
 
       <Grid
+        filter={dataState.filter}
         data={processedData}
-        {...dataState}
-        onDataStateChange={dataStateChange}
+        onDataStateChange={(event: GridDataStateChangeEvent) => setDataState(event.dataState)}
         sortable={{
           allowUnsort: true,
           mode: 'multiple'
@@ -199,12 +198,14 @@ export const ReviewsPage = () => {
         />
 
         <GridColumn
-          field="creationDate"
+          field="creationDateAsDate"
           title="Creation date"
           width="220px"
           filterable
           sortable
           filter="date"
+          format={'{0:dd.MM.yyyy HH:mm}'}
+          cells={{filterCell: () => <DateRangeFilterCell setDataState={setDataState} dataState={dataState} field="creationDateAsDate" /> }}
         />
       </Grid>
     </div>

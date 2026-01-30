@@ -9,6 +9,7 @@ export interface Review {
   rating: number; // 1–5
   description: string;
   creationDate?: string; // np. ISO string
+  creationDateAsDate?: Date;
   user?: User;
   offer?: Offer;
 }
