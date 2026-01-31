@@ -49,6 +49,10 @@ class ApiService {
     return this.request<T>(url, {method: 'POST'}, params, body);
   }
 
+  async put<T>(url: string, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
+    return this.request<T>(url, {method: 'PUT'}, params, body);
+  }
+
   async delete<T> (url: string, params?: Record<string, string | number | boolean>):Promise<T> {
     return this.request<T>(url, {method: 'DELETE'}, params);
   }

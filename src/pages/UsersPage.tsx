@@ -7,6 +7,7 @@ import {AppState} from '../types/AppState.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {Checkbox} from '@mui/material';
+import {getPermissionTypeForField} from '../types/PermissionType.ts';
 
 interface OfferDetailsPageProps {
   setUsers: (users: User[]) => void;
@@ -23,20 +24,43 @@ const UsersPageComponent = (props: OfferDetailsPageProps) => {
       .catch((error) => console.error('Error:', error));
   }, [setUsers]);
 
+  const renderCheckbox = (params: GridRenderCellParams<User, boolean>) => {
+    const currentUser = params.row;
+    const userFromState = users.find((user) => user.id === currentUser.id);
+    const permissionField = params.field; // którą kolumnę kliknięto: isClient, isHost lub isAdmin
+    const permissionType = getPermissionTypeForField(permissionField);
+    const defaultValueFromDb = userFromState?.permissions?.includes(permissionType);
+    const isCheckedFromState = params.value; // na jaką wartość zmieniono: true lub false
+    return(
+      <Checkbox
+        checked={isCheckedFromState || defaultValueFromDb}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          const newPermissions = isChecked
+            ? [...currentUser.permissions, permissionType]
+            : currentUser.permissions.filter((p) => p !== permissionType);
 
-  const renderCheckbox = (params: GridRenderCellParams<User, boolean>) => (
-    <Checkbox
-      checked={params.value || false}
-      onChange={(e) => {
-        const updatedUsers = users.map((user) =>
-          user.id === params.row.id
-            ? {...user, [params.field]: e.target.checked}
-            : user
-        );
-        setUsers(updatedUsers);
-      }}
-    />
-  );
+          const updatedUser = {
+            ...currentUser,
+            // [permissionField]: isChecked, // nie używamy flagi permissionField, tylko tablicy permissions
+            permissions: newPermissions
+          };
+
+          api.put<User>('/user', undefined, updatedUser)
+            .then(() => {
+
+              const updatedUsers = users.map((user) => // dla każdego usera z useState (z bazy)
+                user.id === currentUser.id // jeśli to aktualny user
+                  ? updatedUser // to zaktualizuj tylko aktualnego usera
+                  : user // a pozostałych userów nie zmieniaj
+              );
+
+              setUsers(updatedUsers); // ustaw w useState
+            });
+        }}
+      />
+    );
+  };
 
   const columns: GridColDef<(User[])[number]>[] = [
     {
@@ -110,6 +134,9 @@ const UsersPageComponent = (props: OfferDetailsPageProps) => {
         rows={users}
         columns={columns}
         initialState={{
+          sorting: {
+            sortModel: [{field: 'id', sort: 'asc'}]
+          },
           pagination: {
             paginationModel: {
               pageSize: 20,
