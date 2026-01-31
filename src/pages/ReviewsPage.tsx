@@ -6,8 +6,11 @@ import {api} from '../services/api';
 import {UserInfoCell} from '../components/UserInfoCell.tsx';
 import {DateRangeFilterCell} from '../components/DateRangeFilterCell.tsx';
 import {getReviewsWithDateType} from '../util/dateUtil.ts';
+import {useNavigate} from 'react-router-dom';
 
 export const ReviewsPage = () => {
+
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showLoader, setShowLoader] = useState(false);
   const [dataState, setDataState] = useState<State>({
@@ -63,6 +66,33 @@ export const ReviewsPage = () => {
     );
   };
 
+  const OfferTitleCell = (props: GridCellProps) => {
+    const review = props.dataItem as Review;
+    const offerTitle = review.offer?.title;
+    const offerId = review.offerId;
+
+    const handelOfferTitleClick = () => {
+      if(offerId) {
+        navigate(`/offer/${offerId}`);
+      }
+    };
+
+    return (
+      <td>
+        <div
+          onClick={handelOfferTitleClick}
+          style={{
+            padding: '4px 0',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {offerTitle}
+        </div>
+      </td>
+    );
+  };
 
   const DescriptionCell = (props: GridCellProps) => {
     const description = (props.dataItem as Review).description;
@@ -165,6 +195,16 @@ export const ReviewsPage = () => {
           title="Offer ID"
           width="100px"
           filterable
+          sortable
+          filter="numeric"
+        />
+
+        <GridColumn
+          field="offerTitle"
+          title="Offer Title"
+          width="250px"
+          filterable
+          cells={{data: OfferTitleCell}}
           sortable
           filter="numeric"
         />
