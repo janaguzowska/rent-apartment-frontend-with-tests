@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {Map as KendoMap, TileUrlTemplateArgs, MapLayers, MapTileLayer, MapMarkerLayer, MapClickEvent} from '@progress/kendo-react-map';
+import '@progress/kendo-theme-default/dist/all.css';
+import {Position} from '../types/Position.ts';
 import {
   Accordion,
   AccordionDetails,
@@ -62,6 +65,8 @@ import {Amenity} from '../types/Amenity.ts';
 import {OFFER_TYPES, OfferType} from '../types/OfferType.ts';
 import {IMAGE_URL} from '../const.ts';
 import {api} from '../services/api.ts';
+import {CITIES} from '../mocks/cities.ts';
+import {KendoMapMarker} from '../types/KendoMapMarker.ts';
 
 const OfferAddPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -89,7 +94,7 @@ const OfferAddPage: React.FC = () => {
     children: 0,
   });
 
-  const steps = ['Informacje Podstawowe', 'Szczegóły Nieruchomości', 'Udogodnienia', 'Podsumowanie'];
+  const steps = ['Informacje Podstawowe', 'Położenie nieruchomości', 'Szczegóły Nieruchomości', 'Udogodnienia', 'Podsumowanie'];
 
   const handleNextStep = () => {
     if (activeStep < steps.length - 1) {
@@ -212,17 +217,19 @@ const OfferAddPage: React.FC = () => {
   const renderStepContent = () => {
     switch (activeStep) {
       case 0:
-        return <BasicInfoStep formData={formData} onChange={handleInputChange} onSelectChange={handleSelectChange} />;
+        return <BasicInfoStep formData={formData} setFormData={setFormData} onChange={handleInputChange} onSelectChange={handleSelectChange}/>;
       case 1:
+        return <OfferPositionStep formData={formData} setFormData={setFormData}/>;
+      case 2:
         return (<PropertyDetailsStep formData={formData} onChange={handleInputChange}
           onCheckboxChange={handleCheckboxChange} onPriceChange={handlePriceChange}
           onRatingChange={handleRatingChange}
         />);
-      case 2:
+      case 3:
         return (<ImagesStep formData={formData} onImageChange={handleInputChange} onAddImage={handleAddImage}
           onRemoveImage={handleRemoveImage}
         />);
-      case 3:
+      case 4:
         return <SummaryStep formData={formData}/>;
       default:
         return null;
@@ -235,7 +242,7 @@ const OfferAddPage: React.FC = () => {
         {/* Header */}
         <Box sx={{mb: 4}}>
           <Typography variant="h3" component="h1" gutterBottom sx={{fontWeight: 'bold', color: '#1a237e'}}>
-          Dodaj nową ofertę
+            Dodaj nową ofertę
           </Typography>
           <Divider sx={{my: 2}}/>
         </Box>
@@ -243,7 +250,7 @@ const OfferAddPage: React.FC = () => {
         {/* Alert Info */}
         <Alert severity="info" sx={{mb: 4}} icon={<InfoIcon/>}>
           <AlertTitle>Informacja</AlertTitle>
-        Wypełnij formularz w kolejnych krokach, aby utworzyć nową ofertę nieruchomości.
+          Wypełnij formularz w kolejnych krokach, aby utworzyć nową ofertę nieruchomości.
         </Alert>
 
         {/* Stepper */}
@@ -273,7 +280,7 @@ const OfferAddPage: React.FC = () => {
             variant="outlined"
             size="large"
           >
-          Wstecz
+            Wstecz
           </Button>
 
           {activeStep === steps.length - 1 ? (
@@ -293,7 +300,7 @@ const OfferAddPage: React.FC = () => {
               variant="contained"
               size="large"
             >
-            Dalej
+              Dalej
             </Button>
           )}
         </Box>
@@ -312,7 +319,7 @@ const OfferAddPage: React.FC = () => {
             handleSubmit();
           }} variant="contained" color="success"
           >
-          Potwierdź
+            Potwierdź
           </Button>
         </DialogActions>
       </Dialog>
@@ -341,9 +348,10 @@ const OfferAddPage: React.FC = () => {
 // Krok 1: Informacje Podstawowe
 const BasicInfoStep: React.FC<{
   formData: NewOffer;
+  setFormData: (formData: NewOffer) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => void;
   onSelectChange: (e: SelectChangeEvent) => void;
-}> = ({formData, onChange, onSelectChange}) => (
+}> = ({formData, setFormData, onChange, onSelectChange}) => (
   <Grid container spacing={3}>
     <Grid size={{xs: 12}}>
       <Card>
@@ -371,7 +379,12 @@ const BasicInfoStep: React.FC<{
                 <Select
                   name="city"
                   value={formData.city?.title}
-                  onChange={onSelectChange}
+                  onChange={(event) => {
+                    setFormData({
+                      ...formData,
+                      city: CITIES.find((city) => city.title === event.target.value) || CITIES[0],
+                    });
+                  }}
                   label="Miasto"
                 >
                   <MenuItem value="Amsterdam">Amsterdam</MenuItem>
@@ -422,6 +435,128 @@ const BasicInfoStep: React.FC<{
   </Grid>
 );
 
+const OfferPositionStep: React.FC<{
+  formData: NewOffer;
+  setFormData: React.Dispatch<React.SetStateAction<NewOffer>>;
+}> = ({formData, setFormData}) => {
+  const {lat, lng} = formData.city!.position;
+  // const mapInstanceRef = useRef<any>(null);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([lat, lng]);
+  const [mapZoom, setMapZoom] = useState(11);
+  const [markers, setMarkers] = useState<KendoMapMarker[]>([]);
+
+  useEffect(() => {
+    // Jeśli pozycja już istnieje, wyświetl marker i wycentruj mapę
+    if (formData.position) {
+      setMarkers([{latlng: [formData.position.lat, formData.position.lng], title: formData.title}]);
+      // setMapCenter([formData.position.lat, formData.position.lng]);
+      // setMapZoom(13);
+    }
+  }, []);
+
+  const handleMapClick = (event: MapClickEvent) => {
+    // Pobierz współrzędne kliknięcia
+    const location = event.location;
+    if (location) {
+      const newPosition: Position = {
+        lat: location.lat,
+        lng: location.lng,
+      };
+
+      // Aktualizuj marker
+      setMarkers([{latlng: [newPosition.lat, newPosition.lng], title: formData.title}]);
+
+      // Aktualizuj pozycję w formularzu
+      setFormData((prev) => ({
+        ...prev,
+        position: newPosition,
+      }));
+
+      // Opcjonalnie: wycentruj mapę na nowej pozycji
+      // setMapCenter([newPosition.lat, newPosition.lng]);
+      // setMapZoom(13);
+    }
+  };
+
+  return (
+    <Grid container spacing={3}>
+      <Grid size={{xs: 12}}>
+        <Card>
+          <CardHeader title="Lokalizacja nieruchomości"/>
+          <CardContent>
+            <Stack spacing={3}>
+              <Alert severity="info" icon={<InfoIcon/>}>
+                Kliknij na mapie, aby wskazać dokładną lokalizację nieruchomości
+              </Alert>
+
+              <Box sx={{height: '500px', width: '100%', position: 'relative'}}>
+                <KendoMap
+                  center={mapCenter}
+                  zoom={mapZoom}
+                  onMapClick={handleMapClick}
+                  style={{height: '100%', width: '100%'}}
+                >
+                  <MapLayers>
+                    <MapTileLayer
+                      urlTemplate={(e: TileUrlTemplateArgs) => `https://tile.openstreetmap.org/${e.zoom}/${e.x}/${e.y}.png`}
+                      attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap contributors</a>"
+                    />
+                    {markers.length > 0 && (
+                      <MapMarkerLayer
+                        data={markers}
+                        locationField="latlng"
+                        titleField="title"
+                      />
+                    )}
+                  </MapLayers>
+                </KendoMap>
+              </Box>
+
+              {formData.position && (
+                <Paper elevation={1} sx={{p: 2, backgroundColor: '#f5f5f5'}}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Wybrana pozycja:
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid size={{xs: 12, sm: 6}}>
+                      <TextField
+                        fullWidth
+                        label="Szerokość geograficzna (Latitude)"
+                        value={formData.position.lat.toFixed(6)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        size="small"
+                      />
+                    </Grid>
+                    <Grid size={{xs: 12, sm: 6}}>
+                      <TextField
+                        fullWidth
+                        label="Długość geograficzna (Longitude)"
+                        value={formData.position.lng.toFixed(6)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        size="small"
+                      />
+                    </Grid>
+                  </Grid>
+                </Paper>
+              )}
+
+              {!formData.position && (
+                <Alert severity="warning">
+                  Nie wybrano jeszcze lokalizacji. Kliknij na mapie, aby ją wskazać.
+                </Alert>
+              )}
+            </Stack>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
+  );
+};
+
 // Krok 2: Szczegóły Nieruchomości
 const PropertyDetailsStep: React.FC<{
   formData: NewOffer;
@@ -434,7 +569,7 @@ const PropertyDetailsStep: React.FC<{
     {/* Cena i Cechy */}
     <Grid size={{xs: 12, md: 6}}>
       <Card>
-        <CardHeader title="Cena i Pojemność"/>
+        <CardHeader title="Price and capacity"/>
         <CardContent>
           <Stack spacing={3}>
             <Box>

@@ -23,6 +23,7 @@
     "@progress/kendo-react-grid": "^13.3.0",
     "@progress/kendo-react-inputs": "^13.3.0",
     "@progress/kendo-react-intl": "^13.3.0",
+    "@progress/kendo-react-map": "^13.3.0",
     "@progress/kendo-theme-default": "^12.3.0",
     "@reduxjs/toolkit": "1.9.7",
     "@types/geojson": "^7946.0.16",
