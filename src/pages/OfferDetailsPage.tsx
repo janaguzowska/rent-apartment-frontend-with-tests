@@ -31,7 +31,16 @@ interface FormValues {
 }
 
 const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
-  const {currentOffer, toggleFavorite, setCurrentOffer, setOffers, offers, reservationForm, setReservationForm, isAuthorized} = props;
+  const {
+    currentOffer,
+    toggleFavorite,
+    setCurrentOffer,
+    setOffers,
+    offers,
+    reservationForm,
+    setReservationForm,
+    isAuthorized
+  } = props;
   // const [searchParams, setSearchParams] = useSearchParams();
 
   const {id} = useParams();
@@ -108,7 +117,7 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
             )}
             <div className="offer__name-wrapper">
               <h1 className="offer__name">{currentOffer.title}</h1>
-              { isAuthorized && (
+              {isAuthorized && (
                 <button
                   className={`offer__bookmark-button ${currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''} button`}
                   type="button" onClick={handleBookmarkClick}
@@ -149,7 +158,7 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
               <span className="offer__price-text">&nbsp;night</span>
             </OfferPrice>
             {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-            <form action="#" onSubmit={handleSubmit(onReserveClick)}>
+            <ReserveForm action="#" onSubmit={handleSubmit(onReserveClick)}>
               <Controller
                 control={control}
                 name="dateRange"
@@ -173,10 +182,16 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
               {errors.dateRange && (
                 <p style={{color: 'red', marginTop: '10px'}}>{errors.dateRange.message}</p>
               )}
-              <ReservationButton type="submit" className="offer__order">
+
+              <OfferActionButton type="submit" className="offer__order">
                 Reserve
-              </ReservationButton>
-            </form>
+              </OfferActionButton>
+            </ReserveForm>
+
+            <OfferActionButton onClick={() => navigate(`/offer/${currentOffer.id}/edit`)} type="button" className="offer__order">
+              Edit Offer
+            </OfferActionButton>
+
             <OfferInside className="offer__inside">
               <h2 className="offer__inside-title">What&apos;s inside</h2>
               <ul className="offer__inside-list">
@@ -236,7 +251,7 @@ const AmenityLi = styled.li`
   max-width: 230px;
 `;
 
-const ReservationButton = styled.button`
+const OfferActionButton = styled.button`
   display: flex;
   width: 300px;
   height: 49px;
@@ -252,6 +267,17 @@ const ReservationButton = styled.button`
 
   &:hover {
     opacity: 0.7;
+  }
+`;
+
+const ReserveForm = styled.form`
+  margin-top: 30px;
+
+  input {
+    text-align: center;
+    background-color: white;
+    padding: 16px 10px;
+    border: solid 2px;
   }
 `;
 
