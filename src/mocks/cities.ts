@@ -24,3 +24,5 @@ export const CITIES = [
     position: {lat: 37.971706, lng: 23.7258817},
   },
 ];
+
+

@@ -1,9 +1,4 @@
-import {
-  DatePicker,
-  DatePickerChangeEvent,
-  DateTimePicker,
-  DateTimePickerChangeEvent
-} from '@progress/kendo-react-dateinputs';
+import {DateTimePicker, DateTimePickerChangeEvent} from '@progress/kendo-react-dateinputs';
 import {CompositeFilterDescriptor, FilterDescriptor, State} from '@progress/kendo-data-query';
 
 interface DateRangeFilterCellProps {
@@ -81,9 +76,9 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
   }) as FilterDescriptor;
 
   return (
-    <div style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div style={{padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
       <div>
-        <label style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}>Data od:</label>
+        <label style={{fontSize: '12px', display: 'block', marginBottom: '4px'}}>Data od:</label>
         <DateTimePicker
           value={fromFilter?.value as Date | undefined}
           onChange={onChangeFrom}
@@ -93,7 +88,7 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
         />
       </div>
       <div>
-        <label style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}>Data do:</label>
+        <label style={{fontSize: '12px', display: 'block', marginBottom: '4px'}}>Data do:</label>
         <DateTimePicker
           value={toFilter?.value as Date | undefined}
           onChange={onChangeTo}
