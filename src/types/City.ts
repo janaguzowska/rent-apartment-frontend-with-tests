@@ -2,6 +2,6 @@ import {Position} from './Position.ts';
 
 export interface City {
   title: string;
-  position: Position;
+  position?: Position;
   zoom?: number;
 }

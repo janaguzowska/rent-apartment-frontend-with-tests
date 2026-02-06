@@ -1,5 +1,5 @@
 export interface Amenity{
-  id: number;
+  id?: number;
   name: string;
-  offerId: number;
+  offerId?: number;
 }

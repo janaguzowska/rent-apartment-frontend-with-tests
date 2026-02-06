@@ -7,15 +7,17 @@ import {Stepper, TabStrip, TabStripTab} from '@progress/kendo-react-layout';
 import {Form, FormElement} from '@progress/kendo-react-form';
 import {Notification, NotificationGroup} from '@progress/kendo-react-notification';
 import {Label} from '@progress/kendo-react-labels';
-import {OfferType} from '../types/OfferType';
+import {OFFER_TYPES, OfferType} from '../types/OfferType';
 import {AppState} from '../types/AppState.ts';
 import {Offer} from '../types/Offer.ts';
 import {actions} from '../redux/actions.ts';
 import {connect} from 'react-redux';
 import {api} from '../services/api.ts';
 import {CITIES} from '../mocks/cities.ts';
-import {KendoComboBoxOption} from '../types/KendoComboBoxOption.ts';
 import {Image} from '../types/Image.ts';
+import {Amenity} from '../types/Amenity.ts';
+import {AMENITIES} from '../mocks/amenities.ts';
+import {City} from '../types/City.ts';
 
 interface CityOption {
   name: string;
@@ -35,8 +37,8 @@ interface ChipDataItem {
 interface FormDataType {
   title: string;
   price: number;
-  type: OfferTypeOption;
-  city: CityOption;
+  type: OfferType;
+  city: City;
   rating: number;
   bedrooms: number;
   maxAdults: number;
@@ -45,7 +47,7 @@ interface FormDataType {
   isPremium: boolean;
   isFavorite: boolean;
   description: string;
-  amenities: string[];
+  amenities: Amenity[];
   tags: ChipDataItem[];
   themeColor: string;
   keywords: string;
@@ -68,28 +70,6 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const offerTypes: OfferTypeOption[] = [
-    {text: 'Apartment', value: 'apartment' as OfferType},
-    {text: 'Room', value: 'room' as OfferType},
-    {text: 'House', value: 'house' as OfferType},
-    {text: 'Hotel', value: 'hotel' as OfferType},
-  ];
-
-  const cities: KendoComboBoxOption[] = CITIES.map((c) => ({name: c.title, value: c.title }));
-
-  const amenitiesList = [
-    'Wi-Fi',
-    'Washing machine',
-    'Towels',
-    'Heating',
-    'Coffee machine',
-    'Baby seat',
-    'Kitchen',
-    'Dishwasher',
-    'Cabel TV',
-    'Fridge',
-  ];
-
   const chipData: ChipDataItem[] = [
     {text: 'Featured', value: 'featured'},
     {text: 'New', value: 'new'},
@@ -107,9 +87,9 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
   const [formData, setFormData] = useState<FormDataType>({
     ...currentOffer,
     // price: 120,
-    type: offerTypes[0],
+    type: 'apartment',
     // city: cities[0],
-    city: cities.find((city) => city.name === currentOffer.city?.title)!,
+    city: CITIES.find((city) => city.title === currentOffer.city?.title)!,
     // rating: 4.5,
     // bedrooms: 2,
     // maxAdults: 4,
@@ -118,7 +98,7 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
     // isPremium: false,
     // isFavorite: false,
     // description: 'A wonderful serenity has taken possession of my entire soul...',
-    amenities: currentOffer.amenities.map((amenity) => amenity.name),
+    amenities: currentOffer.amenities,
     tags: [],
     themeColor: '#ff6b6b',
     keywords: '',
@@ -128,7 +108,7 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
     setIsLoading(true);
 
     // Symulacja wysyłania danych
-    api.post('/offer/add', undefined, formData)
+    api.post('/offer/update', undefined, formData)
       .then(() => {
         setSuccessMessage('Oferta została pomyślnie utworzona!');
         setOpenNotification(true);
@@ -137,9 +117,9 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
         setFormData({
           title: '',
           description: '',
-          city: cities.find((c) => c.name === 'Warsaw')!,
+          city: CITIES.find((c) => c.title === 'Warsaw')!,
           price: 0,
-          type: offerTypes.find((type) => type.value === 'apartment')!,
+          type: 'apartment',
           bedrooms: 1,
           maxAdults: 2,
           hasPets: false,
@@ -183,9 +163,8 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
       </NotificationGroup>
 
       <Form
-        onSubmit={handleSubmit}
         initialValues={formData}
-        render={(formRenderProps) => (
+        render={() => (
           <FormElement style={{width: '100%'}}>
             {/* Stepper */}
             <div style={{marginBottom: '30px'}}>
@@ -231,11 +210,11 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
                     <Label>Offer Type</Label>
                     <DropDownList
                       name="type"
-                      data={offerTypes}
+                      data={OFFER_TYPES.map((type) => ({text: type, value: type}))}
                       textField="text"
                       dataItemKey="value"
-                      value={formData.type}
-                      onChange={(e) => setFormData({...formData, type: e.value as OfferTypeOption})}
+                      value={{text: formData.type, value: formData.type}}
+                      onChange={(e) => setFormData({...formData, type: (e.value as OfferTypeOption).value})}
                       style={{width: '100%'}}
                     />
                   </div>
@@ -245,11 +224,11 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
                     <Label>City</Label>
                     <ComboBox
                       name="city"
-                      data={cities}
+                      data={CITIES.map((c) => ({name: c.title, value: c.title}))}
                       textField="name"
                       dataItemKey="value"
-                      value={formData.city}
-                      onChange={(e) => setFormData({...formData, city: e.value as CityOption})}
+                      value={{name: formData.city.title, value: formData.city.title}}
+                      onChange={(e) => setFormData({...formData, city: {title: (e.value as CityOption).value}})}
                       style={{width: '100%'}}
                       placeholder="Select or type a city"
                     />
@@ -358,9 +337,12 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
                   <div style={{marginBottom: '20px'}}>
                     <Label>Amenities</Label>
                     <MultiSelect
-                      data={amenitiesList}
-                      value={formData.amenities}
-                      onChange={(e) => setFormData({...formData, amenities: e.value as string[]})}
+                      data={AMENITIES}
+                      value={formData.amenities.map((amenity) => amenity.name)}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        amenities: (e.value as string[]).map((item) => ({name: item}))
+                      })}
                       style={{width: '100%'}}
                       placeholder="Select amenities..."
                     />
@@ -429,8 +411,13 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
               <Button type="button" themeColor="info">
                 Preview
               </Button>
-              <Button type="submit" themeColor="primary">
-                Save Changes
+              <Button
+                type="button"
+                themeColor="primary"
+                onClick={handleSubmit}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Save Changes'}
               </Button>
             </div>
           </FormElement>
