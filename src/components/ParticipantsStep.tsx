@@ -1,10 +1,9 @@
-import {StepperPagination} from './StepperPagination.tsx';
-import {AppState} from '../types/AppState.ts';
-import {Dispatch} from 'react';
-import {actions} from '../redux/actions.ts';
-import {connect} from 'react-redux';
-import {ReservationForm} from '../types/Reservation.ts';
-
+import { StepperPagination } from './StepperPagination.tsx';
+import { AppState } from '../types/AppState.ts';
+import { Dispatch } from 'react';
+import { actions } from '../redux/actions.ts';
+import { connect } from 'react-redux';
+import { ReservationForm } from '../types/Reservation.ts';
 
 interface ParticipantsStepProps {
   reservationForm: ReservationForm;
@@ -12,16 +11,19 @@ interface ParticipantsStepProps {
 }
 
 export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
-  const {reservationForm, setReservationForm} = props;
+  const { reservationForm, setReservationForm } = props;
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = ev.target;
 
     setReservationForm({
-      ...reservationForm, participants: [{
-        ...reservationForm.participants[0],
-        [name]: value,
-      }]
+      ...reservationForm,
+      participants: [
+        {
+          ...reservationForm.participants[0],
+          [name]: value,
+        },
+      ],
     });
   };
 
@@ -31,17 +33,29 @@ export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
         <div>
           <label>
             First name:
-            <input type="text" name="firstName" onChange={handleChange} value={reservationForm.participants[0].firstName} autoComplete="off"/>
+            <input
+              type="text"
+              name="firstName"
+              onChange={handleChange}
+              value={reservationForm.participants[0].firstName}
+              autoComplete="off"
+            />
           </label>
         </div>
         <div>
           <label>
             Last name:
-            <input type="text" name="lastName" onChange={handleChange} value={reservationForm.participants[0].lastName} autoComplete="off"/>
+            <input
+              type="text"
+              name="lastName"
+              onChange={handleChange}
+              value={reservationForm.participants[0].lastName}
+              autoComplete="off"
+            />
           </label>
         </div>
       </form>
-      <StepperPagination/>
+      <StepperPagination />
     </>
   );
 };
@@ -51,7 +65,11 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  setReservationForm: (reservationForm: ReservationForm) => dispatch(actions.setReservationForm(reservationForm)),
+  setReservationForm: (reservationForm: ReservationForm) =>
+    dispatch(actions.setReservationForm(reservationForm)),
 });
 
-export const ParticipantsStep = connect(mapStateToProps, mapDispatchToProps)(ParticipantsStepComponent);
+export const ParticipantsStep = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ParticipantsStepComponent);

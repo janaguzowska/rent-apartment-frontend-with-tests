@@ -1,41 +1,41 @@
-import {ActionType} from '../types/ActionType.ts';
-import {Offer} from '../types/Offer.ts';
-import {Review} from '../types/Review.ts';
-import {User} from '../types/User.ts';
-import {SearchBarParams} from '../types/SearchBarParams.ts';
-import {ReservationForm, Reservation} from '../types/Reservation.ts';
+import { ActionType } from '../types/ActionType.ts';
+import { Offer } from '../types/Offer.ts';
+import { Review } from '../types/Review.ts';
+import { User } from '../types/User.ts';
+import { SearchBarParams } from '../types/SearchBarParams.ts';
+import { ReservationForm, Reservation } from '../types/Reservation.ts';
 
 export const actions = {
   setOffers: (offers: Offer[]) => ({
     type: ActionType.SetOffers,
-    payload: { offers }
+    payload: { offers },
   }),
   toggleFavorite: (currentOffer: Offer) => ({
     type: ActionType.ToggleFavorite,
-    payload: { currentOffer }
+    payload: { currentOffer },
   }),
   setCurrentOffer: (id: number) => ({
     type: ActionType.SetCurrentOffer,
-    payload: { id }
+    payload: { id },
   }),
   addReview: (review: Review) => ({
     type: ActionType.AddReview,
-    payload: { review }
+    payload: { review },
   }),
   setReviews: (reviews: Review[]) => ({
     type: ActionType.SetReviews,
-    payload: { reviews }
+    payload: { reviews },
   }),
   setUser: (user: User) => ({
     type: ActionType.setUser,
-    payload: { user }
+    payload: { user },
   }),
   logout: () => ({
-    type: ActionType.Logout
+    type: ActionType.Logout,
   }),
   setSearchBarParams: (searchBarParams: SearchBarParams) => ({
     type: ActionType.SetSearchBarParams,
-    payload: { searchBarParams }
+    payload: { searchBarParams },
   }),
   setReservationForm: (reservationForm: ReservationForm) => ({
     type: ActionType.SetReservation,
@@ -43,7 +43,7 @@ export const actions = {
   }),
   setUsers: (users: User[]) => ({
     type: ActionType.setUsers,
-    payload: { users }
+    payload: { users },
   }),
   setUserReservations: (reservations: Reservation[]) => ({
     type: ActionType.SetUserReservations,

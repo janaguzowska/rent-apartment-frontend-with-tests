@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {useRef} from 'react';
+import { useRef } from 'react';
 
 interface FileUploaderProps {
   url?: string;
@@ -7,7 +7,7 @@ interface FileUploaderProps {
 }
 
 export const FileUploader = (props: FileUploaderProps) => {
-  const {url, setUrl} = props;
+  const { url, setUrl } = props;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,8 @@ export const FileUploader = (props: FileUploaderProps) => {
           </FilePickerButton>
         )}
       </FilePickerRow>
-    </>);
+    </>
+  );
 };
 
 const UserInput = styled.input`
@@ -137,5 +138,4 @@ const UploadedImage = styled.img`
   height: 30px;
   border-radius: 50%;
   margin: 0 10px;
-
-  `;
+`;

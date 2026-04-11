@@ -1,9 +1,9 @@
-import {StepperPagination} from './StepperPagination.tsx';
-import {ReservationForm} from '../types/Reservation.ts';
-import {AppState} from '../types/AppState.ts';
-import {connect} from 'react-redux';
-import {Offer} from '../types/Offer.ts';
-import {dateToString} from '../util/dateUtil.ts';
+import { StepperPagination } from './StepperPagination.tsx';
+import { ReservationForm } from '../types/Reservation.ts';
+import { AppState } from '../types/AppState.ts';
+import { connect } from 'react-redux';
+import { Offer } from '../types/Offer.ts';
+import { dateToString } from '../util/dateUtil.ts';
 
 interface SummaryStepProps {
   reservationForm: ReservationForm;
@@ -11,7 +11,7 @@ interface SummaryStepProps {
 }
 
 export const SummaryStepComponent = (props: SummaryStepProps) => {
-  const {reservationForm, currentOffer} = props;
+  const { reservationForm, currentOffer } = props;
   return (
     <div>
       <h3>Offer:</h3>
@@ -19,10 +19,12 @@ export const SummaryStepComponent = (props: SummaryStepProps) => {
       <div>Check in: {dateToString(reservationForm.checkIn)}</div>
       <div>Check out: {dateToString(reservationForm.checkOut)}</div>
       <h3>Participants:</h3>
-      { reservationForm.participants.map((participant)=> (
-        <div key={participant.firstName}>{participant.firstName} {participant.lastName}</div>
+      {reservationForm.participants.map((participant) => (
+        <div key={participant.firstName}>
+          {participant.firstName} {participant.lastName}
+        </div>
       ))}
-      <StepperPagination reservationForm={reservationForm}/>
+      <StepperPagination reservationForm={reservationForm} />
     </div>
   );
 };

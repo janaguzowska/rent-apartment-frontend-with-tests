@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box';
-import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
-import {api} from '../services/api.ts';
-import {User} from '../types/User.ts';
-import {Dispatch, useEffect} from 'react';
-import {AppState} from '../types/AppState.ts';
-import {actions} from '../redux/actions.ts';
-import {connect} from 'react-redux';
-import {Checkbox} from '@mui/material';
-import {getPermissionTypeForField} from '../types/PermissionType.ts';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { api } from '../services/api.ts';
+import { User } from '../types/User.ts';
+import { Dispatch, useEffect } from 'react';
+import { AppState } from '../types/AppState.ts';
+import { actions } from '../redux/actions.ts';
+import { connect } from 'react-redux';
+import { Checkbox } from '@mui/material';
+import { getPermissionTypeForField } from '../types/PermissionType.ts';
 
 interface OfferDetailsPageProps {
   setUsers: (users: User[]) => void;
@@ -15,11 +15,11 @@ interface OfferDetailsPageProps {
 }
 
 const UsersPageComponent = (props: OfferDetailsPageProps) => {
-
-  const {users, setUsers} = props;
+  const { users, setUsers } = props;
 
   useEffect(() => {
-    api.post<User[]>('/user/search', undefined, {})
+    api
+      .post<User[]>('/user/search', undefined, {})
       .then((usersResponse) => setUsers(usersResponse))
       .catch((error) => console.error('Error:', error));
   }, [setUsers]);
@@ -29,9 +29,10 @@ const UsersPageComponent = (props: OfferDetailsPageProps) => {
     const userFromState = users.find((user) => user.id === currentUser.id);
     const permissionField = params.field; // którą kolumnę kliknięto: isClient, isHost lub isAdmin
     const permissionType = getPermissionTypeForField(permissionField);
-    const defaultValueFromDb = userFromState?.permissions?.includes(permissionType);
+    const defaultValueFromDb =
+      userFromState?.permissions?.includes(permissionType);
     const isCheckedFromState = params.value; // na jaką wartość zmieniono: true lub false
-    return(
+    return (
       <Checkbox
         checked={isCheckedFromState || defaultValueFromDb}
         onChange={(e) => {
@@ -43,26 +44,27 @@ const UsersPageComponent = (props: OfferDetailsPageProps) => {
           const updatedUser = {
             ...currentUser,
             // [permissionField]: isChecked, // nie używamy flagi permissionField, tylko tablicy permissions
-            permissions: newPermissions
+            permissions: newPermissions,
           };
 
-          api.put<User>('/user', undefined, updatedUser)
-            .then(() => {
-
-              const updatedUsers = users.map((user) => // dla każdego usera z useState (z bazy)
+          api.put<User>('/user', undefined, updatedUser).then(() => {
+            const updatedUsers = users.map(
+              (
+                user, // dla każdego usera z useState (z bazy)
+              ) =>
                 user.id === currentUser.id // jeśli to aktualny user
                   ? updatedUser // to zaktualizuj tylko aktualnego usera
-                  : user // a pozostałych userów nie zmieniaj
-              );
+                  : user, // a pozostałych userów nie zmieniaj
+            );
 
-              setUsers(updatedUsers); // ustaw w useState
-            });
+            setUsers(updatedUsers); // ustaw w useState
+          });
         }}
       />
     );
   };
 
-  const columns: GridColDef<(User[])[number]>[] = [
+  const columns: GridColDef<User[][number]>[] = [
     {
       field: 'id',
       headerName: 'ID',
@@ -129,13 +131,13 @@ const UsersPageComponent = (props: OfferDetailsPageProps) => {
   ];
 
   return (
-    <Box sx={{height: '90%', width: '100%'}}>
+    <Box sx={{ height: '90%', width: '100%' }}>
       <DataGrid
         rows={users}
         columns={columns}
         initialState={{
           sorting: {
-            sortModel: [{field: 'id', sort: 'asc'}]
+            sortModel: [{ field: 'id', sort: 'asc' }],
           },
           pagination: {
             paginationModel: {
@@ -159,4 +161,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUsers: (users: User[]) => dispatch(actions.setUsers(users)),
 });
 
-export const UsersPage = connect(mapStateToProps, mapDispatchToProps)(UsersPageComponent);
+export const UsersPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UsersPageComponent);

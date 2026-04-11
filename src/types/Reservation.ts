@@ -1,7 +1,7 @@
-import {Tour} from './Tour.ts';
-import {Participant} from './Participant.ts';
-import {Offer} from './Offer.ts';
-import {Insurance} from './Insurance.ts';
+import { Tour } from './Tour.ts';
+import { Participant } from './Participant.ts';
+import { Offer } from './Offer.ts';
+import { Insurance } from './Insurance.ts';
 
 export interface Reservation extends ReservationForm {
   id: number;

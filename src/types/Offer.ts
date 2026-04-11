@@ -1,9 +1,9 @@
-import {City} from './City.ts';
-import {OfferType} from './OfferType.ts';
-import {Host} from './Host.ts';
-import {Position} from './Position.ts';
-import {Image} from './Image.ts';
-import {Amenity} from './Amenity.ts';
+import { City } from './City.ts';
+import { OfferType } from './OfferType.ts';
+import { Host } from './Host.ts';
+import { Position } from './Position.ts';
+import { Image } from './Image.ts';
+import { Amenity } from './Amenity.ts';
 // import {Rating} from './Rating.ts';
 
 export interface Offer extends NewOffer {

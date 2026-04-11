@@ -1,10 +1,10 @@
-import {Dispatch, FormEvent, useState} from 'react';
-import {AppState} from '../types/AppState.ts';
-import {connect} from 'react-redux';
-import {User} from '../types/User.ts';
-import {api} from '../services/api.ts';
-import {Link, useNavigate} from 'react-router-dom';
-import {actions} from '../redux/actions.ts';
+import { Dispatch, FormEvent, useState } from 'react';
+import { AppState } from '../types/AppState.ts';
+import { connect } from 'react-redux';
+import { User } from '../types/User.ts';
+import { api } from '../services/api.ts';
+import { Link, useNavigate } from 'react-router-dom';
+import { actions } from '../redux/actions.ts';
 
 interface LoginProps {
   // isAuthorized: boolean;
@@ -26,8 +26,9 @@ const LoginComponent = ({ setUser }: LoginProps) => {
     }
 
     const url = '/login';
-    api.post<User>(`${url}`, undefined, {email, password})
-      .then((response:User) => {
+    api
+      .post<User>(`${url}`, undefined, { email, password })
+      .then((response: User) => {
         setUser(response);
         localStorage.setItem('credentials', btoa(`${email}:${password}`));
         navigate(-1);
@@ -42,7 +43,13 @@ const LoginComponent = ({ setUser }: LoginProps) => {
           <div className="header__wrapper">
             <div className="header__left">
               <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
+                <img
+                  className="header__logo"
+                  src="img/logo.svg"
+                  alt="6 cities logo"
+                  width="81"
+                  height="41"
+                />
               </Link>
             </div>
           </div>
@@ -52,7 +59,12 @@ const LoginComponent = ({ setUser }: LoginProps) => {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+            <form
+              className="login__form form"
+              action="#"
+              method="post"
+              onSubmit={handleSubmit}
+            >
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
                 <input
@@ -81,7 +93,8 @@ const LoginComponent = ({ setUser }: LoginProps) => {
                 className="login__submit form__submit button"
                 type="submit"
                 disabled={!email || !isPasswordValid}
-              >Sign in
+              >
+                Sign in
               </button>
             </form>
           </section>
@@ -106,4 +119,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
-export const LoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+export const LoginPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginComponent);

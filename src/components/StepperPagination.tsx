@@ -1,18 +1,24 @@
 import styled from 'styled-components';
-import {getBackStepPath, getNextStepPath, isBackButtonEnabled, isNextButtonEnabled, RESERVATION_URL} from '../const.ts';
-import {useLocation, useNavigate, useParams} from 'react-router-dom';
-import {api} from '../services/api.ts';
-import {ReservationForm} from '../types/Reservation.ts';
+import {
+  getBackStepPath,
+  getNextStepPath,
+  isBackButtonEnabled,
+  isNextButtonEnabled,
+  RESERVATION_URL,
+} from '../const.ts';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { api } from '../services/api.ts';
+import { ReservationForm } from '../types/Reservation.ts';
 
 interface StepperPaginationProps {
   reservationForm?: ReservationForm;
 }
 
 export const StepperPagination = (props: StepperPaginationProps) => {
-  const {reservationForm} = props;
+  const { reservationForm } = props;
   const navigate = useNavigate();
-  const {id} = useParams();
-  const {pathname} = useLocation();
+  const { id } = useParams();
+  const { pathname } = useLocation();
 
   const handleBackStepClick = () => {
     if (isBackButtonEnabled(id!, pathname)) {
@@ -31,11 +37,17 @@ export const StepperPagination = (props: StepperPaginationProps) => {
   };
 
   // console.log(`isNextEnabled = ${ isNextEnabled}`);
-  const nextButtonTitle = isNextButtonEnabled(id!, pathname) ? 'Next step' : 'Complete';
+  const nextButtonTitle = isNextButtonEnabled(id!, pathname)
+    ? 'Next step'
+    : 'Complete';
   return (
     <StepPaginationWrapper className="container">
-      <Button onClick={handleBackStepClick} disabled={!isBackButtonEnabled}>Previous step</Button>
-      <Button onClick={handleNextStepClick} disabled={!isNextButtonEnabled}>{nextButtonTitle}</Button>
+      <Button onClick={handleBackStepClick} disabled={!isBackButtonEnabled}>
+        Previous step
+      </Button>
+      <Button onClick={handleNextStepClick} disabled={!isNextButtonEnabled}>
+        {nextButtonTitle}
+      </Button>
     </StepPaginationWrapper>
   );
 };

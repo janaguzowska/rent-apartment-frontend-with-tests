@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import Switch from 'react-switch';
-import {useState} from 'react';
-import {MIN_ADULTS} from '../const.ts';
+import { useState } from 'react';
+import { MIN_ADULTS } from '../const.ts';
 
 interface OccupancyConfigProps {
- adults: number;
+  adults: number;
   childrenNumber: number;
   rooms: number;
   hasPets: boolean;
@@ -15,7 +15,16 @@ interface OccupancyConfigProps {
 }
 
 export const OccupancyConfig = (props: OccupancyConfigProps) => {
-  const {adults, childrenNumber: children, rooms, hasPets, setAdults, setChildren, setRooms, setHasPets} = props;
+  const {
+    adults,
+    childrenNumber: children,
+    rooms,
+    hasPets,
+    setAdults,
+    setChildren,
+    setRooms,
+    setHasPets,
+  } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   type CounterType = 'adults' | 'children' | 'rooms';
@@ -52,7 +61,6 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-
   return (
     <OccupancyConfigWrapper>
       <OccupancyMainWrapper>
@@ -63,20 +71,25 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
           onClick={handleOpenDropdown}
         >
           <div className="occupancy-config__icon-people">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30px">
-              <path
-                d="M16.5 6a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0M18 6A6 6 0 1 0 6 6a6 6 0 0 0 12 0M3 23.25a9 9 0 1 1 18 0 .75.75 0 0 0 1.5 0c0-5.799-4.701-10.5-10.5-10.5S1.5 17.451 1.5 23.25a.75.75 0 0 0 1.5 0"
-              >
-              </path>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="30px"
+            >
+              <path d="M16.5 6a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0M18 6A6 6 0 1 0 6 6a6 6 0 0 0 12 0M3 23.25a9 9 0 1 1 18 0 .75.75 0 0 0 1.5 0c0-5.799-4.701-10.5-10.5-10.5S1.5 17.451 1.5 23.25a.75.75 0 0 0 1.5 0"></path>
             </svg>
           </div>
-          <div>{adults} adults • {children} children • {rooms} room {hasPets ? '• pet' : ''}</div>
+          <div>
+            {adults} adults • {children} children • {rooms} room{' '}
+            {hasPets ? '• pet' : ''}
+          </div>
           <div className="occupancy-config__icon-dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30px">
-              <path
-                d="M19.268 8.913a.9.9 0 0 1-.266.642l-6.057 6.057A1.3 1.3 0 0 1 12 16c-.35.008-.69-.123-.945-.364L4.998 9.58a.91.91 0 0 1 0-1.284.897.897 0 0 1 1.284 0L12 13.99l5.718-5.718a.897.897 0 0 1 1.284 0 .88.88 0 0 1 .266.642"
-              >
-              </path>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="30px"
+            >
+              <path d="M19.268 8.913a.9.9 0 0 1-.266.642l-6.057 6.057A1.3 1.3 0 0 1 12 16c-.35.008-.69-.123-.945-.364L4.998 9.58a.91.91 0 0 1 0-1.284.897.897 0 0 1 1.284 0L12 13.99l5.718-5.718a.897.897 0 0 1 1.284 0 .88.88 0 0 1 .266.642"></path>
             </svg>
           </div>
         </OccupancyMainDropdownButton>
@@ -90,21 +103,32 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
           <OccupancyAdult className="occupancy__adults">
             <div>Adults</div>
             <AdultWrapper>
-              <ButtonWrapper type="button" onClick={() => handleCountDown('adults')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountDown('adults')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
                     <path d="M20.25 12.75H3.75a.75.75 0 0 1 0-1.5h16.5a.75.75 0 0 1 0 1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
               <span> {adults} </span>
-              <ButtonWrapper type="button" onClick={() => handleCountUp('adults')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountUp('adults')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
-                    <path
-                      d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"
-                    >
-                    </path>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
+                    <path d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
@@ -113,21 +137,32 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
           <OccupancyChildren className="occupancy__children">
             <div>Children</div>
             <ChildrenWrapper>
-              <ButtonWrapper type="button" onClick={() => handleCountDown('children')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountDown('children')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
                     <path d="M20.25 12.75H3.75a.75.75 0 0 1 0-1.5h16.5a.75.75 0 0 1 0 1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
               <span> {children} </span>
-              <ButtonWrapper type="button" onClick={() => handleCountUp('children')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountUp('children')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
-                    <path
-                      d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"
-                    >
-                    </path>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
+                    <path d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
@@ -136,21 +171,32 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
           <OccupancyRooms className="occupancy__rooms">
             <div>Rooms</div>
             <RoomsWrapper>
-              <ButtonWrapper type="button" onClick={() => handleCountDown('rooms')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountDown('rooms')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
                     <path d="M20.25 12.75H3.75a.75.75 0 0 1 0-1.5h16.5a.75.75 0 0 1 0 1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
               <span> {rooms} </span>
-              <ButtonWrapper type="button" onClick={() => handleCountUp('rooms')}>
+              <ButtonWrapper
+                type="button"
+                onClick={() => handleCountUp('rooms')}
+              >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25px">
-                    <path
-                      d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"
-                    >
-                    </path>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="25px"
+                  >
+                    <path d="M20.25 11.25h-7.5v-7.5a.75.75 0 0 0-1.5 0v7.5h-7.5a.75.75 0 0 0 0 1.5h7.5v7.5a.75.75 0 0 0 1.5 0v-7.5h7.5a.75.75 0 0 0 0-1.5"></path>
                   </svg>
                 </span>
               </ButtonWrapper>
@@ -175,7 +221,11 @@ export const OccupancyConfig = (props: OccupancyConfigProps) => {
             </HasPetsWrapper>
           </OccupancyPets>
         </div>
-        <OccupancyConfirmButton onClick={() => setIsDropdownOpen(false)} className={isDropdownOpen ? '' : 'visually-hidden'} type="button">
+        <OccupancyConfirmButton
+          onClick={() => setIsDropdownOpen(false)}
+          className={isDropdownOpen ? '' : 'visually-hidden'}
+          type="button"
+        >
           <span>Done</span>
         </OccupancyConfirmButton>
       </OccupancyPopup>
@@ -202,7 +252,7 @@ const OccupancyConfigWrapper = styled.div`
 `;
 
 const OccupancyPopup = styled.div<{ $isVisible: boolean }>`
-  display: ${({ $isVisible}) => ($isVisible ? 'flex' : 'none')};
+  display: ${({ $isVisible }) => ($isVisible ? 'flex' : 'none')};
   flex-direction: column;
   border: 2px solid #007cb9;
   border-radius: 10px;
@@ -284,4 +334,3 @@ const HasPetsWrapper = styled.div`
 const ButtonWrapper = styled.button`
   border: none;
 `;
-

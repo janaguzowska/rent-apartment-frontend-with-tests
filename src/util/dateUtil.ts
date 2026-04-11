@@ -1,19 +1,26 @@
-import {isMatch, parse} from 'date-fns';
-import {Review} from '../types/Review.ts';
+import { isMatch, parse } from 'date-fns';
+import { Review } from '../types/Review.ts';
 
-export const dateToString = (date?: Date) => date?.toLocaleDateString('pl-PL', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-});
+export const dateToString = (date?: Date) =>
+  date?.toLocaleDateString('pl-PL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
 
-const SUPPORTED_DATE_FORMATS = ['yyyy-MM-dd', 'dd.MM.yyyy', 'dd.MM.yyyy HH:mm'] as const;
+const SUPPORTED_DATE_FORMATS = [
+  'yyyy-MM-dd',
+  'dd.MM.yyyy',
+  'dd.MM.yyyy HH:mm',
+] as const;
 
 export const stringToDate = (dateString?: string) => {
   if (!dateString) {
     return null;
   }
-  const matchedFormat = SUPPORTED_DATE_FORMATS.find((format) => isMatch(dateString, format));
+  const matchedFormat = SUPPORTED_DATE_FORMATS.find((format) =>
+    isMatch(dateString, format),
+  );
 
   if (matchedFormat) {
     return parse(dateString, matchedFormat, new Date());
@@ -22,9 +29,10 @@ export const stringToDate = (dateString?: string) => {
   throw new Error(`Unsupported date format: ${dateString}`);
 };
 
-export const getReviewsWithDateType = (reviews: Review[]) => reviews.map((review) => ({
-  ...review,
-  creationDateAsDate: stringToDate(review.creationDate)
-}));
+export const getReviewsWithDateType = (reviews: Review[]) =>
+  reviews.map((review) => ({
+    ...review,
+    creationDateAsDate: stringToDate(review.creationDate),
+  }));
 
 // export const stringToDate = (dateString: string) => parse(dateString, 'dd.MM.yyyy', new Date());

@@ -1,14 +1,14 @@
 import Logo from '../../markup/img/logo.svg';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {AppState} from '../types/AppState.ts';
-import {User} from '../types/User.ts';
-import {connect} from 'react-redux';
-import {Offer} from '../types/Offer.ts';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AppState } from '../types/AppState.ts';
+import { User } from '../types/User.ts';
+import { connect } from 'react-redux';
+import { Offer } from '../types/Offer.ts';
 import styled from 'styled-components';
-import {AVATAR_URL} from '../const.ts';
-import {actions} from '../redux/actions.ts';
-import {Dispatch, FormEvent, useEffect, useState} from 'react';
-import {Menu, MenuItem} from '@mui/material';
+import { AVATAR_URL } from '../const.ts';
+import { actions } from '../redux/actions.ts';
+import { Dispatch, FormEvent, useEffect, useState } from 'react';
+import { Menu, MenuItem } from '@mui/material';
 
 interface HeaderProps {
   isAuthorized: boolean;
@@ -19,8 +19,14 @@ interface HeaderProps {
   setUser: (user: User) => void;
 }
 
-const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: HeaderProps) => {
-  const {pathname} = useLocation();
+const HeaderComponent = ({
+  isAuthorized,
+  user,
+  favoriteOffers,
+  logout,
+  setUser,
+}: HeaderProps) => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [menuParent, setMenuParent] = useState<null | HTMLElement>(null);
 
@@ -53,7 +59,7 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
       return;
     }
     const email = atob(credentials).split(':')[0];
-    setUser({email});
+    setUser({ email });
   }, [setUser]);
 
   return (
@@ -62,7 +68,13 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
         <div className="header__wrapper">
           <div className="header__left">
             <Link className="header__logo-link" to="/">
-              <img className="header__logo" src={Logo} alt="6 cities logo" width="81" height="41"/>
+              <img
+                className="header__logo"
+                src={Logo}
+                alt="6 cities logo"
+                width="81"
+                height="41"
+              />
             </Link>
           </div>
           <nav className="header__nav">
@@ -73,14 +85,21 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
                     <div
                       onClick={handleMenuOpen}
                       className="header__nav-link header__nav-link--profile"
-                      style={{cursor: 'pointer'}}
+                      style={{ cursor: 'pointer' }}
                     >
-                      <Avatar avatarUrl={`${AVATAR_URL}/${user!.login}.jpg`}
+                      <Avatar
+                        avatarUrl={`${AVATAR_URL}/${user!.login}.jpg`}
                         className="header__avatar-wrapper user__avatar-wrapper"
+                      ></Avatar>
+                      <span
+                        id="user-name"
+                        className="header__user-name user__name"
                       >
-                      </Avatar>
-                      <span className="header__user-name user__name">{user!.email}</span>
-                      <span className="header__favorite-count">{favoriteOffers.length}</span>
+                        {user!.email}
+                      </span>
+                      <span className="header__favorite-count">
+                        {favoriteOffers.length}
+                      </span>
                     </div>
                   </li>
                   <Menu
@@ -106,15 +125,17 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
                     <MenuItem onClick={() => handleNavigate('/reports')}>
                       Reports
                     </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                      Sign out
-                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>Sign out</MenuItem>
                   </Menu>
                 </>
               ) : (
                 <>
                   <li className="header__nav-item">
-                    <Link className="header__nav-link" to="/login">
+                    <Link
+                      test-id="sign-in"
+                      className="header__nav-link"
+                      to="/login"
+                    >
                       <span className="header__signout">Sign in</span>
                     </Link>
                   </li>
@@ -133,7 +154,6 @@ const HeaderComponent = ({isAuthorized, user, favoriteOffers, logout, setUser}: 
   );
 };
 
-
 const Avatar = styled.div<{ avatarUrl: string }>`
   background-image: url(${(props) => props.avatarUrl});
 `;
@@ -141,7 +161,7 @@ const Avatar = styled.div<{ avatarUrl: string }>`
 const mapStateToProps = (state: AppState) => ({
   isAuthorized: state.authState.isAuthorized,
   user: state.authState.user,
-  favoriteOffers: state.offerState.offers.filter((offer) => offer.isFavorite)
+  favoriteOffers: state.offerState.offers.filter((offer) => offer.isFavorite),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
@@ -149,5 +169,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
-
-export const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderComponent);
+export const Header = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HeaderComponent);

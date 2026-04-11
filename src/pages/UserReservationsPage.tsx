@@ -1,14 +1,14 @@
 import Box from '@mui/material/Box';
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import {api} from '../services/api.ts';
-import {Dispatch, useEffect, useState} from 'react';
-import {AppState} from '../types/AppState.ts';
-import {actions} from '../redux/actions.ts';
-import {connect} from 'react-redux';
-import {Reservation} from '../types/Reservation.ts';
-import {Link} from 'react-router-dom';
-import {dateToString, stringToDate} from '../util/dateUtil.ts';
-import {Button, Checkbox} from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { api } from '../services/api.ts';
+import { Dispatch, useEffect, useState } from 'react';
+import { AppState } from '../types/AppState.ts';
+import { actions } from '../redux/actions.ts';
+import { connect } from 'react-redux';
+import { Reservation } from '../types/Reservation.ts';
+import { Link } from 'react-router-dom';
+import { dateToString, stringToDate } from '../util/dateUtil.ts';
+import { Button, Checkbox } from '@mui/material';
 import styled from 'styled-components';
 import EditIcon from '@mui/icons-material/Edit';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -22,18 +22,17 @@ interface UserReservationsPageProps {
 }
 
 const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
-
-  const {reservations, setUserReservations} = props;
+  const { reservations, setUserReservations } = props;
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   useEffect(() => {
-    api.post<Reservation[]>('/reservation/search', undefined, {})
+    api
+      .post<Reservation[]>('/reservation/search', undefined, {})
       .then((reservationResponse) => setUserReservations(reservationResponse))
       .catch((error) => console.error('Error:', error));
   }, [setUserReservations]);
 
-
-  const columns: GridColDef<(Reservation[])[number]>[] = [
+  const columns: GridColDef<Reservation[][number]>[] = [
     {
       field: 'checked',
       headerName: 'checked',
@@ -48,7 +47,9 @@ const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
             if (event.target.checked) {
               setSelectedRows([...selectedRows, params.row.id]);
             } else {
-              setSelectedRows(selectedRows.filter((id) => id !== params.row.id));
+              setSelectedRows(
+                selectedRows.filter((id) => id !== params.row.id),
+              );
             }
           }}
         />
@@ -80,7 +81,11 @@ const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
       field: 'title',
       headerName: 'Offer title',
       width: 250,
-      renderCell: (params) => <Link to={`/offer/${params.row.offer.id}`}>{params.row.offer.title}</Link>,
+      renderCell: (params) => (
+        <Link to={`/offer/${params.row.offer.id}`}>
+          {params.row.offer.title}
+        </Link>
+      ),
     },
     {
       field: 'price',
@@ -92,7 +97,8 @@ const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
       field: 'participants',
       headerName: 'Participants',
       width: 150,
-      renderCell: (params) => `${params.row.participants[0].firstName} ${params.row.participants[0].lastName}`,
+      renderCell: (params) =>
+        `${params.row.participants[0].firstName} ${params.row.participants[0].lastName}`,
     },
     {
       field: 'insurance',
@@ -145,28 +151,45 @@ const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
   ];
 
   return (
-    <Box sx={{height: '90%', width: '100%'}}>
+    <Box sx={{ height: '90%', width: '100%' }}>
       <ActionButtons>
-        <Button variant="contained" startIcon={<EditIcon/>} onClick={() => alert('TODO')}
+        <Button
+          variant="contained"
+          startIcon={<EditIcon />}
+          onClick={() => alert('TODO')}
           disabled={selectedRows.length !== 1}
         >
           Edit
         </Button>
         <Button
           variant="contained"
-          startIcon={<LocalOfferIcon/>}
-          onClick={() => alert('TODO: add/remove tags: Complaint, Note, Discount, Priority')}
+          startIcon={<LocalOfferIcon />}
+          onClick={() =>
+            alert('TODO: add/remove tags: Complaint, Note, Discount, Priority')
+          }
           disabled={selectedRows.length === 0}
         >
           Tags
         </Button>
-        <Button variant="contained" startIcon={<BackupTableIcon/>} onClick={() => alert('TODO')}>
+        <Button
+          variant="contained"
+          startIcon={<BackupTableIcon />}
+          onClick={() => alert('TODO')}
+        >
           Export to Excel
         </Button>
-        <Button variant="contained" startIcon={<PictureAsPdfIcon/>} onClick={() => alert('TODO')}>
+        <Button
+          variant="contained"
+          startIcon={<PictureAsPdfIcon />}
+          onClick={() => alert('TODO')}
+        >
           Export to PDF
         </Button>
-        <Button variant="contained" startIcon={<AssessmentIcon/>} onClick={() => alert('TODO')}>
+        <Button
+          variant="contained"
+          startIcon={<AssessmentIcon />}
+          onClick={() => alert('TODO')}
+        >
           Generate Report
         </Button>
       </ActionButtons>
@@ -194,22 +217,29 @@ const UserReservationsPageComponent = (props: UserReservationsPageProps) => {
                   setSelectedRows([]);
                 }
               } else {
-                const clickedId = parseInt(event.target.closest('[data-id]')!.getAttribute('data-id')!, 10);
+                const clickedId = parseInt(
+                  event.target.closest('[data-id]')!.getAttribute('data-id')!,
+                  10,
+                );
                 if (event.target.checked) {
                   setSelectedRows([...selectedRows, clickedId]);
                 } else {
-                  setSelectedRows(selectedRows.filter((id) => id !== clickedId));
+                  setSelectedRows(
+                    selectedRows.filter((id) => id !== clickedId),
+                  );
                 }
               }
-            }
-          }
+            },
+          },
         }}
-        rowSelectionModel={{type: 'include', ids: new Set<number>(selectedRows)}}
+        rowSelectionModel={{
+          type: 'include',
+          ids: new Set<number>(selectedRows),
+        }}
         columnVisibilityModel={{
           offerId: false,
           checked: false,
         }}
-
       />
     </Box>
   );
@@ -220,10 +250,14 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  setUserReservations: (reservations: Reservation[]) => dispatch(actions.setUserReservations(reservations)),
+  setUserReservations: (reservations: Reservation[]) =>
+    dispatch(actions.setUserReservations(reservations)),
 });
 
-export const UserReservationPage = connect(mapStateToProps, mapDispatchToProps)(UserReservationsPageComponent);
+export const UserReservationPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UserReservationsPageComponent);
 
 const ActionButtons = styled.div`
   display: flex;

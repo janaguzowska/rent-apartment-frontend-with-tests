@@ -1,12 +1,12 @@
-import {Outlet, useParams} from 'react-router-dom';
-import {Dispatch, useEffect} from 'react';
-import {StepperBar} from '../components/StepperBar.tsx';
-import {AppState} from '../types/AppState.ts';
-import {connect} from 'react-redux';
-import {OFFER_SEARCH_URL} from '../const.ts';
-import {Offer} from '../types/Offer.ts';
-import {actions} from '../redux/actions.ts';
-import {ReservationForm} from '../types/Reservation.ts';
+import { Outlet, useParams } from 'react-router-dom';
+import { Dispatch, useEffect } from 'react';
+import { StepperBar } from '../components/StepperBar.tsx';
+import { AppState } from '../types/AppState.ts';
+import { connect } from 'react-redux';
+import { OFFER_SEARCH_URL } from '../const.ts';
+import { Offer } from '../types/Offer.ts';
+import { actions } from '../redux/actions.ts';
+import { ReservationForm } from '../types/Reservation.ts';
 
 interface ReservationPageProps {
   offers: Offer[];
@@ -17,10 +17,16 @@ interface ReservationPageProps {
   currentOffer?: Offer;
 }
 
-
 const ReservationPageComponent = (props: ReservationPageProps) => {
-  const { offers, reservationForm, setCurrentOffer, setOffers, setReservationForm, currentOffer} = props;
-  const {id} = useParams();
+  const {
+    offers,
+    reservationForm,
+    setCurrentOffer,
+    setOffers,
+    setReservationForm,
+    currentOffer,
+  } = props;
+  const { id } = useParams();
 
   useEffect(() => {
     if (offers.length === 0) {
@@ -32,10 +38,18 @@ const ReservationPageComponent = (props: ReservationPageProps) => {
         setCurrentOffer(Number(id));
       }
       if (!reservationForm.offerId) {
-        setReservationForm({...reservationForm, offerId: Number(id)});
+        setReservationForm({ ...reservationForm, offerId: Number(id) });
       }
     }
-  }, [id, offers, reservationForm, setCurrentOffer, setOffers, setReservationForm, currentOffer]);
+  }, [
+    id,
+    offers,
+    reservationForm,
+    setCurrentOffer,
+    setOffers,
+    setReservationForm,
+    currentOffer,
+  ]);
 
   return (
     <div>
@@ -54,7 +68,11 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
   setOffers: (offers: Offer[]) => dispatch(actions.setOffers(offers)),
-  setReservationForm: (reservationForm: ReservationForm) => dispatch(actions.setReservationForm(reservationForm)),
+  setReservationForm: (reservationForm: ReservationForm) =>
+    dispatch(actions.setReservationForm(reservationForm)),
 });
 
-export const ReservationPage = connect(mapStateToProps, mapDispatchToProps)(ReservationPageComponent);
+export const ReservationPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ReservationPageComponent);

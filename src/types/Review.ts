@@ -1,5 +1,5 @@
-import {User} from './User.ts';
-import {Offer} from './Offer.ts';
+import { User } from './User.ts';
+import { Offer } from './Offer.ts';
 
 export interface Review {
   id: number;

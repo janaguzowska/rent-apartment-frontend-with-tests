@@ -1,4 +1,4 @@
-import {PermissionType} from './PermissionType.ts';
+import { PermissionType } from './PermissionType.ts';
 
 export interface User {
   id?: number;
@@ -10,5 +10,5 @@ export interface User {
   isAdmin?: boolean;
   isHost?: boolean;
   isClient?: boolean;
-  permissions: PermissionType[];
+  permissions?: PermissionType[];
 }

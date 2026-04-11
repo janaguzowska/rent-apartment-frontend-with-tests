@@ -1,4 +1,4 @@
-import {InsuranceDetail} from './InsuranceDetail.ts';
+import { InsuranceDetail } from './InsuranceDetail.ts';
 
 export interface Insurance {
   title: string;

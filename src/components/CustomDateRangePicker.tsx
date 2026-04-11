@@ -1,19 +1,20 @@
-import React, {forwardRef} from 'react';
+import React, { forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import styled, {createGlobalStyle} from 'styled-components';
-import {DateRange} from '../types/DateRange.ts';
+import styled, { createGlobalStyle } from 'styled-components';
+import { DateRange } from '../types/DateRange.ts';
 
-const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  (props, ref) => (
-    <StyledInput
-      {...props}
-      ref={ref}
-      id="date-picker"
-      placeholder="Check-in date - Check-out date"
-    />
-  )
-);
+const CustomInput = forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>((props, ref) => (
+  <StyledInput
+    {...props}
+    ref={ref}
+    id="date-picker"
+    placeholder="Check-in date - Check-out date"
+  />
+));
 
 CustomInput.displayName = 'CustomInput';
 
@@ -23,7 +24,7 @@ interface CustomDateRangePickerProps {
 }
 
 const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
-  const {dateRange, setDateRange} = props;
+  const { dateRange, setDateRange } = props;
   // const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   // const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   //
@@ -43,7 +44,7 @@ const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
 
   return (
     <>
-      <DatePickerGlobalStyles/>
+      <DatePickerGlobalStyles />
       <DatePicker
         selectsRange // Date range selecting enabled
         // startDate={startDate}
@@ -51,10 +52,13 @@ const CustomDateRangePicker = (props: CustomDateRangePickerProps) => {
         startDate={dateRange[0]}
         endDate={dateRange[1]}
         onChange={(newDateRange) => {
-          setDateRange([newDateRange[0] || undefined, newDateRange[1] || undefined]);
+          setDateRange([
+            newDateRange[0] || undefined,
+            newDateRange[1] || undefined,
+          ]);
         }}
         calendarStartDay={1} // Starts from Monday
-        customInput={<CustomInput/>}
+        customInput={<CustomInput />}
         wrapperClassName="custom-datepicker-wrapper"
         autoComplete="off"
       />

@@ -1,15 +1,20 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Grid, GridCellProps, GridColumn, GridDataStateChangeEvent, GridToolbar} from '@progress/kendo-react-grid';
-import {process, State} from '@progress/kendo-data-query';
-import {Review} from '../types/Review';
-import {api} from '../services/api';
-import {UserInfoCell} from '../components/UserInfoCell.tsx';
-import {DateRangeFilterCell} from '../components/DateRangeFilterCell.tsx';
-import {getReviewsWithDateType} from '../util/dateUtil.ts';
-import {useNavigate} from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Grid,
+  GridCellProps,
+  GridColumn,
+  GridDataStateChangeEvent,
+  GridToolbar,
+} from '@progress/kendo-react-grid';
+import { process, State } from '@progress/kendo-data-query';
+import { Review } from '../types/Review';
+import { api } from '../services/api';
+import { UserInfoCell } from '../components/UserInfoCell.tsx';
+import { DateRangeFilterCell } from '../components/DateRangeFilterCell.tsx';
+import { getReviewsWithDateType } from '../util/dateUtil.ts';
+import { useNavigate } from 'react-router-dom';
 
 export const ReviewsPage = () => {
-
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showLoader, setShowLoader] = useState(false);
@@ -19,13 +24,14 @@ export const ReviewsPage = () => {
     sort: [{ field: 'date', dir: 'desc' }],
     filter: {
       logic: 'and',
-      filters: []
-    }
+      filters: [],
+    },
   });
 
   const loadReviews = useCallback(() => {
     setShowLoader(true);
-    api.post<Review[]>('/review/search', {}, {})
+    api
+      .post<Review[]>('/review/search', {}, {})
       .then((reviewResponse) => setReviews(reviewResponse))
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -59,8 +65,9 @@ export const ReviewsPage = () => {
 
     return (
       <td style={{ textAlign: 'center' }}>
-        <span style={{color}}>
-          {'★'.repeat(rating)}{'☆'.repeat(5 - rating)} ({rating})
+        <span style={{ color }}>
+          {'★'.repeat(rating)}
+          {'☆'.repeat(5 - rating)} ({rating})
         </span>
       </td>
     );
@@ -72,7 +79,7 @@ export const ReviewsPage = () => {
     const offerId = review.offerId;
 
     const handelOfferTitleClick = () => {
-      if(offerId) {
+      if (offerId) {
         navigate(`/offer/${offerId}`);
       }
     };
@@ -85,7 +92,7 @@ export const ReviewsPage = () => {
             padding: '4px 0',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
           }}
         >
           {offerTitle}
@@ -114,7 +121,7 @@ export const ReviewsPage = () => {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
               }}
             >
               {expanded ? 'Zwiń' : 'Rozwiń'}
@@ -132,10 +139,12 @@ export const ReviewsPage = () => {
       <Grid
         filter={dataState.filter}
         data={processedData}
-        onDataStateChange={(event: GridDataStateChangeEvent) => setDataState(event.dataState)}
+        onDataStateChange={(event: GridDataStateChangeEvent) =>
+          setDataState(event.dataState)
+        }
         sortable={{
           allowUnsort: true,
-          mode: 'multiple'
+          mode: 'multiple',
         }}
         showLoader={showLoader}
         filterable
@@ -144,7 +153,7 @@ export const ReviewsPage = () => {
           info: true,
           type: 'numeric',
           pageSizes: [5, 10, 20, 50],
-          previousNext: true
+          previousNext: true,
         }}
         resizable
         reorderable
@@ -152,14 +161,21 @@ export const ReviewsPage = () => {
         style={{
           height: '700px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          borderRadius: '4px'
+          borderRadius: '4px',
         }}
       >
         <GridToolbar>
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
             <div>
               <strong>Total reviews: {reviews.length}</strong>
-              {dataState.filter && (dataState.filter).filters.length > 0 && (
+              {dataState.filter && dataState.filter.filters.length > 0 && (
                 <span style={{ marginLeft: '15px', color: '#666' }}>
                   (Wyfiltrowano: {processedData.total})
                 </span>
@@ -173,7 +189,7 @@ export const ReviewsPage = () => {
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               Odśwież dane
@@ -204,7 +220,7 @@ export const ReviewsPage = () => {
           title="Offer Title"
           width="250px"
           filterable
-          cells={{data: OfferTitleCell}}
+          cells={{ data: OfferTitleCell }}
           sortable
           filter="numeric"
         />
@@ -213,7 +229,7 @@ export const ReviewsPage = () => {
           field="user"
           title="User"
           width="350px"
-          cells={{data: UserInfoCell}}
+          cells={{ data: UserInfoCell }}
           filterable
           sortable
         />
@@ -222,7 +238,7 @@ export const ReviewsPage = () => {
           field="rating"
           title="Rating"
           width="200px"
-          cells={{data: RatingCell}}
+          cells={{ data: RatingCell }}
           filterable
           sortable
           filter="numeric"
@@ -232,7 +248,7 @@ export const ReviewsPage = () => {
           field="description"
           title="Description"
           width="400px"
-          cells={{data: DescriptionCell}}
+          cells={{ data: DescriptionCell }}
           filterable
           sortable
         />
@@ -245,7 +261,15 @@ export const ReviewsPage = () => {
           sortable
           filter="date"
           format={'{0:dd.MM.yyyy HH:mm}'}
-          cells={{filterCell: () => <DateRangeFilterCell setDataState={setDataState} dataState={dataState} field="creationDateAsDate" /> }}
+          cells={{
+            filterCell: () => (
+              <DateRangeFilterCell
+                setDataState={setDataState}
+                dataState={dataState}
+                field="creationDateAsDate"
+              />
+            ),
+          }}
         />
       </Grid>
     </div>

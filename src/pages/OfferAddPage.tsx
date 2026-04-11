@@ -1,7 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Map as KendoMap, TileUrlTemplateArgs, MapLayers, MapTileLayer, MapMarkerLayer, MapClickEvent} from '@progress/kendo-react-map';
+import React, { useEffect, useState } from 'react';
+import {
+  Map as KendoMap,
+  TileUrlTemplateArgs,
+  MapLayers,
+  MapTileLayer,
+  MapMarkerLayer,
+  MapClickEvent,
+} from '@progress/kendo-react-map';
 import '@progress/kendo-theme-default/dist/all.css';
-import {Position} from '../types/Position.ts';
+import { Position } from '../types/Position.ts';
 import {
   Accordion,
   AccordionDetails,
@@ -60,13 +67,13 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import {NewOffer} from '../types/Offer.ts';
-import {Amenity} from '../types/Amenity.ts';
-import {OFFER_TYPES, OfferType} from '../types/OfferType.ts';
-import {IMAGE_URL} from '../const.ts';
-import {api} from '../services/api.ts';
-import {CITIES} from '../mocks/cities.ts';
-import {KendoMapMarker} from '../types/KendoMapMarker.ts';
+import { NewOffer } from '../types/Offer.ts';
+import { Amenity } from '../types/Amenity.ts';
+import { OFFER_TYPES, OfferType } from '../types/OfferType.ts';
+import { IMAGE_URL } from '../const.ts';
+import { api } from '../services/api.ts';
+import { CITIES } from '../mocks/cities.ts';
+import { KendoMapMarker } from '../types/KendoMapMarker.ts';
 
 const OfferAddPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -94,7 +101,13 @@ const OfferAddPage: React.FC = () => {
     children: 0,
   });
 
-  const steps = ['Informacje Podstawowe', 'Położenie nieruchomości', 'Szczegóły Nieruchomości', 'Udogodnienia', 'Podsumowanie'];
+  const steps = [
+    'Informacje Podstawowe',
+    'Położenie nieruchomości',
+    'Szczegóły Nieruchomości',
+    'Udogodnienia',
+    'Podsumowanie',
+  ];
 
   const handleNextStep = () => {
     if (activeStep < steps.length - 1) {
@@ -108,11 +121,17 @@ const OfferAddPage: React.FC = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | {
-    name?: string;
-    value: unknown;
-  }>) => {
-    const {name, value} = e.target as HTMLInputElement;
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | {
+          name?: string;
+          value: unknown;
+        }
+    >,
+  ) => {
+    const { name, value } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -120,7 +139,7 @@ const OfferAddPage: React.FC = () => {
   };
 
   const handleSelectChange = (e: SelectChangeEvent) => {
-    const {name, value} = e.target as HTMLInputElement;
+    const { name, value } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -128,7 +147,7 @@ const OfferAddPage: React.FC = () => {
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, checked} = e.target;
+    const { name, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: checked,
@@ -142,7 +161,10 @@ const OfferAddPage: React.FC = () => {
     }));
   };
 
-  const handleRatingChange = (_e: React.SyntheticEvent, value: number | null) => {
+  const handleRatingChange = (
+    _e: React.SyntheticEvent,
+    value: number | null,
+  ) => {
     if (value !== null) {
       setFormData((prev) => ({
         ...prev,
@@ -181,7 +203,8 @@ const OfferAddPage: React.FC = () => {
     setIsLoading(true);
 
     // Symulacja wysyłania danych
-    api.post('/offer/add', undefined, formData)
+    api
+      .post('/offer/add', undefined, formData)
       .then(() => {
         setSuccessMessage('Oferta została pomyślnie utworzona!');
         setOpenSnackbar(true);
@@ -217,44 +240,69 @@ const OfferAddPage: React.FC = () => {
   const renderStepContent = () => {
     switch (activeStep) {
       case 0:
-        return <BasicInfoStep formData={formData} setFormData={setFormData} onChange={handleInputChange} onSelectChange={handleSelectChange}/>;
+        return (
+          <BasicInfoStep
+            formData={formData}
+            setFormData={setFormData}
+            onChange={handleInputChange}
+            onSelectChange={handleSelectChange}
+          />
+        );
       case 1:
-        return <OfferPositionStep formData={formData} setFormData={setFormData}/>;
+        return (
+          <OfferPositionStep formData={formData} setFormData={setFormData} />
+        );
       case 2:
-        return (<PropertyDetailsStep formData={formData} onChange={handleInputChange}
-          onCheckboxChange={handleCheckboxChange} onPriceChange={handlePriceChange}
-          onRatingChange={handleRatingChange}
-        />);
+        return (
+          <PropertyDetailsStep
+            formData={formData}
+            onChange={handleInputChange}
+            onCheckboxChange={handleCheckboxChange}
+            onPriceChange={handlePriceChange}
+            onRatingChange={handleRatingChange}
+          />
+        );
       case 3:
-        return (<ImagesStep formData={formData} onImageChange={handleInputChange} onAddImage={handleAddImage}
-          onRemoveImage={handleRemoveImage}
-        />);
+        return (
+          <ImagesStep
+            formData={formData}
+            onImageChange={handleInputChange}
+            onAddImage={handleAddImage}
+            onRemoveImage={handleRemoveImage}
+          />
+        );
       case 4:
-        return <SummaryStep formData={formData}/>;
+        return <SummaryStep formData={formData} />;
       default:
         return null;
     }
   };
 
   return (
-    <Container maxWidth="lg" sx={{py: 4}}>
-      <Paper elevation={3} sx={{p: 4}}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
         {/* Header */}
-        <Box sx={{mb: 4}}>
-          <Typography variant="h3" component="h1" gutterBottom sx={{fontWeight: 'bold', color: '#1a237e'}}>
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: 'bold', color: '#1a237e' }}
+          >
             Dodaj nową ofertę
           </Typography>
-          <Divider sx={{my: 2}}/>
+          <Divider sx={{ my: 2 }} />
         </Box>
 
         {/* Alert Info */}
-        <Alert severity="info" sx={{mb: 4}} icon={<InfoIcon/>}>
+        <Alert severity="info" sx={{ mb: 4 }} icon={<InfoIcon />}>
           <AlertTitle>Informacja</AlertTitle>
-          Wypełnij formularz w kolejnych krokach, aby utworzyć nową ofertę nieruchomości.
+          Wypełnij formularz w kolejnych krokach, aby utworzyć nową ofertę
+          nieruchomości.
         </Alert>
 
         {/* Stepper */}
-        <Box sx={{mb: 4}}>
+        <Box sx={{ mb: 4 }}>
           <Stepper activeStep={activeStep}>
             {steps.map((label) => (
               <Step key={label}>
@@ -265,15 +313,17 @@ const OfferAddPage: React.FC = () => {
         </Box>
 
         {/* Progress Bar */}
-        <LinearProgress variant="determinate" value={(activeStep + 1) * 25} sx={{mb: 3}}/>
+        <LinearProgress
+          variant="determinate"
+          value={(activeStep + 1) * 25}
+          sx={{ mb: 3 }}
+        />
 
         {/* Form Content */}
-        <Box sx={{mb: 4, minHeight: '400px'}}>
-          {renderStepContent()}
-        </Box>
+        <Box sx={{ mb: 4, minHeight: '400px' }}>{renderStepContent()}</Box>
 
         {/* Navigation Buttons */}
-        <Box sx={{display: 'flex', justifyContent: 'space-between', gap: 2}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
           <Button
             disabled={activeStep === 0}
             onClick={handleBackStep}
@@ -289,17 +339,13 @@ const OfferAddPage: React.FC = () => {
               variant="contained"
               color="success"
               size="large"
-              startIcon={<SaveIcon/>}
+              startIcon={<SaveIcon />}
               disabled={isLoading}
             >
-              {isLoading ? <CircularProgress size={24}/> : 'Utwórz ofertę'}
+              {isLoading ? <CircularProgress size={24} /> : 'Utwórz ofertę'}
             </Button>
           ) : (
-            <Button
-              onClick={handleNextStep}
-              variant="contained"
-              size="large"
-            >
+            <Button onClick={handleNextStep} variant="contained" size="large">
               Dalej
             </Button>
           )}
@@ -307,17 +353,25 @@ const OfferAddPage: React.FC = () => {
       </Paper>
 
       {/* Confirmation Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Potwierdzenie</DialogTitle>
         <DialogContent>
           <Typography>Czy na pewno chcesz utworzyć tę ofertę?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Anuluj</Button>
-          <Button onClick={() => {
-            handleCloseDialog();
-            handleSubmit();
-          }} variant="contained" color="success"
+          <Button
+            onClick={() => {
+              handleCloseDialog();
+              handleSubmit();
+            }}
+            variant="contained"
+            color="success"
           >
             Potwierdź
           </Button>
@@ -329,16 +383,16 @@ const OfferAddPage: React.FC = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <SnackbarContent
           message={
-            <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-              <CheckCircleIcon sx={{color: 'white'}}/>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CheckCircleIcon sx={{ color: 'white' }} />
               {successMessage}
             </Box>
           }
-          sx={{backgroundColor: '#4caf50'}}
+          sx={{ backgroundColor: '#4caf50' }}
         />
       </Snackbar>
     </Container>
@@ -349,16 +403,20 @@ const OfferAddPage: React.FC = () => {
 const BasicInfoStep: React.FC<{
   formData: NewOffer;
   setFormData: (formData: NewOffer) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => void;
+  onChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }
+    >,
+  ) => void;
   onSelectChange: (e: SelectChangeEvent) => void;
-}> = ({formData, setFormData, onChange, onSelectChange}) => (
+}> = ({ formData, setFormData, onChange, onSelectChange }) => (
   <Grid container spacing={3}>
-    <Grid size={{xs: 12}}>
+    <Grid size={{ xs: 12 }}>
       <Card>
-        <CardHeader title="Informacje Podstawowe"/>
+        <CardHeader title="Informacje Podstawowe" />
         <CardContent>
           <Grid container spacing={2}>
-            <Grid size={{xs: 12}}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Tytuł oferty"
@@ -373,7 +431,7 @@ const BasicInfoStep: React.FC<{
               />
             </Grid>
 
-            <Grid size={{xs: 12, sm: 6}}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Miasto</InputLabel>
                 <Select
@@ -382,7 +440,10 @@ const BasicInfoStep: React.FC<{
                   onChange={(event) => {
                     setFormData({
                       ...formData,
-                      city: CITIES.find((city) => city.title === event.target.value) || CITIES[0],
+                      city:
+                        CITIES.find(
+                          (city) => city.title === event.target.value,
+                        ) || CITIES[0],
                     });
                   }}
                   label="Miasto"
@@ -397,7 +458,7 @@ const BasicInfoStep: React.FC<{
               </FormControl>
             </Grid>
 
-            <Grid size={{xs: 12, sm: 6}}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Typ nieruchomości</InputLabel>
                 <Select
@@ -415,7 +476,7 @@ const BasicInfoStep: React.FC<{
               </FormControl>
             </Grid>
 
-            <Grid size={{xs: 12}}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Opis"
@@ -438,8 +499,8 @@ const BasicInfoStep: React.FC<{
 const OfferPositionStep: React.FC<{
   formData: NewOffer;
   setFormData: React.Dispatch<React.SetStateAction<NewOffer>>;
-}> = ({formData, setFormData}) => {
-  const {lat, lng} = formData.city!.position;
+}> = ({ formData, setFormData }) => {
+  const { lat, lng } = formData.city!.position;
   // const mapInstanceRef = useRef<any>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>([lat, lng]);
   const [mapZoom, setMapZoom] = useState(11);
@@ -448,7 +509,12 @@ const OfferPositionStep: React.FC<{
   useEffect(() => {
     // Jeśli pozycja już istnieje, wyświetl marker i wycentruj mapę
     if (formData.position) {
-      setMarkers([{latlng: [formData.position.lat, formData.position.lng], title: formData.title}]);
+      setMarkers([
+        {
+          latlng: [formData.position.lat, formData.position.lng],
+          title: formData.title,
+        },
+      ]);
       // setMapCenter([formData.position.lat, formData.position.lng]);
       // setMapZoom(13);
     }
@@ -464,7 +530,9 @@ const OfferPositionStep: React.FC<{
       };
 
       // Aktualizuj marker
-      setMarkers([{latlng: [newPosition.lat, newPosition.lng], title: formData.title}]);
+      setMarkers([
+        { latlng: [newPosition.lat, newPosition.lng], title: formData.title },
+      ]);
 
       // Aktualizuj pozycję w formularzu
       setFormData((prev) => ({
@@ -480,25 +548,29 @@ const OfferPositionStep: React.FC<{
 
   return (
     <Grid container spacing={3}>
-      <Grid size={{xs: 12}}>
+      <Grid size={{ xs: 12 }}>
         <Card>
-          <CardHeader title="Lokalizacja nieruchomości"/>
+          <CardHeader title="Lokalizacja nieruchomości" />
           <CardContent>
             <Stack spacing={3}>
-              <Alert severity="info" icon={<InfoIcon/>}>
+              <Alert severity="info" icon={<InfoIcon />}>
                 Kliknij na mapie, aby wskazać dokładną lokalizację nieruchomości
               </Alert>
 
-              <Box sx={{height: '500px', width: '100%', position: 'relative'}}>
+              <Box
+                sx={{ height: '500px', width: '100%', position: 'relative' }}
+              >
                 <KendoMap
                   center={mapCenter}
                   zoom={mapZoom}
                   onMapClick={handleMapClick}
-                  style={{height: '100%', width: '100%'}}
+                  style={{ height: '100%', width: '100%' }}
                 >
                   <MapLayers>
                     <MapTileLayer
-                      urlTemplate={(e: TileUrlTemplateArgs) => `https://tile.openstreetmap.org/${e.zoom}/${e.x}/${e.y}.png`}
+                      urlTemplate={(e: TileUrlTemplateArgs) =>
+                        `https://tile.openstreetmap.org/${e.zoom}/${e.x}/${e.y}.png`
+                      }
                       attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap contributors</a>"
                     />
                     {markers.length > 0 && (
@@ -513,12 +585,12 @@ const OfferPositionStep: React.FC<{
               </Box>
 
               {formData.position && (
-                <Paper elevation={1} sx={{p: 2, backgroundColor: '#f5f5f5'}}>
+                <Paper elevation={1} sx={{ p: 2, backgroundColor: '#f5f5f5' }}>
                   <Typography variant="subtitle2" gutterBottom>
                     Wybrana pozycja:
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid size={{xs: 12, sm: 6}}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField
                         fullWidth
                         label="Szerokość geograficzna (Latitude)"
@@ -529,7 +601,7 @@ const OfferPositionStep: React.FC<{
                         size="small"
                       />
                     </Grid>
-                    <Grid size={{xs: 12, sm: 6}}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField
                         fullWidth
                         label="Długość geograficzna (Longitude)"
@@ -546,7 +618,8 @@ const OfferPositionStep: React.FC<{
 
               {!formData.position && (
                 <Alert severity="warning">
-                  Nie wybrano jeszcze lokalizacji. Kliknij na mapie, aby ją wskazać.
+                  Nie wybrano jeszcze lokalizacji. Kliknij na mapie, aby ją
+                  wskazać.
                 </Alert>
               )}
             </Stack>
@@ -560,20 +633,32 @@ const OfferPositionStep: React.FC<{
 // Krok 2: Szczegóły Nieruchomości
 const PropertyDetailsStep: React.FC<{
   formData: NewOffer;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => void;
+  onChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }
+    >,
+  ) => void;
   onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPriceChange: (e: Event, newValue: number | number[]) => void;
   onRatingChange: (e: React.SyntheticEvent, value: number | null) => void;
-}> = ({formData, onChange, onCheckboxChange, onPriceChange, onRatingChange}) => (
+}> = ({
+  formData,
+  onChange,
+  onCheckboxChange,
+  onPriceChange,
+  onRatingChange,
+}) => (
   <Grid container spacing={3}>
     {/* Cena i Cechy */}
-    <Grid size={{xs: 12, md: 6}}>
+    <Grid size={{ xs: 12, md: 6 }}>
       <Card>
-        <CardHeader title="Price and capacity"/>
+        <CardHeader title="Price and capacity" />
         <CardContent>
           <Stack spacing={3}>
             <Box>
-              <Typography gutterBottom>Cena za noc: €{formData.price}</Typography>
+              <Typography gutterBottom>
+                Cena za noc: €{formData.price}
+              </Typography>
               <Slider
                 name="price"
                 value={formData.price}
@@ -582,9 +667,9 @@ const PropertyDetailsStep: React.FC<{
                 max={500}
                 step={10}
                 marks={[
-                  {value: 10, label: '€10'},
-                  {value: 250, label: '€250'},
-                  {value: 500, label: '€500'},
+                  { value: 10, label: '€10' },
+                  { value: 250, label: '€250' },
+                  { value: 500, label: '€500' },
                 ]}
               />
               <FormHelperText>Ustaw czynsze za noc</FormHelperText>
@@ -598,7 +683,7 @@ const PropertyDetailsStep: React.FC<{
               value={formData.bedrooms}
               onChange={onChange}
               inputProps={{
-                inputProps: {min: 1, max: 10},
+                inputProps: { min: 1, max: 10 },
               }}
             />
 
@@ -610,7 +695,7 @@ const PropertyDetailsStep: React.FC<{
               value={formData.maxAdults}
               onChange={onChange}
               inputProps={{
-                inputProps: {min: 1, max: 20},
+                inputProps: { min: 1, max: 20 },
               }}
             />
           </Stack>
@@ -619,9 +704,9 @@ const PropertyDetailsStep: React.FC<{
     </Grid>
 
     {/* Ustawienia i Ocena */}
-    <Grid size={{xs: 12, md: 6}}>
+    <Grid size={{ xs: 12, md: 6 }}>
       <Card>
-        <CardHeader title="Ustawienia i Ocena"/>
+        <CardHeader title="Ustawienia i Ocena" />
         <CardContent>
           <Stack spacing={3}>
             <FormGroup>
@@ -647,7 +732,7 @@ const PropertyDetailsStep: React.FC<{
               />
             </FormGroup>
 
-            <Divider/>
+            <Divider />
 
             <Box>
               <Typography component="legend" gutterBottom>
@@ -662,17 +747,17 @@ const PropertyDetailsStep: React.FC<{
             </Box>
 
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Więcej opcji</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Stack spacing={2} sx={{width: '100%'}}>
+                <Stack spacing={2} sx={{ width: '100%' }}>
                   <FormControlLabel
-                    control={<Switch/>}
+                    control={<Switch />}
                     label="Wyświetl w rekomendacjach"
                   />
                   <FormControlLabel
-                    control={<Switch/>}
+                    control={<Switch />}
                     label="Aktywna oferta"
                     defaultChecked
                   />
@@ -689,20 +774,26 @@ const PropertyDetailsStep: React.FC<{
 // Krok 3: Zdjęcia
 const ImagesStep: React.FC<{
   formData: NewOffer;
-  onImageChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | {
-    name?: string;
-    value: unknown;
-  }>) => void;
+  onImageChange: (
+    e: React.ChangeEvent<
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | {
+          name?: string;
+          value: unknown;
+        }
+    >,
+  ) => void;
   onAddImage: () => void;
   onRemoveImage: (index: number) => void;
-}> = ({formData, onImageChange, onAddImage, onRemoveImage}) => (
+}> = ({ formData, onImageChange, onAddImage, onRemoveImage }) => (
   <Grid container spacing={3}>
-    <Grid size={{xs: 12}}>
+    <Grid size={{ xs: 12 }}>
       <Card>
-        <CardHeader title="Zdjęcia Nieruchomości"/>
+        <CardHeader title="Zdjęcia Nieruchomości" />
         <CardContent>
           <Stack spacing={3}>
-            <Box sx={{display: 'flex', gap: 1}}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <TextField
                 fullWidth
                 label="URL zdjęcia"
@@ -713,7 +804,7 @@ const ImagesStep: React.FC<{
                 inputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PhotoCameraIcon/>
+                      <PhotoCameraIcon />
                     </InputAdornment>
                   ),
                 }}
@@ -722,7 +813,7 @@ const ImagesStep: React.FC<{
                 <Button
                   variant="contained"
                   onClick={onAddImage}
-                  startIcon={<AddIcon/>}
+                  startIcon={<AddIcon />}
                 >
                   Dodaj
                 </Button>
@@ -734,14 +825,14 @@ const ImagesStep: React.FC<{
                 <Typography variant="subtitle1" gutterBottom>
                   Dodane zdjęcia ({formData.images.length})
                 </Typography>
-                <ImageList sx={{width: '100%', height: 300}} cols={3}>
+                <ImageList sx={{ width: '100%', height: 300 }} cols={3}>
                   {formData.images.map((image, index) => (
                     <ImageListItem key={image.name}>
                       <img
                         src={`${IMAGE_URL}/${image.name}.jpg`}
                         alt={`Preview ${index}`}
                         loading="lazy"
-                        style={{height: '100%', objectFit: 'cover'}}
+                        style={{ height: '100%', objectFit: 'cover' }}
                       />
                       <ImageListItemBar
                         title={`Zdjęcie ${index + 1}`}
@@ -750,9 +841,9 @@ const ImagesStep: React.FC<{
                             <Button
                               onClick={() => onRemoveImage(index)}
                               size="small"
-                              sx={{color: 'white'}}
+                              sx={{ color: 'white' }}
                             >
-                              <DeleteIcon/>
+                              <DeleteIcon />
                             </Button>
                           </Tooltip>
                         }
@@ -776,11 +867,11 @@ const ImagesStep: React.FC<{
 );
 
 // Krok 4: Podsumowanie
-const SummaryStep: React.FC<{ formData: NewOffer }> = ({formData}) => (
+const SummaryStep: React.FC<{ formData: NewOffer }> = ({ formData }) => (
   <Grid container spacing={3}>
-    <Grid size={{xs: 12}}>
+    <Grid size={{ xs: 12 }}>
       <Card>
-        <CardHeader title="Podsumowanie Oferty"/>
+        <CardHeader title="Podsumowanie Oferty" />
         <CardContent>
           <List>
             <ListItem>
@@ -789,42 +880,39 @@ const SummaryStep: React.FC<{ formData: NewOffer }> = ({formData}) => (
                 secondary={formData.title || 'Nie podano'}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
-              <ListItemText
-                primary="Miasto"
-                secondary={formData.city?.title}
-              />
+              <ListItemText primary="Miasto" secondary={formData.city?.title} />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Typ nieruchomości"
                 secondary={formData.type}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Cena za noc"
                 secondary={`€${formData.price}`}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Liczba sypialni"
                 secondary={formData.bedrooms}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Maksimum dorosłych"
                 secondary={formData.maxAdults}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Zezwolenie na zwierzęta"
@@ -837,7 +925,7 @@ const SummaryStep: React.FC<{ formData: NewOffer }> = ({formData}) => (
                 }
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Oferta Premium"
@@ -850,14 +938,14 @@ const SummaryStep: React.FC<{ formData: NewOffer }> = ({formData}) => (
                 }
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Ocena"
-                secondary={<Rating value={formData.rating} readOnly/>}
+                secondary={<Rating value={formData.rating} readOnly />}
               />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem>
               <ListItemText
                 primary="Liczba zdjęć"

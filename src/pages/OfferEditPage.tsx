@@ -1,23 +1,38 @@
-import {Dispatch, useState} from 'react';
-import {ColorPicker, Input, NumericTextBox, Rating, Switch, TextArea} from '@progress/kendo-react-inputs';
-import {AutoComplete, ComboBox, DropDownList, MultiSelect} from '@progress/kendo-react-dropdowns';
-import {Button, ChipList} from '@progress/kendo-react-buttons';
-import {Upload} from '@progress/kendo-react-upload';
-import {Stepper, TabStrip, TabStripTab} from '@progress/kendo-react-layout';
-import {Form, FormElement} from '@progress/kendo-react-form';
-import {Notification, NotificationGroup} from '@progress/kendo-react-notification';
-import {Label} from '@progress/kendo-react-labels';
-import {OFFER_TYPES, OfferType} from '../types/OfferType';
-import {AppState} from '../types/AppState.ts';
-import {Offer} from '../types/Offer.ts';
-import {actions} from '../redux/actions.ts';
-import {connect} from 'react-redux';
-import {api} from '../services/api.ts';
-import {CITIES} from '../mocks/cities.ts';
-import {Image} from '../types/Image.ts';
-import {Amenity} from '../types/Amenity.ts';
-import {AMENITIES} from '../mocks/amenities.ts';
-import {City} from '../types/City.ts';
+import { Dispatch, useState } from 'react';
+import {
+  ColorPicker,
+  Input,
+  NumericTextBox,
+  Rating,
+  Switch,
+  TextArea,
+} from '@progress/kendo-react-inputs';
+import {
+  AutoComplete,
+  ComboBox,
+  DropDownList,
+  MultiSelect,
+} from '@progress/kendo-react-dropdowns';
+import { Button, ChipList } from '@progress/kendo-react-buttons';
+import { Upload } from '@progress/kendo-react-upload';
+import { Stepper, TabStrip, TabStripTab } from '@progress/kendo-react-layout';
+import { Form, FormElement } from '@progress/kendo-react-form';
+import {
+  Notification,
+  NotificationGroup,
+} from '@progress/kendo-react-notification';
+import { Label } from '@progress/kendo-react-labels';
+import { OFFER_TYPES, OfferType } from '../types/OfferType';
+import { AppState } from '../types/AppState.ts';
+import { Offer } from '../types/Offer.ts';
+import { actions } from '../redux/actions.ts';
+import { connect } from 'react-redux';
+import { api } from '../services/api.ts';
+import { CITIES } from '../mocks/cities.ts';
+import { Image } from '../types/Image.ts';
+import { Amenity } from '../types/Amenity.ts';
+import { AMENITIES } from '../mocks/amenities.ts';
+import { City } from '../types/City.ts';
 
 interface CityOption {
   name: string;
@@ -62,7 +77,7 @@ interface OfferEditPageProps {
 }
 
 export const OfferEditPageComponent = (props: OfferEditPageProps) => {
-  const {setCurrentOffer, currentOffer, isAuthorized} = props;
+  const { setCurrentOffer, currentOffer, isAuthorized } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [stepValue, setStepValue] = useState(0);
@@ -71,17 +86,17 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const chipData: ChipDataItem[] = [
-    {text: 'Featured', value: 'featured'},
-    {text: 'New', value: 'new'},
-    {text: 'Popular', value: 'popular'},
-    {text: 'Eco-friendly', value: 'eco'},
+    { text: 'Featured', value: 'featured' },
+    { text: 'New', value: 'new' },
+    { text: 'Popular', value: 'popular' },
+    { text: 'Eco-friendly', value: 'eco' },
   ];
 
   const stepperSteps = [
-    {label: 'Basic Info', icon: 'k-i-home'},
-    {label: 'Details', icon: 'k-i-info'},
-    {label: 'Amenities', icon: 'k-i-check'},
-    {label: 'Media', icon: 'k-i-image'},
+    { label: 'Basic Info', icon: 'k-i-home' },
+    { label: 'Details', icon: 'k-i-info' },
+    { label: 'Amenities', icon: 'k-i-check' },
+    { label: 'Media', icon: 'k-i-image' },
   ];
 
   const [formData, setFormData] = useState<FormDataType>({
@@ -108,7 +123,8 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
     setIsLoading(true);
 
     // Symulacja wysyłania danych
-    api.post('/offer/update', undefined, formData)
+    api
+      .post('/offer/update', undefined, formData)
       .then(() => {
         setSuccessMessage('Oferta została pomyślnie utworzona!');
         setOpenNotification(true);
@@ -134,13 +150,12 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
           themeColor: '#ff6b6b',
           keywords: '',
         });
-
       })
       .finally(() => setIsLoading(false));
   };
 
   return (
-    <div style={{padding: '40px', maxWidth: '1200px', margin: '0 auto'}}>
+    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
       <h1>Edit Offer - KendoReact Components Showcase</h1>
 
       <NotificationGroup
@@ -153,7 +168,7 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
       >
         {openNotification && (
           <Notification
-            type={{style: 'success', icon: true}}
+            type={{ style: 'success', icon: true }}
             closable
             onClose={() => setOpenNotification(false)}
           >
@@ -165,9 +180,9 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
       <Form
         initialValues={formData}
         render={() => (
-          <FormElement style={{width: '100%'}}>
+          <FormElement style={{ width: '100%' }}>
             {/* Stepper */}
-            <div style={{marginBottom: '30px'}}>
+            <div style={{ marginBottom: '30px' }}>
               <Stepper
                 value={stepValue}
                 onChange={(e) => setStepValue(e.value)}
@@ -176,99 +191,144 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
             </div>
 
             {/* TabStrip */}
-            <TabStrip selected={selectedTab} onSelect={(e) => setSelectedTab(e.selected)}>
+            <TabStrip
+              selected={selectedTab}
+              onSelect={(e) => setSelectedTab(e.selected)}
+            >
               <TabStripTab title="Basic Information">
-                <div style={{padding: '20px'}}>
+                <div style={{ padding: '20px' }}>
                   {/* Input */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Title</Label>
                     <Input
                       name="title"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.value || ''})}
-                      style={{width: '100%'}}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.value || '' })
+                      }
+                      style={{ width: '100%' }}
                       placeholder="Enter offer title"
                     />
                   </div>
 
                   {/* NumericTextBox */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Price per Night ($)</Label>
                     <NumericTextBox
                       name="price"
                       value={formData.price}
-                      onChange={(e) => setFormData({...formData, price: e.value as number || 0})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: (e.value as number) || 0,
+                        })
+                      }
                       min={0}
                       max={10000}
                       format="c2"
-                      style={{width: '100%'}}
+                      style={{ width: '100%' }}
                     />
                   </div>
 
                   {/* DropDownList */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Offer Type</Label>
                     <DropDownList
                       name="type"
-                      data={OFFER_TYPES.map((type) => ({text: type, value: type}))}
+                      data={OFFER_TYPES.map((type) => ({
+                        text: type,
+                        value: type,
+                      }))}
                       textField="text"
                       dataItemKey="value"
-                      value={{text: formData.type, value: formData.type}}
-                      onChange={(e) => setFormData({...formData, type: (e.value as OfferTypeOption).value})}
-                      style={{width: '100%'}}
+                      value={{ text: formData.type, value: formData.type }}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          type: (e.value as OfferTypeOption).value,
+                        })
+                      }
+                      style={{ width: '100%' }}
                     />
                   </div>
 
                   {/* ComboBox */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>City</Label>
                     <ComboBox
                       name="city"
-                      data={CITIES.map((c) => ({name: c.title, value: c.title}))}
+                      data={CITIES.map((c) => ({
+                        name: c.title,
+                        value: c.title,
+                      }))}
                       textField="name"
                       dataItemKey="value"
-                      value={{name: formData.city.title, value: formData.city.title}}
-                      onChange={(e) => setFormData({...formData, city: {title: (e.value as CityOption).value}})}
-                      style={{width: '100%'}}
+                      value={{
+                        name: formData.city.title,
+                        value: formData.city.title,
+                      }}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          city: { title: (e.value as CityOption).value },
+                        })
+                      }
+                      style={{ width: '100%' }}
                       placeholder="Select or type a city"
                     />
                   </div>
 
                   {/* Rating */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Rating</Label>
                     <div>
                       <Rating
                         value={formData.rating}
-                        onChange={(e) => setFormData({...formData, rating: e.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, rating: e.value })
+                        }
                         max={5}
                         precision="half"
                       />
-                      <span style={{marginLeft: '10px'}}>{formData.rating} / 5</span>
+                      <span style={{ marginLeft: '10px' }}>
+                        {formData.rating} / 5
+                      </span>
                     </div>
                   </div>
 
                   {/* Switch */}
-                  <div style={{marginBottom: '20px', display: 'flex', gap: '30px'}}>
+                  <div
+                    style={{
+                      marginBottom: '20px',
+                      display: 'flex',
+                      gap: '30px',
+                    }}
+                  >
                     <div>
                       <Label>Premium Offer</Label>
                       <Switch
                         checked={formData.isPremium}
-                        onChange={(e) => setFormData({...formData, isPremium: e.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, isPremium: e.value })
+                        }
                       />
                     </div>
                     <div>
                       <Label>Allow Pets</Label>
                       <Switch
                         checked={formData.hasPets}
-                        onChange={(e) => setFormData({...formData, hasPets: e.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, hasPets: e.value })
+                        }
                       />
                     </div>
                     <div>
                       <Label>Favorite</Label>
                       <Switch
                         checked={formData.isFavorite}
-                        onChange={(e) => setFormData({...formData, isFavorite: e.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, isFavorite: e.value })
+                        }
                       />
                     </div>
                   </div>
@@ -276,55 +336,71 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
               </TabStripTab>
 
               <TabStripTab title="Details & Capacity">
-                <div style={{padding: '20px'}}>
-
+                <div style={{ padding: '20px' }}>
                   {/* NumericTextBox - Bedrooms */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Number of Bedrooms</Label>
                     <NumericTextBox
                       value={formData.bedrooms}
-                      onChange={(e) => setFormData({...formData, bedrooms: e.value as number || 1})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          bedrooms: (e.value as number) || 1,
+                        })
+                      }
                       min={1}
                       max={10}
                       format="n0"
-                      style={{width: '100%'}}
+                      style={{ width: '100%' }}
                     />
                   </div>
 
                   {/* NumericTextBox - Adults */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Maximum Adults</Label>
                     <NumericTextBox
                       value={formData.maxAdults}
-                      onChange={(e) => setFormData({...formData, maxAdults: e.value as number || 1})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          maxAdults: (e.value as number) || 1,
+                        })
+                      }
                       min={1}
                       max={20}
                       format="n0"
-                      style={{width: '100%'}}
+                      style={{ width: '100%' }}
                     />
                   </div>
 
                   {/* NumericTextBox - Children */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Maximum Children</Label>
                     <NumericTextBox
                       value={formData.children}
-                      onChange={(e) => setFormData({...formData, children: e.value as number || 0})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          children: (e.value as number) || 0,
+                        })
+                      }
                       min={0}
                       max={10}
                       format="n0"
-                      style={{width: '100%'}}
+                      style={{ width: '100%' }}
                     />
                   </div>
 
                   {/* TextArea */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Description</Label>
                     <TextArea
                       value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.value || ''})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, description: e.value || '' })
+                      }
                       rows={5}
-                      style={{width: '100%'}}
+                      style={{ width: '100%' }}
                       placeholder="Describe your offer..."
                     />
                   </div>
@@ -332,53 +408,76 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
               </TabStripTab>
 
               <TabStripTab title="Amenities & Tags">
-                <div style={{padding: '20px'}}>
+                <div style={{ padding: '20px' }}>
                   {/* MultiSelect */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Amenities</Label>
                     <MultiSelect
                       data={AMENITIES}
                       value={formData.amenities.map((amenity) => amenity.name)}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        amenities: (e.value as string[]).map((item) => ({name: item}))
-                      })}
-                      style={{width: '100%'}}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          amenities: (e.value as string[]).map((item) => ({
+                            name: item,
+                          })),
+                        })
+                      }
+                      style={{ width: '100%' }}
                       placeholder="Select amenities..."
                     />
                   </div>
 
                   {/* ChipList */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Special Tags</Label>
                     <ChipList
                       data={chipData}
                       selection="multiple"
                       value={formData.tags}
-                      onChange={(e) => setFormData({...formData, tags: e.value as ChipDataItem[]})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          tags: e.value as ChipDataItem[],
+                        })
+                      }
                       textField="text"
                       valueField="value"
                     />
                   </div>
 
                   {/* AutoComplete */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Search Keywords</Label>
                     <AutoComplete
-                      data={['luxury', 'budget', 'family-friendly', 'business', 'romantic', 'pet-friendly']}
+                      data={[
+                        'luxury',
+                        'budget',
+                        'family-friendly',
+                        'business',
+                        'romantic',
+                        'pet-friendly',
+                      ]}
                       value={formData.keywords}
-                      onChange={(e) => setFormData({...formData, keywords: e.value as string || ''})}
-                      style={{width: '100%'}}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          keywords: (e.value as string) || '',
+                        })
+                      }
+                      style={{ width: '100%' }}
                       placeholder="Type keywords..."
                     />
                   </div>
 
                   {/* ColorPicker */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Theme Color</Label>
                     <ColorPicker
                       value={formData.themeColor}
-                      onChange={(e) => setFormData({...formData, themeColor: e.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, themeColor: e.value })
+                      }
                       view="gradient"
                     />
                   </div>
@@ -386,17 +485,21 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
               </TabStripTab>
 
               <TabStripTab title="Images">
-                <div style={{padding: '20px'}}>
+                <div style={{ padding: '20px' }}>
                   {/* Upload */}
-                  <div style={{marginBottom: '20px'}}>
+                  <div style={{ marginBottom: '20px' }}>
                     <Label>Upload Images</Label>
                     <Upload
                       batch={false}
                       multiple
                       defaultFiles={[]}
                       withCredentials={false}
-                      saveUrl={'https://demos.telerik.com/kendo-ui/service-v4/upload/save'}
-                      removeUrl={'https://demos.telerik.com/kendo-ui/service-v4/upload/remove'}
+                      saveUrl={
+                        'https://demos.telerik.com/kendo-ui/service-v4/upload/save'
+                      }
+                      removeUrl={
+                        'https://demos.telerik.com/kendo-ui/service-v4/upload/remove'
+                      }
                     />
                   </div>
                 </div>
@@ -404,7 +507,14 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
             </TabStrip>
 
             {/* Buttons */}
-            <div style={{marginTop: '30px', display: 'flex', gap: '10px', justifyContent: 'flex-end'}}>
+            <div
+              style={{
+                marginTop: '30px',
+                display: 'flex',
+                gap: '10px',
+                justifyContent: 'flex-end',
+              }}
+            >
               <Button type="button" themeColor="secondary">
                 Cancel
               </Button>
@@ -427,7 +537,6 @@ export const OfferEditPageComponent = (props: OfferEditPageProps) => {
   );
 };
 
-
 const mapStateToProps = (state: AppState) => ({
   currentOffer: state.offerState.currentOffer!,
   isAuthorized: state.authState.isAuthorized,
@@ -437,4 +546,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setCurrentOffer: (id: number) => dispatch(actions.setCurrentOffer(id)),
 });
 
-export const OfferEditPage = connect(mapStateToProps, mapDispatchToProps)(OfferEditPageComponent);
+export const OfferEditPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(OfferEditPageComponent);

@@ -1,17 +1,20 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {ActionPayload} from '../types/ActionPayload.ts';
-import {ActionType} from '../types/ActionType.ts';
-import {Review} from '../types/Review.ts';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { ActionPayload } from '../types/ActionPayload.ts';
+import { ActionType } from '../types/ActionType.ts';
+import { Review } from '../types/Review.ts';
 
 interface ReviewState {
   reviews: Review[];
 }
 
-const defaultState: ReviewState = ({
-  reviews: []
-});
+const defaultState: ReviewState = {
+  reviews: [],
+};
 
-export const reviewReducer = (state: ReviewState = defaultState, action: PayloadAction<ActionPayload, ActionType>): ReviewState => {
+export const reviewReducer = (
+  state: ReviewState = defaultState,
+  action: PayloadAction<ActionPayload, ActionType>,
+): ReviewState => {
   switch (action.type) {
     case ActionType.AddReview:
       return {

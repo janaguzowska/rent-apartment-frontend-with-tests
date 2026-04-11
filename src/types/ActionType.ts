@@ -11,4 +11,3 @@ export enum ActionType {
   SetReviews = 'SetReviews',
   setUsers = 'setUsers',
 }
-

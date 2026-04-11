@@ -1,18 +1,18 @@
-import {connect} from 'react-redux';
-import {Dispatch, useState} from 'react';
-import {api} from '../services/api.ts';
-import {User} from '../types/User.ts';
-import {Link, useNavigate} from 'react-router-dom';
-import {actions} from '../redux/actions.ts';
-import {Registration} from '../types/Registration.ts';
+import { connect } from 'react-redux';
+import { Dispatch, useState } from 'react';
+import { api } from '../services/api.ts';
+import { User } from '../types/User.ts';
+import { Link, useNavigate } from 'react-router-dom';
+import { actions } from '../redux/actions.ts';
+import { Registration } from '../types/Registration.ts';
 import styled from 'styled-components';
-import {FileUploader} from '../components/FileUploader.tsx';
+import { FileUploader } from '../components/FileUploader.tsx';
 
 interface RegistrationProps {
   setUser: (user: User) => void;
 }
 
-const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
+const RegistrationPageComponent = ({ setUser }: RegistrationProps) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -27,11 +27,11 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
   // const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [confirmPasswordBlurred, setConfirmPasswordBlurred] = useState(false);
 
-
   const doPasswordsMatch = password === confirmPassword;
   const isEmailValid = email.includes('@') && email.includes('.');
   const isLoginValid = login.length > 3;
-  const isFormValid = firstName.trim() &&
+  const isFormValid =
+    firstName.trim() &&
     lastName.trim() &&
     email.trim() &&
     login &&
@@ -66,7 +66,8 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
     };
 
     const url = '/register';
-    api.post<User>(`${url}`, undefined, registrationData)
+    api
+      .post<User>(`${url}`, undefined, registrationData)
       .then((response: User) => {
         const credentials = btoa(`${email.trim()}:${password}`);
         localStorage.setItem('credentials', credentials);
@@ -74,9 +75,7 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
         navigate('/');
       })
       .catch(() => alert('Błąd przy rejestracji. Spróbuj ponownie.'));
-
   };
-
 
   return (
     <div className="page page--gray page--login">
@@ -85,7 +84,13 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
           <div className="header__wrapper">
             <div className="header__left">
               <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
+                <img
+                  className="header__logo"
+                  src="img/logo.svg"
+                  alt="6 cities logo"
+                  width="81"
+                  height="41"
+                />
               </Link>
             </div>
           </div>
@@ -95,7 +100,12 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
         <div className="page__login-container container">
           <RegisterFormWrapper className="login">
             <h1 className="login__title">Registration form</h1>
-            <RegisterForm className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+            <RegisterForm
+              className="login__form form"
+              action="#"
+              method="post"
+              onSubmit={handleSubmit}
+            >
               <div className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="firstName">First Name</label>
                 <input
@@ -184,8 +194,12 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
                     checked={isClient}
                     // onChange={(ev) => setIsCustomer(ev.target.checked)}
                   />
-                  <UserLabel htmlFor="isClient" onClick={() => setIsClient(!isClient)} isChecked={isClient}>Is
-                    Client
+                  <UserLabel
+                    htmlFor="isClient"
+                    onClick={() => setIsClient(!isClient)}
+                    isChecked={isClient}
+                  >
+                    Is Client
                   </UserLabel>
                 </UserType>
                 <UserType className="login__input-wrapper form__input-wrapper">
@@ -196,7 +210,13 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
                     name="isHost"
                     checked={isHost}
                   />
-                  <UserLabel htmlFor="isHost" onClick={() => setIsHost(!isHost)} isChecked={isHost}>Is Host</UserLabel>
+                  <UserLabel
+                    htmlFor="isHost"
+                    onClick={() => setIsHost(!isHost)}
+                    isChecked={isHost}
+                  >
+                    Is Host
+                  </UserLabel>
                 </UserType>
                 <UserType className="login__input-wrapper form__input-wrapper">
                   <UserInput
@@ -206,14 +226,24 @@ const RegistrationPageComponent = ({setUser}: RegistrationProps) => {
                     name="isAdmin"
                     checked={isAdmin}
                   />
-                  <UserLabel htmlFor="isAdmin" onClick={() => setIsAdmin(!isAdmin)} isChecked={isAdmin}>Is Admin</UserLabel>
+                  <UserLabel
+                    htmlFor="isAdmin"
+                    onClick={() => setIsAdmin(!isAdmin)}
+                    isChecked={isAdmin}
+                  >
+                    Is Admin
+                  </UserLabel>
                 </UserType>
               </UserTypeWrapper>
               <AvatarWrapper className="login__input-wrapper form__input-wrapper">
                 <label htmlFor="avatar">Avatar </label>
-                <FileUploader url={avatarUrl} setUrl={setAvatarUrl}/>
+                <FileUploader url={avatarUrl} setUrl={setAvatarUrl} />
               </AvatarWrapper>
-              <SubmitButtonWrapper className="login__submit form__submit button" type="submit" disabled={!isFormValid}>
+              <SubmitButtonWrapper
+                className="login__submit form__submit button"
+                type="submit"
+                disabled={!isFormValid}
+              >
                 Register
               </SubmitButtonWrapper>
             </RegisterForm>
@@ -235,8 +265,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setUser: (user: User) => dispatch(actions.setUser(user)),
 });
 
-export const RegistrationPage = connect(null, mapDispatchToProps)(RegistrationPageComponent);
-
+export const RegistrationPage = connect(
+  null,
+  mapDispatchToProps,
+)(RegistrationPageComponent);
 
 const UserTypeWrapper = styled.div`
   display: flex;
@@ -259,7 +291,7 @@ const RegisterForm = styled.form`
 
 const UserType = styled.div`
   display: flex;
-  width: 50%
+  width: 50%;
 `;
 
 const UserInput = styled.input`
@@ -277,7 +309,7 @@ const UserLabel = styled.label<{ isChecked: boolean }>`
     border-radius: 50%;
     cursor: pointer;
     vertical-align: middle;
-    background-color: ${(props) => props.isChecked ? '#c7c7c7' : '#ffffff'};
+    background-color: ${(props) => (props.isChecked ? '#c7c7c7' : '#ffffff')};
   }
 `;
 

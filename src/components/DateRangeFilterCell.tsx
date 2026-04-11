@@ -1,5 +1,12 @@
-import {DateTimePicker, DateTimePickerChangeEvent} from '@progress/kendo-react-dateinputs';
-import {CompositeFilterDescriptor, FilterDescriptor, State} from '@progress/kendo-data-query';
+import {
+  DateTimePicker,
+  DateTimePickerChangeEvent,
+} from '@progress/kendo-react-dateinputs';
+import {
+  CompositeFilterDescriptor,
+  FilterDescriptor,
+  State,
+} from '@progress/kendo-data-query';
 
 interface DateRangeFilterCellProps {
   setDataState: (dataState: State) => void;
@@ -8,13 +15,14 @@ interface DateRangeFilterCellProps {
 }
 
 export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
-  const {setDataState, dataState, field} = props;
+  const { setDataState, dataState, field } = props;
 
   const hasValue = (value: any) => Boolean(value && value !== '');
 
   const onChangeFrom = (event: DateTimePickerChangeEvent) => {
     const value = event.value;
-    const filters = (dataState.filter as CompositeFilterDescriptor)?.filters || [];
+    const filters =
+      (dataState.filter as CompositeFilterDescriptor)?.filters || [];
 
     const newFilters = filters.filter((f) => {
       const fd = f as FilterDescriptor;
@@ -25,7 +33,7 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
       newFilters.push({
         field: field,
         operator: 'gte',
-        value: value
+        value: value,
       } as FilterDescriptor);
     }
 
@@ -33,14 +41,15 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
       ...dataState,
       filter: {
         logic: 'and',
-        filters: newFilters
-      }
+        filters: newFilters,
+      },
     });
   };
 
   const onChangeTo = (event: DateTimePickerChangeEvent) => {
     const value = event.value;
-    const filters = (dataState.filter as CompositeFilterDescriptor)?.filters || [];
+    const filters =
+      (dataState.filter as CompositeFilterDescriptor)?.filters || [];
 
     const newFilters = filters.filter((f) => {
       const fd = f as FilterDescriptor;
@@ -51,7 +60,7 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
       newFilters.push({
         field: field,
         operator: 'lte',
-        value: value
+        value: value,
       } as FilterDescriptor);
     }
 
@@ -59,12 +68,13 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
       ...dataState,
       filter: {
         logic: 'and',
-        filters: newFilters
-      }
+        filters: newFilters,
+      },
     });
   };
 
-  const filters = (dataState.filter as CompositeFilterDescriptor)?.filters || [];
+  const filters =
+    (dataState.filter as CompositeFilterDescriptor)?.filters || [];
   const fromFilter = filters.find((f) => {
     const fd = f as FilterDescriptor;
     return fd.field === field && fd.operator === 'gte';
@@ -76,9 +86,20 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
   }) as FilterDescriptor;
 
   return (
-    <div style={{padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+    <div
+      style={{
+        padding: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+      }}
+    >
       <div>
-        <label style={{fontSize: '12px', display: 'block', marginBottom: '4px'}}>Data od:</label>
+        <label
+          style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}
+        >
+          Data od:
+        </label>
         <DateTimePicker
           value={fromFilter?.value as Date | undefined}
           onChange={onChangeFrom}
@@ -88,7 +109,11 @@ export const DateRangeFilterCell = (props: DateRangeFilterCellProps) => {
         />
       </div>
       <div>
-        <label style={{fontSize: '12px', display: 'block', marginBottom: '4px'}}>Data do:</label>
+        <label
+          style={{ fontSize: '12px', display: 'block', marginBottom: '4px' }}
+        >
+          Data do:
+        </label>
         <DateTimePicker
           value={toFilter?.value as Date | undefined}
           onChange={onChangeTo}

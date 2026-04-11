@@ -1,11 +1,11 @@
-import {Offer} from '../types/Offer.ts';
-import {Link} from 'react-router-dom';
-import {Dispatch} from 'react';
-import {actions} from '../redux/actions.ts';
-import {connect} from 'react-redux';
-import {IMAGE_URL} from '../const.ts';
-import {api} from '../services/api.ts';
-import {AppState} from '../types/AppState.ts';
+import { Offer } from '../types/Offer.ts';
+import { Link } from 'react-router-dom';
+import { Dispatch } from 'react';
+import { actions } from '../redux/actions.ts';
+import { connect } from 'react-redux';
+import { IMAGE_URL } from '../const.ts';
+import { api } from '../services/api.ts';
+import { AppState } from '../types/AppState.ts';
 
 interface OfferCardProps {
   currentOffer: Offer;
@@ -13,14 +13,19 @@ interface OfferCardProps {
   isAuthorized: boolean;
 }
 
-const OfferCardComponent = ({currentOffer, toggleFavorite, isAuthorized}: OfferCardProps) => {
-
+const OfferCardComponent = ({
+  currentOffer,
+  toggleFavorite,
+  isAuthorized,
+}: OfferCardProps) => {
   const handleBookmarkClick = () => {
     if (currentOffer.isFavorite) {
-      api.delete<void>('/offer/favorite/delete', {offerId: currentOffer.id })
+      api
+        .delete<void>('/offer/favorite/delete', { offerId: currentOffer.id })
         .then(() => toggleFavorite(currentOffer));
     } else {
-      api.post<void>('/offer/favorite/add', {offerId: currentOffer.id})
+      api
+        .post<void>('/offer/favorite/add', { offerId: currentOffer.id })
         .then(() => toggleFavorite(currentOffer));
     }
   };
@@ -34,7 +39,10 @@ const OfferCardComponent = ({currentOffer, toggleFavorite, isAuthorized}: OfferC
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${currentOffer.id}`}>
-          <img className="place-card__image" src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`} width="260"
+          <img
+            className="place-card__image"
+            src={`${IMAGE_URL}/${currentOffer.previewImage.name}.jpg`}
+            width="260"
             height="200"
             alt={currentOffer.title}
           />
@@ -43,13 +51,16 @@ const OfferCardComponent = ({currentOffer, toggleFavorite, isAuthorized}: OfferC
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{currentOffer.price}</b>
+            <b className="place-card__price-value">
+              &euro;{currentOffer.price}
+            </b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          { isAuthorized && (
+          {isAuthorized && (
             <button
               className={`place-card__bookmark-button ${currentOffer.isFavorite ? 'place-card__bookmark-button--active' : ''} button`}
-              type="button" onClick={handleBookmarkClick}
+              type="button"
+              onClick={handleBookmarkClick}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
                 <use xlinkHref="#icon-bookmark"></use>
@@ -60,7 +71,7 @@ const OfferCardComponent = ({currentOffer, toggleFavorite, isAuthorized}: OfferC
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{'width': `${currentOffer.rating * 20}%`}}></span>
+            <span style={{ width: `${currentOffer.rating * 20}%` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
@@ -78,7 +89,11 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  toggleFavorite: (currentOffer: Offer) => dispatch(actions.toggleFavorite(currentOffer))
+  toggleFavorite: (currentOffer: Offer) =>
+    dispatch(actions.toggleFavorite(currentOffer)),
 });
 
-export const OfferCard = connect(mapStateToProps, mapDispatchToProps)(OfferCardComponent);
+export const OfferCard = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(OfferCardComponent);

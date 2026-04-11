@@ -1,4 +1,4 @@
-import {BASE_URL} from '../const.ts';
+import { BASE_URL } from '../const.ts';
 
 class ApiService {
   private baseUrl: string;
@@ -8,11 +8,16 @@ class ApiService {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.defaultHeaders = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
   }
 
-  async request<T>(url: string, options: RequestInit = {}, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
+  async request<T>(
+    url: string,
+    options: RequestInit = {},
+    params?: Record<string, string | number | boolean>,
+    body?: any,
+  ): Promise<T> {
     let fullUrl = this.baseUrl + url;
 
     if (params) {
@@ -30,7 +35,7 @@ class ApiService {
       headers: {
         ...this.defaultHeaders,
         ...options.headers,
-        ...(credentials ? {'Authorization': `Basic ${credentials}`} : {})
+        ...(credentials ? { Authorization: `Basic ${credentials}` } : {}),
       },
     };
 
@@ -45,20 +50,34 @@ class ApiService {
     return response.json() as T;
   }
 
-  async post<T>(url: string, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
-    return this.request<T>(url, {method: 'POST'}, params, body);
+  async post<T>(
+    url: string,
+    params?: Record<string, string | number | boolean>,
+    body?: any,
+  ): Promise<T> {
+    return this.request<T>(url, { method: 'POST' }, params, body);
   }
 
-  async put<T>(url: string, params?: Record<string, string | number | boolean>, body?: any): Promise<T> {
-    return this.request<T>(url, {method: 'PUT'}, params, body);
+  async put<T>(
+    url: string,
+    params?: Record<string, string | number | boolean>,
+    body?: any,
+  ): Promise<T> {
+    return this.request<T>(url, { method: 'PUT' }, params, body);
   }
 
-  async delete<T> (url: string, params?: Record<string, string | number | boolean>):Promise<T> {
-    return this.request<T>(url, {method: 'DELETE'}, params);
+  async delete<T>(
+    url: string,
+    params?: Record<string, string | number | boolean>,
+  ): Promise<T> {
+    return this.request<T>(url, { method: 'DELETE' }, params);
   }
 
-  async get<T>(url: string, params?: Record<string, string | number | boolean>):Promise<T> {
-    return this.request<T>(url, {method: 'GET'}, params);
+  async get<T>(
+    url: string,
+    params?: Record<string, string | number | boolean>,
+  ): Promise<T> {
+    return this.request<T>(url, { method: 'GET' }, params);
   }
 }
 
