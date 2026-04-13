@@ -20,7 +20,10 @@ export const SummaryStepComponent = (props: SummaryStepProps) => {
       <div>Check out: {dateToString(reservationForm.checkOut)}</div>
       <h3>Participants:</h3>
       {reservationForm.participants.map((participant) => (
-        <div key={participant.firstName}>
+        <div
+          key={participant.firstName}
+          data-testid={`participant-${participant.firstName} ${participant.lastName}`}
+        >
           {participant.firstName} {participant.lastName}
         </div>
       ))}

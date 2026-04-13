@@ -132,7 +132,9 @@ const OfferDetailsPageComponent = (props: OfferDetailsPageProps) => {
               </div>
             )}
             <div className="offer__name-wrapper">
-              <h1 className="offer__name">{currentOffer.title}</h1>
+              <h1 data-testid="offer__name" className="offer__name">
+                {currentOffer.title}
+              </h1>
               {isAuthorized && (
                 <button
                   className={`offer__bookmark-button ${currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''} button`}

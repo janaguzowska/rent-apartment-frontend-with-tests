@@ -36,6 +36,7 @@ export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
             <input
               type="text"
               name="firstName"
+              data-testid="firstName"
               onChange={handleChange}
               value={reservationForm.participants[0].firstName}
               autoComplete="off"
@@ -48,6 +49,7 @@ export const ParticipantsStepComponent = (props: ParticipantsStepProps) => {
             <input
               type="text"
               name="lastName"
+              data-testid="lastName"
               onChange={handleChange}
               value={reservationForm.participants[0].lastName}
               autoComplete="off"

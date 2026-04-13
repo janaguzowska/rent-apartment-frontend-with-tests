@@ -8,7 +8,9 @@
     "lint": "eslint src --ext ts,tsx",
     "preview": "vite preview",
     "test": "vitest --passWithNoTests",
-    "e2e": "npx playwright test"
+    "e2e": "npx playwright test",
+    "e2e:pulpit:headed": "npm run e2e tests/pulpit.spec.ts -- --headed",
+    "e2e:headed": "npx playwright test --headed"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

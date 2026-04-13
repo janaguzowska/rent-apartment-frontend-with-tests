@@ -15,6 +15,6 @@ test.describe('Login tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // Assert
-    await expect(page.locator('#user-name')).toHaveText('admin1@admin.pl');
+    await expect(page.locator('#user-name')).toHaveText('admin@admin.pl');
   });
 });

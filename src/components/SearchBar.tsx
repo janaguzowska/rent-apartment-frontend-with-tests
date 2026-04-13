@@ -1,4 +1,4 @@
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { Dispatch, useEffect, useRef, useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -150,6 +150,17 @@ export const SearchBarComponent = ({
             value={selectedCity}
             onChange={setSelectedCity}
             options={cityOptionsArray}
+            components={{
+              Control: (props) => (
+                <components.Control
+                  {...props}
+                  innerProps={{
+                    ...props.innerProps,
+                    'data-testid': 'city-select',
+                  }}
+                />
+              ),
+            }}
             styles={{
               control: (baseStyles) => ({
                 ...baseStyles,
