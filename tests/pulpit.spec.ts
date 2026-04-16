@@ -1,24 +1,34 @@
 import { test, expect } from '@playwright/test';
+import { adminData } from '../test-data/login.data';
+import { LoginPage } from '../test-pages/login.page';
+import { AuthNavigationPage } from '../test-pages/auth-navigation.page';
+import { reservationGuest } from '../test-data/users.data';
+import { offersData } from '../test-data/offers.data';
+import { SearchPage } from '../test-pages/search.page';
+export { adminData } from '../test-data/login.data';
 
 test.describe('Login tests', () => {
-  // const baseUrl = 'http://localhost:5173/';
-  const adminEmail = 'admin@admin.pl';
-  const adminPassword = 'admin';
+  const adminEmail = adminData.adminEmail;
+  const adminPassword = adminData.adminPassword;
 
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
   });
 
   test('Search offers in Warsaw', async ({ page }) => {
-    const studioInOldTown = 'Modern Studio in Old Town';
+    const studioInOldTown = offersData.warsawOffer.title;
+    const warsawCity = offersData.warsawOffer.city;
 
-    await page.getByRole('link', { name: 'Sign in' }).click();
-    await page.getByRole('textbox', { name: 'Email' }).fill(adminEmail);
-    await page.getByRole('textbox', { name: 'Password' }).fill(adminPassword);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await page.getByTestId('city-select').click();
-    await page.getByRole('option', { name: 'Warsaw' }).click();
-    await page.getByRole('button', { name: 'Search' }).click();
+    const authNavigationPage = new AuthNavigationPage(page);
+    const loginPage = new LoginPage(page);
+
+    await authNavigationPage.openLoginForm();
+    await loginPage.login(adminEmail, adminPassword);
+
+    const searchPage = new SearchPage(page);
+
+    await searchPage.selectCity(warsawCity);
+    await searchPage.search();
     await page.getByRole('link', { name: studioInOldTown }).first().click();
     await page.getByTestId('offer__name').click();
 
@@ -26,14 +36,16 @@ test.describe('Login tests', () => {
   });
 
   test('Reservation apartment by user', async ({ page }) => {
-    const colosseum2 = 'Luxury Villa near Colosseum2';
-    const userName = 'Adam';
-    const userLastName = 'Kwiatkowski';
+    const colosseum2 = offersData.romeOffer.title;
+    const userName = reservationGuest.firstName;
+    const userLastName = reservationGuest.lastName;
 
-    await page.getByRole('link', { name: 'Sign in' }).click();
-    await page.getByRole('textbox', { name: 'Email' }).fill(adminEmail);
-    await page.getByRole('textbox', { name: 'Password' }).fill(adminPassword);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    const authNavigationPage = new AuthNavigationPage(page);
+    const loginPage = new LoginPage(page);
+
+    await authNavigationPage.openLoginForm();
+    await loginPage.login(adminEmail, adminPassword);
+
     await page.getByRole('link', { name: colosseum2 }).first().click();
     await page
       .getByRole('textbox', { name: 'Check-in date - Check-out date' })
