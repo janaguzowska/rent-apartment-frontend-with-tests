@@ -28,16 +28,22 @@ jobs:
 #        run: npx playwright install --with-deps
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps --force
+        run: npx playwright install --with-deps
 
-      - name: Build project
-#        run: npm run build
-        run: npx vite build
+#      - name: Build project
+##        run: npm run build
+#        run: npx vite build
 
-      - name: Run changed Playwright tests
-        run: npx playwright test --only-changed=origin/$GITHUB_BASE_REF
-        if: github.event_name == 'pull_request'
+#      - name: Run changed Playwright tests
+#        run: npx playwright test --only-changed=origin/$GITHUB_BASE_REF
+#        if: github.event_name == 'pull_request'
 
       - name: Run Playwright tests
         run: npx playwright test --timeout=60000
-#        if: github.event_name != 'pull_request'
+      - uses: actions/upload-artifact@v5
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
