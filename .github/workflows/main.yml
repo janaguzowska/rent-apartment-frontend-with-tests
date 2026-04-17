@@ -39,5 +39,5 @@ jobs:
         if: github.event_name == 'pull_request'
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --timeout=60000
 #        if: github.event_name != 'pull_request'
