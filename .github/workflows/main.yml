@@ -31,7 +31,8 @@ jobs:
         run: npx playwright install --with-deps --force
 
       - name: Build project
-        run: npm run build
+#        run: npm run build
+        run: npx vite build
 
       - name: Run changed Playwright tests
         run: npx playwright test --only-changed=origin/$GITHUB_BASE_REF
