@@ -6,10 +6,10 @@ test.describe('Login tests', () => {
     // Arrange
     const adminEmail = adminData.adminEmail;
     const adminPassword = adminData.adminPassword;
-    const baseUrl = 'http://localhost:5173/';
+    // const baseUrl = 'http://localhost:5173/';
 
     // Act
-    await page.goto(baseUrl);
+    await page.goto('http://localhost:5173/');
     await page.getByRole('link', { name: 'Sign in' }).click();
     await page.getByRole('textbox', { name: 'Email' }).fill(adminEmail);
     await page.getByRole('textbox', { name: 'Email' }).press('Tab');
