@@ -30,15 +30,18 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps --force
 
+      - name: Start app
+        run: npm run start -- --host 0.0.0.0 --port 5173 &
+
+      - name: Wait for app
+        run: npx wait-on http://127.0.0.1:5173
+        # jeśli nie chcesz dodawać wait-on do projektu, można użyć prostszego sleep,
+        # ale wait-on jest stabilniejsze
+
       - name: Run changed Playwright tests
         run: npx playwright test --only-changed=origin/$GITHUB_BASE_REF
         if: github.event_name == 'pull_request'
 
       - name: Run Playwright tests
         run: npx playwright test
-#      - uses: actions/upload-artifact@v5
-#        if: ${{ !cancelled() }}
-#        with:
-#          name: playwright-report
-#          path: playwright-report/
-#          retention-days: 30
+        if: github.event_name != 'pull_request'
